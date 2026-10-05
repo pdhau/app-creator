@@ -1,191 +1,191 @@
-{
-  "version": 1,
-  "skills": {
-    "add-3d-assets": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/add-3d-assets/SKILL.md",
-      "computedHash": "dd86664f97d5260aa13484f63ba66414d8d38c0ada923df2715c67101454e7cb"
-    },
-    "add-assets": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/add-assets/SKILL.md",
-      "computedHash": "5f9546ea597c28d695aa1429a0e19a190e8e43ca84113e6e9acb0e01b87ef32c"
-    },
-    "add-audio": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/add-audio/SKILL.md",
-      "computedHash": "183463d6f83b565183caf868e745da9732c5739ba01dcef2e9b45540e351c621"
-    },
-    "add-feature": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/add-feature/SKILL.md",
-      "computedHash": "4f2bfca00f15f15492886ab3c71722724770d7a3a760858166622cd3dc0bfaea"
-    },
-    "add-multiplayer": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/add-multiplayer/SKILL.md",
-      "computedHash": "7f16021bd918314155cfcd00ecdb7010db113fea111e61ceacaca72eff6594ac"
-    },
-    "design-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/design-game/SKILL.md",
-      "computedHash": "ed3c4269349d9119f081725a02e76f3079b45e92615c366eddf86af0cbeaf0f2"
-    },
-    "fetch-tweet": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/fetch-tweet/SKILL.md",
-      "computedHash": "00ca2f5ed3e55ca58ff9ca1c1da33aeee73d2f21c364831b891e62577426574f"
-    },
-    "game-3d-assets": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-3d-assets/SKILL.md",
-      "computedHash": "a86170227cd6267a477700ac0e5b9b7bc65c8fb0f0bbfd9c7c39dece494241a7"
-    },
-    "game-architecture": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-architecture/SKILL.md",
-      "computedHash": "319d2befd2e7d11e484450c49244c91999695a4b66282e553e40ecdf1a558d31"
-    },
-    "game-assets": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-assets/SKILL.md",
-      "computedHash": "3296abec73c2a29d170a6ab4f549b3b31e525f294bb6be0b1c87778100c8241b"
-    },
-    "game-audio": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-audio/SKILL.md",
-      "computedHash": "6375c20972b4c59831ea21be26136851738f46f7902e1bcbba9e350806dd81b3"
-    },
-    "game-deploy": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-deploy/SKILL.md",
-      "computedHash": "6b57fbae8a976f2b7d2f56afe25ffd7d14a58201d3a90a2e7453f50d68a300fb"
-    },
-    "game-designer": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-designer/SKILL.md",
-      "computedHash": "051d3e1e033f0beffeaef7a82af944d23102ef82fc6606aca4064f1100be95b7"
-    },
-    "game-qa": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/game-qa/SKILL.md",
-      "computedHash": "afcc914a5e307f4058917097c65d7cb1bde160a5b27b76cda9cd07594f758045"
-    },
-    "improve-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/improve-game/SKILL.md",
-      "computedHash": "4d4481cd11ec0cf232b790f5c88230d7dffa9ecf6319bd274d91ade955cbaab0"
-    },
-    "make-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/make-game/SKILL.md",
-      "computedHash": "6b006785ee25a4fd09b53e006bbcc0003772e39dc461afc5ed8a106c0863c123"
-    },
-    "meshyai": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/meshyai/SKILL.md",
-      "computedHash": "85bb85266c42205ec4f2dcde4ce85f854a699430ae22fb3529144857f32c4d0e"
-    },
-    "monetize-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/monetize-game/SKILL.md",
-      "computedHash": "604845457093ec5e315a4856cb10d5d2309a2886ec0d7b2c545b509941ba97d5"
-    },
-    "phaser": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/phaser/SKILL.md",
-      "computedHash": "2e8bd40c41fc4b367678e86f02b0eb4ba7aaa1770ad42cfe30b7ce74c4913364"
-    },
-    "promo-video": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/promo-video/SKILL.md",
-      "computedHash": "9a65bbd5f10be424626e772da1c5070811883668ad42930741cb766a04d75272"
-    },
-    "qa-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/qa-game/SKILL.md",
-      "computedHash": "3aab76c844011eff294e3d58dd8261cf0412588d7c363706117f7d07ff9668aa"
-    },
-    "quick-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/quick-game/SKILL.md",
-      "computedHash": "5e2640779d95670664dbd7615c427eb81c6d891f542e834374a18608eadb458f"
-    },
-    "record-promo": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/record-promo/SKILL.md",
-      "computedHash": "e1575abca5e8ed9cefd4fea84f91489149feeeb62d3ee4fa7d377581d2acf07f"
-    },
-    "retrodiffusion": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/retrodiffusion/SKILL.md",
-      "computedHash": "9acafbcdf573d5f2f9439300b2a26ab52d0b1dfd80d1bed2e543417f066d116c"
-    },
-    "review-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/review-game/SKILL.md",
-      "computedHash": "c7229c517788da2b26d369343da9d15d7760a6cbdafda5d26643ece598fc413e"
-    },
-    "scaffold-gateables": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/scaffold-gateables/SKILL.md",
-      "computedHash": "0429188452dfe565c1b28d671b17ed04a7b03eebe357e27e3087de0e553814af"
-    },
-    "threejs-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/threejs-game/SKILL.md",
-      "computedHash": "b0e412bbc67447342750ee7765cb9585e86c883ce16475645a1a99f9101ebb9f"
-    },
-    "threejs-perf": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/threejs-perf/SKILL.md",
-      "computedHash": "8739885b28b57b0eaa82c6ba41ff1c9bd8e0ca2abfe2e09bb495242cd97cf17b"
-    },
-    "use-template": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/use-template/SKILL.md",
-      "computedHash": "867dd347d9d5603da3374eebdc7e7b5fe4f6c2ec2f45d28a74febad3bf45929f"
-    },
-    "viral-game": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/viral-game/SKILL.md",
-      "computedHash": "767ef22646e368244c3beefef62eb87a0c37f9667ab72017f93222e057d5ec9c"
-    },
-    "worldlabs": {
-      "source": "playableintelligence/game-creator",
-      "sourceType": "github",
-      "skillPath": "skills/worldlabs/SKILL.md",
-      "computedHash": "fda41f1dc6716e71db53eb8d6ebb49901b5bd87ff60903ccd2c1b0f7d12aef85"
-    }
-  }
+﻿{
+    "version":  1,
+    "skills":  {
+                   "add-react-feature":  {
+                                             "source":  "local",
+                                             "sourceType":  "local",
+                                             "skillPath":  "skills/add-react-feature/SKILL.md",
+                                             "computedHash":  "b1f9e431e992c1cc72480859ccab0c3d3d94e7d09a04b200b9ac738e46dd37f7"
+                                         },
+                   "add-realtime":  {
+                                        "source":  "local",
+                                        "sourceType":  "local",
+                                        "skillPath":  "skills/add-realtime/SKILL.md",
+                                        "computedHash":  "36ec84fc26b995e43e5a99409d8dd666f48a8d865a66c0047dcdd785a36169ee"
+                                    },
+                   "add-web-3d-assets":  {
+                                             "source":  "local",
+                                             "sourceType":  "local",
+                                             "skillPath":  "skills/add-web-3d-assets/SKILL.md",
+                                             "computedHash":  "d1ad9c787efa8e9e1ad2f3ced95460cf7b59bd658f6386dddcf5d806306b2ebf"
+                                         },
+                   "add-web-audio":  {
+                                         "source":  "local",
+                                         "sourceType":  "local",
+                                         "skillPath":  "skills/add-web-audio/SKILL.md",
+                                         "computedHash":  "08cb735df30f7c14508b4f9de689c17b2e03c8af2546383fe72775a486c14e65"
+                                     },
+                   "add-web-qa":  {
+                                      "source":  "local",
+                                      "sourceType":  "local",
+                                      "skillPath":  "skills/add-web-qa/SKILL.md",
+                                      "computedHash":  "4831a6b0390ad6b33ab9c9872c9349cf371dc2cee12fcb184a674e65b0407332"
+                                  },
+                   "design-react-ui":  {
+                                           "source":  "local",
+                                           "sourceType":  "local",
+                                           "skillPath":  "skills/design-react-ui/SKILL.md",
+                                           "computedHash":  "2193e742de3a2154a108377193b5b7b327ee6a3363fe23eb0e665ae373823baf"
+                                       },
+                   "fetch-social-content":  {
+                                                "source":  "local",
+                                                "sourceType":  "local",
+                                                "skillPath":  "skills/fetch-social-content/SKILL.md",
+                                                "computedHash":  "4d07805c12526a4bd282eba9c4e444eb27d17a7d80558438e4ce1a7531052904"
+                                            },
+                   "generate-3d-assets":  {
+                                              "source":  "local",
+                                              "sourceType":  "local",
+                                              "skillPath":  "skills/generate-3d-assets/SKILL.md",
+                                              "computedHash":  "a1bec0539502f939d8a506f53537caec4ad4fcc09143eedb900042e6d5d254ea"
+                                          },
+                   "generate-3d-environments":  {
+                                                    "source":  "local",
+                                                    "sourceType":  "local",
+                                                    "skillPath":  "skills/generate-3d-environments/SKILL.md",
+                                                    "computedHash":  "8ea8421ed3e5fb934ba909030e286679f39e18063bbedcf88cbe94d2969a5ea0"
+                                                },
+                   "generate-visual-assets":  {
+                                                  "source":  "local",
+                                                  "sourceType":  "local",
+                                                  "skillPath":  "skills/generate-visual-assets/SKILL.md",
+                                                  "computedHash":  "6e1f3bd6e33ea2a02b830282cb979f82a5f8257311a790b3b20606abaf28c012"
+                                              },
+                   "improve-react-app":  {
+                                             "source":  "local",
+                                             "sourceType":  "local",
+                                             "skillPath":  "skills/improve-react-app/SKILL.md",
+                                             "computedHash":  "566914da93b6dbcf8e3ceaac041451259f0bf102f5db88a3f9fc76b78e0ac862"
+                                         },
+                   "make-react-app":  {
+                                          "source":  "local",
+                                          "sourceType":  "local",
+                                          "skillPath":  "skills/make-react-app/SKILL.md",
+                                          "computedHash":  "b8300dadb57e309a0d100d6075f8f3e58c99877e42f2a06b3e85262849852d0e"
+                                      },
+                   "manage-web-assets":  {
+                                             "source":  "local",
+                                             "sourceType":  "local",
+                                             "skillPath":  "skills/manage-web-assets/SKILL.md",
+                                             "computedHash":  "191f4e2f188277391f2b3a9de3c9bf1a3f5e60aabc69092a7516f1464089e821"
+                                         },
+                   "monetize-web-app":  {
+                                            "source":  "local",
+                                            "sourceType":  "local",
+                                            "skillPath":  "skills/monetize-web-app/SKILL.md",
+                                            "computedHash":  "173f857fa7bfc4a2dd91dacb861a67e111d30c8fb8208cdd923cdb627c2ea25f"
+                                        },
+                   "product-design":  {
+                                          "source":  "local",
+                                          "sourceType":  "local",
+                                          "skillPath":  "skills/product-design/SKILL.md",
+                                          "computedHash":  "718e5a58b3d07022dc4b8b8763a09726733f52bbda0a4cddc9b75ff8159d5da8"
+                                      },
+                   "quick-react-prototype":  {
+                                                 "source":  "local",
+                                                 "sourceType":  "local",
+                                                 "skillPath":  "skills/quick-react-prototype/SKILL.md",
+                                                 "computedHash":  "855d9ffe54fa09ab6d5241bab8f495fea6c0d7dac2d1b3f8f014123b497fe6af"
+                                             },
+                   "react-architecture":  {
+                                              "source":  "local",
+                                              "sourceType":  "local",
+                                              "skillPath":  "skills/react-architecture/SKILL.md",
+                                              "computedHash":  "186cbe8d8b737a92f27398639464d966feee19f015ebd4059ccdf042c1ba20db"
+                                          },
+                   "react-canvas":  {
+                                        "source":  "local",
+                                        "sourceType":  "local",
+                                        "skillPath":  "skills/react-canvas/SKILL.md",
+                                        "computedHash":  "3d13859991f9cdc6540de2334dd94650c2b44f7862b63683a10f2f285784de73"
+                                    },
+                   "react-three":  {
+                                       "source":  "local",
+                                       "sourceType":  "local",
+                                       "skillPath":  "skills/react-three/SKILL.md",
+                                       "computedHash":  "55e47a6a2759200c0b932b5e9832c2e219168585219251d56d6727a9d467569f"
+                                   },
+                   "record-product-demo":  {
+                                               "source":  "local",
+                                               "sourceType":  "local",
+                                               "skillPath":  "skills/record-product-demo/SKILL.md",
+                                               "computedHash":  "f93ee27ca114e476d0c092fda849212c9e80fb373d45ecc6e3389bb4e9907ea2"
+                                           },
+                   "record-web-demo":  {
+                                           "source":  "local",
+                                           "sourceType":  "local",
+                                           "skillPath":  "skills/record-web-demo/SKILL.md",
+                                           "computedHash":  "ff547078eca0a85988598f71abf2e6051260e908fda3c85d243798bd1f7027cc"
+                                       },
+                   "review-react-app":  {
+                                            "source":  "local",
+                                            "sourceType":  "local",
+                                            "skillPath":  "skills/review-react-app/SKILL.md",
+                                            "computedHash":  "e090dd819dac973627e7c51ffe59ef7781484bdb810e882aab9cba5ea0b763d0"
+                                        },
+                   "scaffold-entitlements":  {
+                                                 "source":  "local",
+                                                 "sourceType":  "local",
+                                                 "skillPath":  "skills/scaffold-entitlements/SKILL.md",
+                                                 "computedHash":  "d3667b89e929c6637f684734cdd6a1492fb82c5cc46162b5ab9e2a3d4bbf0fb1"
+                                             },
+                   "ship-react-app":  {
+                                          "source":  "local",
+                                          "sourceType":  "local",
+                                          "skillPath":  "skills/ship-react-app/SKILL.md",
+                                          "computedHash":  "38c2690609c1018a5bec3d97281ebb2ed0d95af7969eb42f3ad152a5c3dc054b"
+                                      },
+                   "use-react-template":  {
+                                              "source":  "local",
+                                              "sourceType":  "local",
+                                              "skillPath":  "skills/use-react-template/SKILL.md",
+                                              "computedHash":  "530c6b69b4a88a5d4b41437aad422efc10631ae6e7bbb0ac55e3d63ec3cb0974"
+                                          },
+                   "web-3d-assets":  {
+                                         "source":  "local",
+                                         "sourceType":  "local",
+                                         "skillPath":  "skills/web-3d-assets/SKILL.md",
+                                         "computedHash":  "332c84cb9bdf295a1b532c7d9c0cb23c9b061823b6bafb6f205ce88f1e4b9ab4"
+                                     },
+                   "web-asset-pipeline":  {
+                                              "source":  "local",
+                                              "sourceType":  "local",
+                                              "skillPath":  "skills/web-asset-pipeline/SKILL.md",
+                                              "computedHash":  "135c1ceb48b0d9f2154e8aa62bd1ce43d22be243240ab39dd293aa72b7edc0bd"
+                                          },
+                   "web-audio-patterns":  {
+                                              "source":  "local",
+                                              "sourceType":  "local",
+                                              "skillPath":  "skills/web-audio-patterns/SKILL.md",
+                                              "computedHash":  "1354d7517fca4c3a45a346588f7a9552d2a9221f8e5a9dd32439080fcc8953db"
+                                          },
+                   "web-deploy":  {
+                                      "source":  "local",
+                                      "sourceType":  "local",
+                                      "skillPath":  "skills/web-deploy/SKILL.md",
+                                      "computedHash":  "043e17e5b5e425823697dc6a40529d380cb0d1130e69aaf0899afc56e3fa4ff0"
+                                  },
+                   "webgl-performance":  {
+                                             "source":  "local",
+                                             "sourceType":  "local",
+                                             "skillPath":  "skills/webgl-performance/SKILL.md",
+                                             "computedHash":  "c1bcfb4249e53ef7db33af87607e962688a300de82cdcb3fd742eeff97400cce"
+                                         },
+                   "web-qa":  {
+                                  "source":  "local",
+                                  "sourceType":  "local",
+                                  "skillPath":  "skills/web-qa/SKILL.md",
+                                  "computedHash":  "11c025bff903194b36b900ddf52a821181a4c105a6037669f379c68af44dfcf4"
+                              }
+               }
 }
