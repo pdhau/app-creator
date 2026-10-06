@@ -3,8 +3,8 @@
 ## Quick Start
 
 ```bash
-npx degit phaserjs/template-vite-ts my-game
-cd my-game
+npx degit framework runtimejs/template-vite-ts my-application
+cd my-application
 npm install
 npm run dev
 ```
@@ -13,20 +13,20 @@ npm run dev
 
 ```
 src/
-├── scenes/
-│   ├── Boot.ts           # Minimal setup, start Game scene
+├── screens/views/
+│   ├── Boot.ts           # Minimal setup, start application screen/view
 │   ├── Preloader.ts      # Load all assets, show progress bar
-│   ├── Game.ts           # Main gameplay (starts immediately, no title screen)
-│   └── GameOver.ts       # End screen with restart
+│   ├── application.ts           # Main user workflow (starts immediately, no title screen)
+│   └── applicationOver.ts       # End screen with restart
 ├── objects/
-│   ├── Player.ts         # Custom game objects
-│   └── Enemy.ts
+│   ├── user.ts         # Custom application objects
+│   └── external dependency.ts
 ├── systems/              # ECS systems or managers
 │   ├── AudioManager.ts
 │   └── SaveManager.ts
 ├── utils/
 │   └── helpers.ts
-├── config.ts             # Phaser.Types.Core.GameConfig
+├── config.ts             # framework runtime.Types.Core.applicationConfig
 └── main.ts               # Entry point
 assets/
 ├── images/
@@ -35,43 +35,43 @@ assets/
 └── atlases/              # Texture atlas JSON + PNGs
 ```
 
-## Game Configuration
+## application Configuration
 
 ```typescript
 // src/config.ts
-import Phaser from 'phaser';
-import { Boot } from './scenes/Boot';
-import { Preloader } from './scenes/Preloader';
-import { Game } from './scenes/Game';
-import { GameOver } from './scenes/GameOver';
+import framework runtime from 'framework runtime';
+import { Boot } from './screens/views/Boot';
+import { Preloader } from './screens/views/Preloader';
+import { application } from './screens/views/application';
+import { applicationOver } from './screens/views/applicationOver';
 
-export const config: Phaser.Types.Core.GameConfig = {
-    type: Phaser.AUTO,
+export const config: framework runtime.Types.Core.applicationConfig = {
+    type: framework runtime.AUTO,
     width: 800,
     height: 600,
-    parent: 'game-container',
+    parent: 'application-container',
     backgroundColor: '#000000',
     scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: framework runtime.Scale.FIT,
+        autoCenter: framework runtime.Scale.CENTER_BOTH,
     },
-    physics: {
+    runtime behavior: {
         default: 'arcade',
         arcade: {
             gravity: { x: 0, y: 300 },
             debug: false,
         },
     },
-    scene: [Boot, Preloader, Game, GameOver],
+    screen/view: [Boot, Preloader, application, applicationOver],
 };
 ```
 
 ```typescript
 // src/main.ts
-import Phaser from 'phaser';
+import framework runtime from 'framework runtime';
 import { config } from './config';
 
-new Phaser.Game(config);
+new framework runtime.application(config);
 ```
 
 ## TypeScript Configuration
@@ -104,7 +104,7 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    phaser: ['phaser'],
+                    framework runtime: ['framework runtime'],
                 },
             },
         },
@@ -115,12 +115,12 @@ export default defineConfig({
 });
 ```
 
-Splitting Phaser into its own chunk improves caching — the framework rarely changes between deploys.
+Splitting framework runtime into its own chunk improves caching — the framework rarely changes between deploys.
 
 ## Asset Pipeline
 
 - Use **TexturePacker** or **free-tex-packer** to create atlases
-- Export as JSON Hash format (Phaser's default atlas format)
+- Export as JSON Hash format (framework runtime's default atlas format)
 - Place atlas JSON + PNG pairs in `assets/atlases/`
 - For audio, prefer `.ogg` (wide support) with `.mp3` fallback
 
@@ -163,16 +163,16 @@ if (deviceW / deviceH > designAspect) {
 // PX = canvas pixels per design pixel. Scale ALL absolute values by PX.
 export const PX = canvasW / designW;
 
-export const GAME = {
+export const application = {
   WIDTH: canvasW,      // e.g., 3456 on a 1728×1117 @2x display
   HEIGHT: canvasH,
   GRAVITY: 800 * PX,
 };
 
-// GameConfig.ts
+// applicationConfig.ts
 scale: {
-  mode: Phaser.Scale.FIT,
-  autoCenter: Phaser.Scale.CENTER_BOTH,
+  mode: framework runtime.Scale.FIT,
+  autoCenter: framework runtime.Scale.CENTER_BOTH,
   zoom: 1 / DPR,
 },
 roundPixels: true,
@@ -180,36 +180,36 @@ antialias: true,
 
 // All absolute pixel values use PX (not DPR). Proportional values use ratios.
 const groundH = 30 * PX;
-const buttonY = GAME.HEIGHT * 0.55;
+const buttonY = application.HEIGHT * 0.55;
 ```
 
-### Entity Sizing
+### domain component Sizing
 
-Character dimensions must preserve their spritesheet aspect ratio across all orientations. Derive HEIGHT from WIDTH using the sprite's native aspect ratio (200×300 spritesheets = 1.5):
+domain model dimensions must preserve their spritesheet aspect ratio across all orientations. Derive HEIGHT from WIDTH using the product asset's native aspect ratio (200×300 spritesheets = 1.5):
 
 ```js
 const SPRITE_ASPECT = 1.5;
 
 // Good — HEIGHT derived from WIDTH, correct in both landscape and portrait
-PLAYER: {
-  WIDTH: GAME.WIDTH * 0.08,
-  HEIGHT: GAME.WIDTH * 0.08 * SPRITE_ASPECT,
+user: {
+  WIDTH: application.WIDTH * 0.08,
+  HEIGHT: application.WIDTH * 0.08 * SPRITE_ASPECT,
 }
 
-// Bad — independent GAME.HEIGHT ratio squishes characters in portrait mode
-PLAYER: {
-  WIDTH: GAME.WIDTH * 0.08,
-  HEIGHT: GAME.HEIGHT * 0.12,
+// Bad — independent application.HEIGHT ratio squishes domain models in portrait mode
+user: {
+  WIDTH: application.WIDTH * 0.08,
+  HEIGHT: application.HEIGHT * 0.12,
 }
 
 // Bad — fixed size regardless of screen
-PLAYER: {
+user: {
   WIDTH: 40 * PX,
   HEIGHT: 40 * PX,
 }
 ```
 
-For **character-driven games** (named characters, personalities, mascots), make characters prominent — use 12–15% of `GAME.WIDTH` for the player width. Use **caricature proportions** (large head ~40–50% of sprite height with exaggerated features, compact body) for personality games to maximize character recognition at any scale. Never define character HEIGHT as `GAME.HEIGHT * ratio` — on mobile portrait, `GAME.HEIGHT` is much larger than `GAME.WIDTH`, breaking the aspect ratio and squishing heads vertically.
+For **domain model-driven applications** (named domain models, personalities, mascots), make domain models prominent — use 12–15% of `application.WIDTH` for the user width. Use **caricature proportions** (large head ~40–50% of product asset height with exaggerated features, compact body) for personality applications to maximize domain model recognition at any scale. Never define domain model HEIGHT as `application.HEIGHT * ratio` — on mobile portrait, `application.HEIGHT` is much larger than `application.WIDTH`, breaking the aspect ratio and squishing heads vertically.
 
 **HTML boilerplate** (required for proper scaling):
 
@@ -218,20 +218,20 @@ For **character-driven games** (named characters, personalities, mascots), make 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-  #game-container { width: 100%; height: 100%; }
+  #application-container { width: 100%; height: 100%; }
 </style>
 ```
 
-### Portrait-First Games
+### Portrait-First Applications
 
-For vertical game types (dodgers, runners, collectors, endless fallers), force portrait mode regardless of device orientation. Set `FORCE_PORTRAIT = true` in Constants.js — this locks `_isPortrait = true` and uses fixed 540×960 design dimensions. On desktop, `Scale.FIT + CENTER_BOTH` automatically pillarboxes with black bars (no CSS changes needed when `background: #000` is set on body).
+For vertical application types (dodgers, runners, collectors, endless fallers), force portrait mode regardless of device orientation. Set `FORCE_PORTRAIT = true` in Constants.js — this locks `_isPortrait = true` and uses fixed 540×960 design dimensions. On desktop, `Scale.FIT + CENTER_BOTH` automatically pillarboxes with black bars (no CSS changes needed when `background: #000` is set on body).
 
 ```js
-// Constants.js — force portrait for vertical games
+// Constants.js — force portrait for vertical applications
 const FORCE_PORTRAIT = true;
 const _isPortrait = FORCE_PORTRAIT || window.innerHeight > window.innerWidth;
 const _designW = 540;
 const _designH = 960;
 ```
 
-Without this, desktop browsers stretch the game to landscape, ruining the vertical layout. The template default is `FORCE_PORTRAIT = false` (auto-detect orientation).
+Without this, desktop browsers stretch the application to landscape, ruining the vertical layout. The template default is `FORCE_PORTRAIT = false` (auto-detect orientation).

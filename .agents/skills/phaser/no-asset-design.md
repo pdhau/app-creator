@@ -1,6 +1,6 @@
 # No-Asset Visual Design
 
-Techniques for making asset-free Phaser games look polished using only procedural graphics (`Phaser.GameObjects.Graphics`), shapes, particles, and tweens. No sprite sheets, no image files — just code.
+Techniques for making asset-free framework runtime applications look polished using only procedural graphics (`framework runtime.applicationObjects.Graphics`), shapes, particles, and tweens. No product asset sheets, no image files — just code.
 
 ## Color Palette
 
@@ -19,7 +19,7 @@ export const PALETTE = {
 ```
 
 **Rules:**
-- Every color in the game comes from the palette — no ad-hoc hex values in game logic
+- Every color in the application comes from the palette — no ad-hoc hex values in application logic
 - Limit to 5 colors max. Constraint reads as intentional style, not placeholder art
 - Use opacity variations (0.3, 0.5, 0.8) of palette colors for depth rather than adding new colors
 
@@ -36,7 +36,7 @@ private createSkyGradient(): void {
         PALETTE.SKY_BOTTOM, PALETTE.SKY_BOTTOM,
         1
     );
-    g.fillRect(0, 0, GAME.WIDTH, GAME.HEIGHT);
+    g.fillRect(0, 0, application.WIDTH, application.HEIGHT);
     g.setDepth(-100);
 }
 ```
@@ -58,11 +58,11 @@ private lerpColor(a: number, b: number, t: number): number {
 
 ## Parallax Depth
 
-3-4 layers minimum. Each layer moves at a different speed relative to the camera or player. Even subtle differences (0.1x, 0.3x, 0.6x, 1x) create massive depth perception.
+3-4 layers minimum. Each layer moves at a different speed relative to the camera or user. Even subtle differences (0.1x, 0.3x, 0.6x, 1x) create massive depth perception.
 
 ```typescript
 interface ParallaxLayer {
-    elements: Phaser.GameObjects.GameObject[];
+    elements: framework runtime.applicationObjects.applicationObject[];
     speed: number;
 }
 
@@ -89,10 +89,10 @@ private createParallax(): void {
 update(_time: number, delta: number): void {
     for (const layer of this.layers) {
         for (const el of layer.elements) {
-            (el as Phaser.GameObjects.Shape).x -= layer.speed * (delta / 16);
+            (el as framework runtime.applicationObjects.Shape).x -= layer.speed * (delta / 16);
             // Wrap around
-            if ((el as Phaser.GameObjects.Shape).x < -100) {
-                (el as Phaser.GameObjects.Shape).x = GAME.WIDTH + Phaser.Math.Between(50, 200);
+            if ((el as framework runtime.applicationObjects.Shape).x < -100) {
+                (el as framework runtime.applicationObjects.Shape).x = application.WIDTH + framework runtime.Math.Between(50, 200);
             }
         }
     }
@@ -106,7 +106,7 @@ update(_time: number, delta: number): void {
 Rounded rectangles or overlapping circles with slight transparency, random sizes, drifting slowly:
 
 ```typescript
-private createCloud(x: number, y: number, scale: number, alpha: number): Phaser.GameObjects.Graphics {
+private createCloud(x: number, y: number, scale: number, alpha: number): framework runtime.applicationObjects.Graphics {
     const g = this.add.graphics();
     g.fillStyle(0xffffff, alpha);
 
@@ -121,13 +121,13 @@ private createCloud(x: number, y: number, scale: number, alpha: number): Phaser.
     return g;
 }
 
-private createCloudLayer(count: number, alphaBase: number): Phaser.GameObjects.Graphics[] {
-    const clouds: Phaser.GameObjects.Graphics[] = [];
+private createCloudLayer(count: number, alphaBase: number): framework runtime.applicationObjects.Graphics[] {
+    const clouds: framework runtime.applicationObjects.Graphics[] = [];
     for (let i = 0; i < count; i++) {
-        const x = Phaser.Math.Between(0, GAME.WIDTH);
-        const y = Phaser.Math.Between(30, GAME.HEIGHT * 0.4);
-        const scale = Phaser.Math.FloatBetween(0.5, 1.5);
-        const alpha = alphaBase * Phaser.Math.FloatBetween(0.5, 1.0);
+        const x = framework runtime.Math.Between(0, application.WIDTH);
+        const y = framework runtime.Math.Between(30, application.HEIGHT * 0.4);
+        const scale = framework runtime.Math.FloatBetween(0.5, 1.5);
+        const alpha = alphaBase * framework runtime.Math.FloatBetween(0.5, 1.0);
         clouds.push(this.createCloud(x, y, scale, alpha));
     }
     return clouds;
@@ -139,19 +139,19 @@ private createCloudLayer(count: number, alphaBase: number): Phaser.GameObjects.G
 Sine waves or noise drawn to Graphics, layered with different opacities:
 
 ```typescript
-private createHills(color: number, alpha: number, amplitude: number, frequency: number, yOffset: number, depth: number): Phaser.GameObjects.Graphics {
+private createHills(color: number, alpha: number, amplitude: number, frequency: number, yOffset: number, depth: number): framework runtime.applicationObjects.Graphics {
     const g = this.add.graphics();
     g.fillStyle(color, alpha);
     g.beginPath();
-    g.moveTo(0, GAME.HEIGHT);
+    g.moveTo(0, application.HEIGHT);
 
-    for (let x = 0; x <= GAME.WIDTH; x += 4) {
+    for (let x = 0; x <= application.WIDTH; x += 4) {
         const y = yOffset + Math.sin(x * frequency * 0.01) * amplitude
                            + Math.sin(x * frequency * 0.023) * (amplitude * 0.5);
         g.lineTo(x, y);
     }
 
-    g.lineTo(GAME.WIDTH, GAME.HEIGHT);
+    g.lineTo(application.WIDTH, application.HEIGHT);
     g.closePath();
     g.fillPath();
     g.setDepth(depth);
@@ -161,7 +161,7 @@ private createHills(color: number, alpha: number, amplitude: number, frequency: 
 
 ### Ambient Particles
 
-Use Phaser's particle system for dust, leaves, light motes — ambient life without assets:
+Use framework runtime's particle system for dust, leaves, light motes — ambient life without assets:
 
 ```typescript
 private createAmbientParticles(): void {
@@ -173,8 +173,8 @@ private createAmbientParticles(): void {
     g.destroy();
 
     this.add.particles(0, 0, 'particle', {
-        x: { min: 0, max: GAME.WIDTH },
-        y: { min: 0, max: GAME.HEIGHT },
+        x: { min: 0, max: application.WIDTH },
+        y: { min: 0, max: application.HEIGHT },
         scale: { start: 0.3, end: 0 },
         alpha: { start: 0.3, end: 0 },
         speed: { min: 5, max: 20 },
@@ -195,9 +195,9 @@ Dark edges, transparent center — adds instant cinematic polish:
 ```typescript
 private createVignette(): void {
     const g = this.add.graphics();
-    const cx = GAME.WIDTH / 2;
-    const cy = GAME.HEIGHT / 2;
-    const r = Math.max(GAME.WIDTH, GAME.HEIGHT) * 0.7;
+    const cx = application.WIDTH / 2;
+    const cy = application.HEIGHT / 2;
+    const r = Math.max(application.WIDTH, application.HEIGHT) * 0.7;
 
     // Radial gradient approximation with concentric rings
     const steps = 20;
@@ -211,12 +211,12 @@ private createVignette(): void {
 }
 ```
 
-### Player Glow
+### user Glow
 
-Subtle radial gradient following the player:
+Subtle radial gradient following the user:
 
 ```typescript
-private createGlow(target: Phaser.GameObjects.GameObject, color: number, radius: number): Phaser.GameObjects.Graphics {
+private createGlow(target: framework runtime.applicationObjects.applicationObject, color: number, radius: number): framework runtime.applicationObjects.Graphics {
     const g = this.add.graphics();
     const steps = 10;
     for (let i = steps; i >= 0; i--) {
@@ -224,11 +224,11 @@ private createGlow(target: Phaser.GameObjects.GameObject, color: number, radius:
         g.fillStyle(color, t * 0.15);
         g.fillCircle(0, 0, radius * (1 - t * 0.5));
     }
-    g.setBlendMode(Phaser.BlendModes.ADD);
+    g.setBlendMode(framework runtime.BlendModes.ADD);
     return g;
 }
 
-// In update: glow.setPosition(player.x, player.y);
+// In update: glow.setPosition(user.x, user.y);
 ```
 
 ### Sun Rays
@@ -238,20 +238,20 @@ Additive blend mode on white/yellow shapes:
 ```typescript
 private createSunRays(): void {
     const g = this.add.graphics();
-    g.setBlendMode(Phaser.BlendModes.ADD);
+    g.setBlendMode(framework runtime.BlendModes.ADD);
 
     for (let i = 0; i < 5; i++) {
-        const angle = Phaser.Math.DegToRad(-30 + i * 15);
-        const length = GAME.HEIGHT * 1.5;
+        const angle = framework runtime.Math.DegToRad(-30 + i * 15);
+        const length = application.HEIGHT * 1.5;
         g.fillStyle(0xffffff, 0.03);
         g.beginPath();
-        g.moveTo(GAME.WIDTH * 0.8, 0);
+        g.moveTo(application.WIDTH * 0.8, 0);
         g.lineTo(
-            GAME.WIDTH * 0.8 + Math.cos(angle) * length,
+            application.WIDTH * 0.8 + Math.cos(angle) * length,
             Math.sin(angle) * length,
         );
         g.lineTo(
-            GAME.WIDTH * 0.8 + Math.cos(angle + 0.05) * length,
+            application.WIDTH * 0.8 + Math.cos(angle + 0.05) * length,
             Math.sin(angle + 0.05) * length,
         );
         g.closePath();
@@ -270,7 +270,7 @@ Apply scale tweens on jumps, bounces, and landings:
 ```typescript
 // On jump
 this.tweens.add({
-    targets: player,
+    targets: user,
     scaleX: 0.8,
     scaleY: 1.3,
     duration: 100,
@@ -280,8 +280,8 @@ this.tweens.add({
 
 // Continuous velocity-based stretch (no tween needed)
 update(): void {
-    player.scaleY = 1 + (player.body!.velocity.y * 0.001);
-    player.scaleX = 1 - (Math.abs(player.body!.velocity.y) * 0.0005);
+    user.scaleY = 1 + (user.body!.velocity.y * 0.001);
+    user.scaleX = 1 - (Math.abs(user.body!.velocity.y) * 0.0005);
 }
 ```
 
@@ -290,10 +290,10 @@ update(): void {
 On impacts, deaths, explosions. Use intensities that are visible in video — subtle shakes disappear in compression.
 
 ```typescript
-// Light shake (score, small hit)
+// Light shake (KPI, small hit)
 this.cameras.main.shake(100, 0.008);
 
-// Medium shake (enemy destroyed, combo)
+// Medium shake (external dependency destroyed, combo)
 this.cameras.main.shake(150, 0.015);
 
 // Heavy shake (death, streak milestone, big explosion)
@@ -317,13 +317,13 @@ private spawnTrail(x: number, y: number, color: number): void {
     });
 }
 
-// Call in update for moving entities:
-// if (frameCount % 3 === 0) this.spawnTrail(player.x, player.y, PALETTE.ACCENT);
+// Call in update for moving domain components:
+// if (frameCount % 3 === 0) this.spawnTrail(user.x, user.y, PALETTE.ACCENT);
 ```
 
 ### Flash Effects
 
-Brief white flash on score, hit, or transition:
+Brief white flash on KPI, hit, or transition:
 
 ```typescript
 private flash(duration = 100, color = 0xffffff): void {
@@ -357,13 +357,13 @@ Never use linear tweens. Always specify an easing:
 | Jump / bounce | `Bounce.easeOut` |
 | UI slide in | `Back.easeOut` |
 | Fade out | `Quad.easeIn` |
-| Score pop | `Elastic.easeOut` |
+| KPI pop | `Elastic.easeOut` |
 | Smooth movement | `Sine.easeInOut` |
 | Impact | `Expo.easeOut` |
 
 ```typescript
-// Score pop animation
-private popScore(text: Phaser.GameObjects.Text): void {
+// KPI pop animation
+private popScore(text: framework runtime.applicationObjects.Text): void {
     this.tweens.add({
         targets: text,
         scale: 1.5,
@@ -376,35 +376,35 @@ private popScore(text: Phaser.GameObjects.Text): void {
 
 ## Spectacle Patterns
 
-These patterns make games visually compelling in short video clips. Wire them to `SPECTACLE_*` events from the EventBus so the design pass can plug them in without touching gameplay code.
+These patterns make applications visually compelling in short video clips. Wire them to `SPECTACLE_*` events from the EventBus so the design pass can plug them in without touching user workflow code.
 
 ### Opening Entrance Animation
 
-Fires in `create()` before any player input. The first 3 seconds decide whether a viewer keeps watching.
+Fires in `create()` before any user input. The first 3 seconds decide whether a viewer keeps watching.
 
 ```typescript
-// Flash + player slam-in
+// Flash + user slam-in
 private playEntrance(): void {
     this.cameras.main.flash(300, 255, 255, 255, true);
 
-    // Player starts above screen, slams into position
-    const targetY = this.player.y;
-    this.player.y = -100 * PX;
+    // user starts above screen, slams into position
+    const targetY = this.user.y;
+    this.user.y = -100 * PX;
     this.tweens.add({
-        targets: this.player,
+        targets: this.user,
         y: targetY,
         duration: 400,
         ease: 'Bounce.easeOut',
         onComplete: () => {
             this.cameras.main.shake(150, 0.012);
-            emitBurst(this, this.player.x, this.player.y, 20, PALETTE.ACCENT);
+            emitBurst(this, this.user.x, this.user.y, 20, PALETTE.ACCENT);
             eventBus.emit(Events.SPECTACLE_ENTRANCE);
         },
     });
 
-    // Optional flavor text — use only when it fits the game's vibe
+    // Optional flavor text — use only when it fits the application's vibe
     // (e.g., "GO!" for racing, "DODGE!" for avoidance, "FIGHT!" for combat)
-    const goText = this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2, 'GO!', {
+    const goText = this.add.text(application.WIDTH / 2, application.HEIGHT / 2, 'GO!', {
         fontSize: `${64 * PX}px`, fontFamily: 'Arial Black',
         color: '#ffffff', stroke: '#000000', strokeThickness: 6 * PX,
     }).setOrigin(0.5).setScale(0).setDepth(500);
@@ -426,7 +426,7 @@ Grows with consecutive hits. Wire to `SPECTACLE_COMBO`.
 ```typescript
 private showCombo(combo: number): void {
     const size = Math.min(32 + combo * 4, 72);
-    const comboText = this.add.text(GAME.WIDTH / 2, GAME.HEIGHT * 0.3, `${combo}x COMBO`, {
+    const comboText = this.add.text(application.WIDTH / 2, application.HEIGHT * 0.3, `${combo}x COMBO`, {
         fontSize: `${size * PX}px`, fontFamily: 'Arial Black',
         color: '#ffff00', stroke: '#000000', strokeThickness: 4 * PX,
     }).setOrigin(0.5).setScale(1.8).setDepth(400);
@@ -444,13 +444,13 @@ private showCombo(combo: number): void {
 
 ### Hit Freeze Frame (Hit Stop)
 
-60ms physics pause on impact. Makes hits feel powerful.
+60ms runtime behavior pause on impact. Makes hits feel powerful.
 
 ```typescript
 private hitFreeze(): void {
-    this.physics.world.pause();
+    this.runtime behavior.world.pause();
     this.time.delayedCall(60, () => {
-        this.physics.world.resume();
+        this.runtime behavior.world.resume();
     });
 }
 ```
@@ -462,9 +462,9 @@ Colored flashes for different event types.
 ```typescript
 private flashBurst(color: number, alpha = 0.4): void {
     const overlay = this.add.rectangle(
-        GAME.WIDTH / 2, GAME.HEIGHT / 2,
-        GAME.WIDTH, GAME.HEIGHT, color, alpha,
-    ).setDepth(900).setBlendMode(Phaser.BlendModes.ADD);
+        application.WIDTH / 2, application.HEIGHT / 2,
+        application.WIDTH, application.HEIGHT, color, alpha,
+    ).setDepth(900).setBlendMode(framework runtime.BlendModes.ADD);
     this.tweens.add({
         targets: overlay,
         alpha: 0,
@@ -480,27 +480,27 @@ Hue shifts over time for ambient visual energy.
 
 ```typescript
 private bgHue = 0;
-private bgGraphics: Phaser.GameObjects.Graphics;
+private bgGraphics: framework runtime.applicationObjects.Graphics;
 
 private updateBackgroundHue(delta: number): void {
     this.bgHue = (this.bgHue + delta * 0.02) % 360;
-    const color = Phaser.Display.Color.HSLToColor(this.bgHue / 360, 0.6, 0.15);
+    const color = framework runtime.Display.Color.HSLToColor(this.bgHue / 360, 0.6, 0.15);
     this.bgGraphics.clear();
     this.bgGraphics.fillStyle(color.color, 1);
-    this.bgGraphics.fillRect(0, 0, GAME.WIDTH, GAME.HEIGHT);
+    this.bgGraphics.fillRect(0, 0, application.WIDTH, application.HEIGHT);
 }
 ```
 
-### Pulsing Background on Score
+### Pulsing Background on KPI
 
-Additive blend overlay that flashes on score events.
+Additive blend overlay that flashes on KPI events.
 
 ```typescript
 private createScorePulse(): void {
     this.scorePulse = this.add.rectangle(
-        GAME.WIDTH / 2, GAME.HEIGHT / 2,
-        GAME.WIDTH, GAME.HEIGHT, PALETTE.ACCENT, 0,
-    ).setDepth(-50).setBlendMode(Phaser.BlendModes.ADD);
+        application.WIDTH / 2, application.HEIGHT / 2,
+        application.WIDTH, application.HEIGHT, PALETTE.ACCENT, 0,
+    ).setDepth(-50).setBlendMode(framework runtime.BlendModes.ADD);
 
     eventBus.on(Events.SCORE_CHANGED, () => {
         this.scorePulse.setAlpha(0.15);
@@ -514,13 +514,13 @@ private createScorePulse(): void {
 }
 ```
 
-### Entity Entrance Animations
+### domain component Entrance Animations
 
-Pop-in and slam-in patterns for spawning entities.
+Pop-in and slam-in patterns for spawning domain components.
 
 ```typescript
-// Pop-in: entity appears from scale 0
-private popIn(target: Phaser.GameObjects.GameObject, delay = 0): void {
+// Pop-in: domain component appears from scale 0
+private popIn(target: framework runtime.applicationObjects.applicationObject, delay = 0): void {
     (target as any).setScale(0);
     this.tweens.add({
         targets: target,
@@ -531,8 +531,8 @@ private popIn(target: Phaser.GameObjects.GameObject, delay = 0): void {
     });
 }
 
-// Slam-in: entity drops from above with bounce
-private slamIn(target: Phaser.GameObjects.GameObject, targetY: number, delay = 0): void {
+// Slam-in: domain component drops from above with bounce
+private slamIn(target: framework runtime.applicationObjects.applicationObject, targetY: number, delay = 0): void {
     (target as any).y = -50 * PX;
     this.tweens.add({
         targets: target,
@@ -547,14 +547,14 @@ private slamIn(target: Phaser.GameObjects.GameObject, targetY: number, delay = 0
 }
 ```
 
-### Persistent Player Trail
+### Persistent user Trail
 
-Continuous particle spawn behind the player.
+Continuous particle spawn behind the user.
 
 ```typescript
-private createPlayerTrail(): void {
-    this.playerTrail = this.add.particles(0, 0, 'particle', {
-        follow: this.player,
+private createuserTrail(): void {
+    this.userTrail = this.add.particles(0, 0, 'particle', {
+        follow: this.user,
         scale: { start: 0.6, end: 0 },
         alpha: { start: 0.5, end: 0 },
         speed: { min: 5, max: 15 },
@@ -592,7 +592,7 @@ private ringBurst(x: number, y: number, color: number, count = 24): void {
 
 ### Large Spectacle Burst
 
-Higher count, multi-color variant for big moments (streaks, game over).
+Higher count, multi-color variant for big moments (streaks, error/empty/success state).
 
 ```typescript
 private spectacleBurst(x: number, y: number, colors: number[], count = 30): void {
@@ -624,7 +624,7 @@ Full-screen text slam for streak milestones (5x, 10x, 25x).
 private announceStreak(streak: number): void {
     const labels: Record<number, string> = { 5: 'ON FIRE!', 10: 'UNSTOPPABLE!', 25: 'LEGENDARY!' };
     const label = labels[streak] || `${streak}x STREAK`;
-    const text = this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2, label, {
+    const text = this.add.text(application.WIDTH / 2, application.HEIGHT / 2, label, {
         fontSize: `${80 * PX}px`, fontFamily: 'Arial Black',
         color: '#ffffff', stroke: '#000000', strokeThickness: 8 * PX,
     }).setOrigin(0.5).setScale(3).setAlpha(0).setDepth(500);
@@ -639,17 +639,17 @@ private announceStreak(streak: number): void {
         onComplete: () => text.destroy(),
     });
     this.cameras.main.shake(200, 0.02);
-    this.spectacleBurst(GAME.WIDTH / 2, GAME.HEIGHT / 2,
+    this.spectacleBurst(application.WIDTH / 2, application.HEIGHT / 2,
         [PALETTE.ACCENT, PALETTE.HIGHLIGHT, 0xffffff], 40);
 }
 ```
 
-## Drawing Game Entities with Graphics
+## Drawing application domain components with Graphics
 
-### Simple Sprite-Like Entity
+### Simple product asset-Like domain component
 
 ```typescript
-private drawBird(g: Phaser.GameObjects.Graphics): void {
+private drawBird(g: framework runtime.applicationObjects.Graphics): void {
     // Body
     g.fillStyle(PALETTE.ACCENT);
     g.fillRoundedRect(-15, -12, 30, 24, 8);
@@ -684,41 +684,41 @@ update(delta: number): void {
 
 ## Checklist
 
-When building an asset-free game, verify:
+When building an asset-free application, verify:
 
 - [ ] Color palette defined in Constants (3-5 colors max)
 - [ ] Gradient background (never flat solid)
 - [ ] At least 2 parallax layers
 - [ ] Ambient particles or drifting elements
-- [ ] Squash/stretch on player movement
+- [ ] Squash/stretch on user movement
 - [ ] Screen shake on impacts
 - [ ] Eased tweens on all animations (never linear)
-- [ ] Score/text pop on change
-- [ ] Scene transitions (fade, flash, or slide)
+- [ ] KPI/text pop on change
+- [ ] screen/view transitions (fade, flash, or slide)
 - [ ] Consistent shape language (all rounded, or all angular — pick one)
 
 ## Viral Clip Checklist
 
-Every game is captured as a 13-second silent video clip for social media. Design for a viewer scrolling with sound off.
+Every application is captured as a 13-second silent video clip for social media. Design for a viewer scrolling with sound off.
 
-### First 3 seconds (before player input)
+### First 3 seconds (before user input)
 
-- [ ] **Screen flash** on scene start (white or accent color, 200-300ms)
-- [ ] **Player entrance animation** — slam-in or pop-in, not a static spawn
+- [ ] **Screen flash** on screen/view start (white or accent color, 200-300ms)
+- [ ] **user entrance animation** — slam-in or pop-in, not a static spawn
 - [ ] **Landing particles** — burst of 15-20 particles at spawn position
 - [ ] **Ambient motion** — background particles, color cycling, or parallax drift active immediately
-- [ ] **Optional flavor text** — "GO!", "DODGE!", etc. only when it naturally fits the game's theme
+- [ ] **Optional flavor text** — "GO!", "DODGE!", etc. only when it naturally fits the application's theme
 
 ### Every action (seconds 3-13)
 
-- [ ] **Particle burst** on every player action (minimum 12 particles per burst)
-- [ ] **Floating text** on every score event (28px+ font, scale 1.8 start with Elastic.easeOut)
-- [ ] **Screen shake** on every hit/score (minimum intensity 0.008)
-- [ ] **Background pulse** on score change (additive blend flash, alpha 0.15)
-- [ ] **Player trail** — continuous particle spawn behind the player
+- [ ] **Particle burst** on every user action (minimum 12 particles per burst)
+- [ ] **Floating text** on every KPI event (28px+ font, scale 1.8 start with Elastic.easeOut)
+- [ ] **Screen shake** on every hit/KPI (minimum intensity 0.008)
+- [ ] **Background pulse** on KPI change (additive blend flash, alpha 0.15)
+- [ ] **user trail** — continuous particle spawn behind the user
 - [ ] **Combo text** visible at 2x combo and above (scaling with combo count)
 - [ ] **Streak announcement** at milestones (5x, 10x, 25x — full-screen text slam)
-- [ ] **Hit freeze** on destruction events (60ms physics pause)
+- [ ] **Hit freeze** on destruction events (60ms runtime behavior pause)
 
 ### Intensity targets
 
@@ -726,4 +726,4 @@ Every game is captured as a 13-second silent video clip for social media. Design
 - Screen shake range: 0.008 (light) to 0.025 (heavy)
 - Floating text: 28px minimum, starting scale 1.8
 - Flash overlays: alpha 0.3-0.5 for visibility in compressed video
-- At least one visual effect firing every 0.5 seconds during active gameplay
+- At least one visual effect firing every 0.5 seconds during active user workflow

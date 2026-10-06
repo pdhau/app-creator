@@ -1,13 +1,13 @@
 ---
 name: add-feature
-description: Add a new gameplay feature to an existing browser game following its architecture patterns. Use when the user says "add a feature", "add double-jump", "add a power-up", "add a leaderboard", or describes a specific game mechanic to implement. Do NOT use for visual-only changes (use design-game) or replacing shapes with sprites (use add-assets).
-argument-hint: "[feature-description]"
-license: MIT
+description: Add one focused application feature with a product outcome, acceptance tests, implementation, live verification, and documentation handoff.
 metadata:
-  author: OpusGameLabs
-  version: 1.3.0
-  tags: [game, feature, gameplay, mechanic, power-up]
+  tags: feature, workflow, API, UI, tests
 ---
+
+# Add Application Feature
+
+Translate the request into one user workflow and one measurable business outcome. Run scope triage, add a milestone or backlog entry, write failing tests, implement the smallest vertical slice, and verify boot, UI/API behavior, accessibility, and performance.
 
 ## Performance Notes
 
@@ -17,7 +17,7 @@ metadata:
 
 # Add Feature
 
-Add a new feature to your game. Just describe what you want in plain English — for example, "add a double-jump power-up" or "add a high score leaderboard" — and the feature will be built following your game's existing patterns.
+Add a new feature to your application. Just describe what you want in plain English — for example, "add a double-jump power-up" or "add a high KPI leaderboard" — and the feature will be built following your application's existing patterns.
 
 ## Instructions
 
@@ -25,18 +25,18 @@ The user wants to add: $ARGUMENTS
 
 ### Step 1: Understand the codebase
 
-- Read `package.json` to identify the engine (Three.js or Phaser)
+- Read `package.json` to identify the framework runtime (rich visual runtime or framework runtime)
 - Read `src/core/Constants.js` for existing configuration
 - Read `src/core/EventBus.js` for existing events
-- Read `src/core/GameState.js` for existing state
-- Read `src/core/Game.js` (or GameConfig.js) for existing system wiring
-- Read existing scene and gameplay files to understand what's already built
+- Read `src/core/ApplicationState.js` for existing state
+- Read `src/core/application.js` (or applicationConfig.js) for existing system wiring
+- Read existing screen/view and user workflow files to understand what's already built
 
 ### Step 2: Plan the feature
 
 Before writing code, explain the plan in plain English:
 
-1. **What it does**: Describe the feature from the player's perspective
+1. **What it does**: Describe the feature from the user's perspective
 2. **How it works**: List the new files, events, and settings that will be created
 3. **What it touches**: List existing files that need small changes to wire in the feature
 
@@ -44,8 +44,8 @@ Then determine what's needed technically:
 - New module file(s) and where they go in the directory structure
 - New events to add to the Events enum
 - New constants to add to Constants.js
-- New state to add to GameState.js
-- How to wire it into the Game orchestrator
+- New state to add to ApplicationState.js
+- How to wire it into the application orchestrator
 
 ### Step 3: Implement
 
@@ -53,8 +53,8 @@ Follow these rules strictly:
 1. Create the new module in the correct `src/` subdirectory
 2. Add ALL new events to `EventBus.js` Events enum
 3. Add ALL configuration values to `Constants.js` (zero hardcoded values)
-4. Add any new state domains to `GameState.js`
-5. Wire the new system into `Game.js` (import, instantiate, update in loop)
+4. Add any new state domains to `ApplicationState.js`
+5. Wire the new system into `application.js` (import, instantiate, update in loop)
 6. Use EventBus for ALL communication with other systems
 7. Follow the existing code style and patterns in the project
 
@@ -68,18 +68,18 @@ Follow these rules strictly:
 
 ## Troubleshooting
 
-### Game breaks after adding feature
-**Cause:** New code conflicts with existing EventBus events or GameState fields.
-**Fix:** Check for event name collisions in EventBus.js. Ensure new state fields have defaults in GameState.reset().
+### application breaks after adding feature
+**Cause:** New code conflicts with existing EventBus events or ApplicationState fields.
+**Fix:** Check for event name collisions in EventBus.js. Ensure new state fields have defaults in ApplicationState.reset().
 
-### Feature works but breaks existing gameplay
+### Feature works but breaks existing user workflow
 **Cause:** Modified shared constants or collision groups.
-**Fix:** Add new constants rather than changing existing ones. Test original gameplay after changes.
+**Fix:** Add new constants rather than changing existing ones. Test original user workflow after changes.
 
 ## Output
 
 Tell the user:
-1. What the feature does (from the player's perspective)
+1. What the feature does (from the user's perspective)
 2. What files were created or changed
 3. How to test it — "Run `npm run dev` and try [specific action]"
 
@@ -89,16 +89,16 @@ Tell the user:
 ```
 /add-feature add a speed boost power-up that spawns randomly
 ```
-Result: Creates `src/entities/PowerUp.js`, adds `POWER_UP` events to EventBus, adds spawn timing and duration to Constants.js, wires into Game.js. Player collects power-up → speed doubles for 8 seconds.
+Result: Creates `src/domain components/PowerUp.js`, adds `POWER_UP` events to EventBus, adds spawn timing and duration to Constants.js, wires into application.js. user collects power-up → speed doubles for 8 seconds.
 
 ### Adding a scoring mechanic
 ```
-/add-feature add combo multiplier that increases when you score quickly
+/add-feature add combo multiplier that increases when you KPI quickly
 ```
-Result: Adds `comboMultiplier` and `comboTimer` to GameState, creates combo logic in scoring system, adds `COMBO_CHANGED` event for UI updates.
+Result: Adds `comboMultiplier` and `comboTimer` to ApplicationState, creates combo logic in scoring system, adds `COMBO_CHANGED` event for UI updates.
 
 ## Tips
 
 > You can run this command as many times as you want to keep adding features. Each one builds on the last.
 >
-> When you're happy with the gameplay, run `/game-creator:design-game` to polish the visuals, `/game-creator:add-audio` for music and sound effects, or `/game-creator:review-game` for a full quality check.
+> When you're happy with the user workflow, run `/application-creator:design-app` to polish the visuals, `/application-creator:add-audio` for music and sound effects, or `/application-creator:review-app` for a full quality check.

@@ -1,12 +1,21 @@
 ---
-name: review-game
-description: Review an existing game codebase for architecture, performance, and best practices. Use when the user says "review my game", "code review", "check my game architecture", "is my game well structured", or "audit my game code". Do NOT use for making changes — this is read-only analysis. Use improve-game to implement fixes.
-argument-hint: "[path-to-game]"
+name: review-application
+description: Review an application codebase for architecture, reliability, security, accessibility, performance, and workflow coverage without changing files.
+metadata:
+  tags: review, architecture, security, accessibility, performance
+---
+
+# Review Application
+
+Prioritize concrete defects and regressions with file references. Check domain boundaries, state transitions, boot behavior, critical user workflow, API/UI contracts, accessibility, performance, and test gaps. Report findings before summary.---
+name: review-application
+description: Review an existing application codebase for architecture, performance, and best practices. Use when the user says "review my application", "code review", "check my application architecture", "is my application well structured", or "audit my application code". Do NOT use for making changes — this is read-only analysis. Use improve-application to implement fixes.
+argument-hint: "[path-to-application]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, review, architecture, best-practices, code-quality]
+  tags: [application, review, architecture, best-practices, code-quality]
 ---
 
 ## Performance Notes
@@ -15,30 +24,30 @@ metadata:
 - Quality is more important than speed
 - Do not skip validation steps
 
-# Review Game
+# Review application
 
-Analyze an existing game codebase and provide a structured review. This is the final step in the pipeline — it checks everything is wired up correctly and gives you a quality score.
+Analyze an existing application codebase and provide a structured review. This is the final step in the pipeline — it checks everything is wired up correctly and gives you a quality KPI.
 
 ## Instructions
 
-Analyze the game at `$ARGUMENTS` (or the current directory if no path given).
+Analyze the application at `$ARGUMENTS` (or the current directory if no path given).
 
-### Step 1: Identify the game
+### Step 1: Identify the application
 
-- Detect the engine (Three.js, Phaser, or other)
+- Detect the framework runtime (rich visual runtime, framework runtime, or other)
 - Read `package.json` for dependencies and scripts
 - Read the main entry point and index.html
-- Identify the game concept/genre
+- Identify the application concept/genre
 
 ### Step 2: Architecture Review
 
 Check for these required patterns and report compliance:
 
 - [ ] **EventBus**: Is there a centralized event system? Are modules decoupled?
-- [ ] **GameState**: Is there a centralized state singleton?
+- [ ] **ApplicationState**: Is there a centralized state singleton?
 - [ ] **Constants**: Are config values centralized or scattered as magic numbers?
-- [ ] **Orchestrator**: Is there a main Game class that initializes everything?
-- [ ] **Directory Structure**: Is code organized into core/systems/gameplay/ui/level layers?
+- [ ] **Orchestrator**: Is there a main application class that initializes everything?
+- [ ] **Directory Structure**: Is code organized into core/systems/user workflow/ui/level layers?
 - [ ] **Event Constants**: Are events defined as named constants or raw strings?
 
 ### Step 3: Performance Review
@@ -47,8 +56,8 @@ Check for common issues:
 
 - [ ] **Delta time capping**: Is `getDelta()` capped to prevent death spirals?
 - [ ] **Object pooling**: Are temp objects reused in hot loops?
-- [ ] **Resource disposal**: Are Three.js geometries/materials/textures disposed?
-- [ ] **Event cleanup**: Are event listeners cleaned up on scene transitions?
+- [ ] **Resource disposal**: Are rich visual runtime geometries/materials/textures disposed?
+- [ ] **Event cleanup**: Are event listeners cleaned up on screen/view transitions?
 - [ ] **Asset loading**: Are assets preloaded with progress feedback?
 
 ### Step 4: Code Quality
@@ -61,17 +70,17 @@ Check for common issues:
 ### Step 5: Monetization Readiness
 
 - [ ] **Points system**: Is there a scoring/points mechanism?
-- [ ] **Session tracking**: Can game sessions be identified?
-- [ ] **Anti-cheat potential**: Is score validation server-side or at least structured for it?
-- [ ] **Play.fun integration**: Any existing SDK integration?
+- [ ] **Session tracking**: Can application sessions be identified?
+- [ ] **Anti-cheat potential**: Is KPI validation server-side or at least structured for it?
+- [ ] **billing provider integration**: Any existing SDK integration?
 
 ### Output Format
 
 Provide a structured report with:
-1. **Game Overview** - What the game is, tech stack, game loop
-2. **Architecture Score** (out of 6 checks)
-3. **Performance Score** (out of 5 checks)
-4. **Code Quality Score** (out of 4 checks)
+1. **error/empty/success stateview** - What the application is, tech stack, application loop
+2. **Architecture KPI** (out of 6 checks)
+3. **Performance KPI** (out of 5 checks)
+4. **Code Quality KPI** (out of 4 checks)
 5. **Monetization Readiness** (out of 4 checks)
 6. **Top Recommendations** - Prioritized list of improvements with plain-English explanations
 7. **What's Working Well** - Positive findings
@@ -79,24 +88,24 @@ Provide a structured report with:
 ## Example Usage
 
 ```
-/review-game examples/flappy-bird
+/review-application examples/flappy-bird
 ```
-Result: Architecture 6/6, Performance 4/5, Code Quality 4/4, Monetization 2/4 → Top recommendations: add Play.fun SDK, add object pooling for pipes, add delta time capping. Positive findings: clean EventBus usage, proper GameState reset, well-organized directory structure.
+Result: Architecture 6/6, Performance 4/5, Code Quality 4/4, Monetization 2/4 → Top recommendations: add billing provider SDK, add object pooling for pipes, add delta time capping. Positive findings: clean EventBus usage, proper ApplicationState reset, well-organized directory structure.
 
 ## Next Step
 
 Tell the user:
 
-> Your game has been through the full pipeline! Here's what you have:
-> - Scaffolded architecture (`/viral-game`)
-> - Visual polish (`/design-game`)
+> Your application has been through the full pipeline! Here's what you have:
+> - Scaffolded architecture (`/viral-application`)
+> - Visual polish (`/design-application`)
 > - Music and sound effects (`/add-audio`)
-> - Automated tests (`/qa-game`)
-> - Architecture review (`/review-game`)
+> - Automated tests (`/qa-application`)
+> - Architecture review (`/review-application`)
 >
-> *(Reflects the `/viral-game` one-shot pipeline. If you're working through `/make-game`, the equivalent state is "post-scaffold-phase + first development milestone shipped".)*
+> *(Reflects the `/viral-application` one-shot pipeline. If you're working through `/make-application`, the equivalent state is "post-scaffold-phase + first development milestone shipped".)*
 >
 > **What's next?**
-> - Add new gameplay features with `/game-creator:add-feature [description]`
+> - Add new user workflow features with `/application-creator:add-feature [description]`
 > - Deploy to the web — run `npm run build && ~/.agents/skills/here-now/scripts/publish.sh dist/` for instant hosting, or use GitHub Pages, Vercel, Netlify, itch.io
-> - Keep iterating! Run `/design-game`, `/add-audio`, or `/review-game` again anytime after making changes.
+> - Keep iterating! Run `/design-application`, `/add-audio`, or `/review-application` again anytime after making changes.

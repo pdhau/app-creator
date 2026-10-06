@@ -1,30 +1,39 @@
 ---
 name: threejs-perf
-description: Three.js performance optimization patterns for draw calls, scene traversal, and instancing. Use when optimizing 3D scenes with 100+ repeated objects, thousands of moving entities, or draw calls above 500. Loaded by threejs-game, viral-game, and make-game for performance guidance.
+description: Optimize application rendering, data access, interaction latency, bundle size, and resource usage with measurable budgets.
+metadata:
+  tags: performance, profiling, rendering, bundle, latency
+---
+
+# Application Performance
+
+Measure before changing code. Set budgets for boot, route transitions, interaction latency, network payloads, memory, and rendering. Optimize repeated work, cache deliberately, preserve correctness, and rerun the affected workflow on desktop and mobile.---
+name: threejs-perf
+description: rich visual runtime performance optimization patterns for draw calls, screen/view traversal, and instancing. Use when optimizing 3D screens/views with 100+ repeated objects, thousands of moving domain components, or draw calls above 500. Loaded by threejs-app, viral-app, and make-app for performance guidance.
 argument-hint: "[topic]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
   tags: [threejs, performance, instancing, draw-calls, optimization]
 ---
 
-# Three.js Performance Optimization
+# rich visual runtime Performance Optimization
 
-Performance patterns for Three.js games, backed by measured before/after numbers on Three.js r183 (headless Chromium via Playwright, Apple M1 Pro, software WebGL).
+Performance patterns for rich visual runtime applications, backed by measured before/after numbers on rich visual runtime r183 (headless Chromium via Playwright, Apple M1 Pro, software WebGL).
 
 ## Reference Files
 
 - `instancing-static.md` — InstancedMesh for large static repeated objects (19,600 → 1 draw call)
-- `instancing-moving.md` — Flat state buffer + batched InstancedMesh writes for moving entities (8,000 entities)
+- `instancing-moving.md` — Flat state buffer + batched InstancedMesh writes for moving domain components (8,000 domain components)
 - `templates/` — Baseline vs optimized reference implementations for each pattern
 
 ## When to Use This Skill
 
-- Scene has 100+ repeated objects sharing geometry/material
+- screen/view has 100+ repeated objects sharing geometry/material
 - Draw calls exceed 500 and frame time is unstable
-- Thousands of moving entities need per-frame transform updates
-- Profile shows scene-graph traversal as a bottleneck
+- Thousands of moving domain components need per-frame transform updates
+- Profile shows screen/view-graph traversal as a bottleneck
 
 ## When NOT to Use
 
@@ -45,7 +54,7 @@ Performance patterns for Three.js games, backed by measured before/after numbers
 for (let i = 0; i < 19600; i++) {
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, 0, z);
-  scene.add(mesh); // 19,600 draw calls
+  screen/view.add(mesh); // 19,600 draw calls
 }
 
 // Correct: one InstancedMesh
@@ -56,19 +65,19 @@ for (let i = 0; i < 19600; i++) {
   im.setMatrixAt(i, mat);
 }
 im.instanceMatrix.needsUpdate = true;
-scene.add(im); // 1 draw call
+screen/view.add(im); // 1 draw call
 ```
 
-## Pattern 2: Moving Entity Update Loops
+## Pattern 2: Moving domain component Update Loops
 
-**Problem**: Thousands of moving actors as individual Meshes = scene-graph churn + transform propagation.
+**Problem**: Thousands of moving actors as individual Meshes = screen/view-graph churn + transform propagation.
 
-**Solution**: Flat entity state buffer + batched `InstancedMesh.setMatrixAt()` writes.
+**Solution**: Flat domain component state buffer + batched `InstancedMesh.setMatrixAt()` writes.
 
 **Evidence**: 8,000 → 1 draw calls. Render CPU p95: 9.9ms → 0.5ms (~20× faster). Update loop p95: 1.4ms → 0.3ms. See `instancing-moving.md`.
 
 ```js
-// Anti-pattern: per-entity Mesh position writes
+// Anti-pattern: per-domain component Mesh position writes
 meshes.forEach((mesh, i) => {
   mesh.position.x = computeX(i, tick);
   mesh.position.y = computeY(i, tick);
@@ -95,16 +104,16 @@ Is the object repeated 50+ times with same geometry+material?
 
 ## Measured Results
 
-Headless Chromium 147 via Playwright, Three.js r183, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
+Headless Chromium 147 via Playwright, rich visual runtime r183, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
 
 | Scenario | Metric | Baseline | Optimized | Improvement |
 |----------|--------|----------|-----------|-------------|
 | Static World (19.6k cubes) | Draw calls | ~19,365 | 2 | ~9,682× |
 | Static World (19.6k cubes) | Render CPU p95 | 28.5ms | 0.5ms | ~57× |
 | Static World (19.6k cubes) | Build | 39.4ms | 3.9ms | ~10× |
-| Moving Entities (8k wave-field) | Draw calls | 8,000 | 1 | 8,000× |
-| Moving Entities (8k wave-field) | Render CPU p95 | 9.9ms | 0.5ms | ~20× |
-| Moving Entities (8k wave-field) | Update loop p95 | 1.4ms | 0.3ms | ~4.7× |
+| Moving domain components (8k wave-field) | Draw calls | 8,000 | 1 | 8,000× |
+| Moving domain components (8k wave-field) | Render CPU p95 | 9.9ms | 0.5ms | ~20× |
+| Moving domain components (8k wave-field) | Update loop p95 | 1.4ms | 0.3ms | ~4.7× |
 
 ### Methodology notes
 

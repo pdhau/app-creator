@@ -1,15 +1,25 @@
 ---
-name: make-game
-description: Use when the user wants to design, scaffold, build, or iterate on a video game — including brainstorming new game ideas, planning a gameplay loop, choosing an engine, scaffolding a project, adding features, fixing gameplay bugs, or working on assets. Triggers on phrases like "make a game", "create a [genre] game", "build a [type] game", "I want to make a [genre]", or any session inside a game project directory (has docs/, src/, or an engine config).
+name: application-development
+description: Use this skill to design, scaffold, build, test, and iterate on a web, desktop, mobile, CLI, or service application. Start with a product plan, then follow the idea, scaffold, and development workflows.
 metadata:
-  author: OpusGameLabs
-  version: "2.0"
-  tags: video games, threejs, unity, gaming, pipelines, commands, godot
+  author: application-creator
+  version: "3.0"
+  tags: application, product, workflow, planning, testing, delivery
 ---
 
-# Make Games
+# Application Development
 
-When working with a user to create a video game, reference the skills/pipelines/commands provided to help the user create a perfect pipeline for their game development.
+Use this entrypoint for application work. Keep the workflow explicit: idea -> scaffold -> development.
+
+## Rules
+
+- Do not create implementation files before the approved `docs/product-plan.md`, `docs/tech.md`, and first ADR exist.
+- Run `sub-pipelines/session-start.md` first in an existing repository.
+- Triage multi-request scope, write deferred work to `docs/backlog.md`, and work against one milestone at a time.
+- Write failing acceptance tests before implementation. Verify boot, user workflow, API/UI behavior, accessibility, and performance live after each change.
+- Update `docs/STATE.md`, milestone status, ADRs, and handoff notes whenever the repository changes.
+
+When working with a user to create an application, reference the skills and pipelines provided to guide the project from product idea to shipped software.
 
 Based on the state of the user's request, current codebase, and stage of development, choose the proper steps to take with the user to complete their request.
 
@@ -17,61 +27,26 @@ Based on the state of the user's request, current codebase, and stage of develop
 
 Use this skill when:
 
-- The user is brainstorming or describing a game idea (no project directory required — the idea phase exists exactly for this)
-- The current working directory is a game project (has `docs/`, source files, or an engine config like `package.json` with Phaser/Three.js, a Unity `Assets/`, a Godot `project.godot`, etc.)
-- The user wants to add gameplay features, fix gameplay bugs, work on assets, or iterate on game design
+- The user is brainstorming or describing a application idea (no project directory required — the idea phase exists exactly for this)
+- The current working directory is a application project (has `docs/`, source files, or an framework runtime config like `package.json` with framework runtime/rich visual runtime, a Unity `Assets/`, a Godot `project.godot`, etc.)
+- The user wants to add user workflow features, fix user workflow bugs, work on assets, or iterate on application design
 
 Do not use this skill when:
 
-- The user's request is unrelated to game development (general web apps, CLI tools, libraries, infrastructure, data work, etc.)
-- The user explicitly asks for a non-game artifact (e.g. "build me a chat app")
-- The user wants a **one-shot viral game** from a tweet, news story, or short prompt — shipped end-to-end in a single session with no milestone planning. Use [`/viral-game`](../viral-game/SKILL.md) instead. That pipeline is opinionated (Phaser/Three.js, here.now, Play.fun) and trades the planning rigor of this skill for ~10-minute time-to-deploy. If a `/viral-game` session outgrows itself (the user starts asking for milestones, ADRs, or long-term iteration), they should switch back to this skill.
+- The user's request is unrelated to application development (general web apps, CLI tools, libraries, infrastructure, data work, etc.)
+- The user explicitly asks for a non-application artifact (e.g. "build me a chat app")
+- The user wants a **one-shot viral application** from a tweet, news story, or short prompt — shipped end-to-end in a single session with no milestone planning. Use [`/viral-application`](../viral-application/SKILL.md) instead. That pipeline is opinionated (framework runtime/rich visual runtime, here.now, billing provider) and trades the planning rigor of this skill for ~10-minute time-to-deploy. If a `/viral-application` session outgrows itself (the user starts asking for milestones, ADRs, or long-term iteration), they should switch back to this skill.
 
-# Table of Contents
-
-1. Rules
-2. Phases
-3. Milestones
-4. Important Files
-5. Templates
-6. Sub-pipelines
-7. Other Skills
-
-# 1. Rules
-
-- **No code before plan.** If `docs/gameplan.md` does not exist, you MUST run the [idea-phase pipeline](phase-pipelines/idea.md) to completion — gameplan, `docs/tech.md`, and ADR-0001 written and user-confirmed — before creating any source files, running engine scaffolders, installing dependencies, or otherwise touching code. A detailed-sounding user prompt is **not** a substitute for the idea-phase questions: even if the user says "3D racing game with pixel art shaders," you do not yet know the gameplay loop, win condition, controls, scope, or target session length, and improvising those choices is the single biggest cause of refactoring later. Treat this as a hard tripwire — if you find yourself about to scaffold a project without a written gameplan the user has signed off on, stop and run the idea phase first. The clarifying-questions checklist in [idea.md](phase-pipelines/idea.md) is the minimum bar; do not skip items because the prompt "seems clear."
-- **Always run the [session-start sub-pipeline](sub-pipelines/session-start.md) first** when entering a session in an existing project directory. It recovers context (`docs/STATE.md`, `docs/gameplan.md`, `docs/tech.md`, milestones), determines the current phase, and confirms the next step with the user. Skip only if there is no project directory yet (idea-phase brand-new conversation).
-- When asking the user questions, use the `AskUserQuestion` tool. If you can provide some recommendations as multiple choice answers, with the option for the user to provide their own answer, that would be optimal.
-  - When asking questions, keep them focused, clear, and detailed. If the question may have some logical answers you can think of, provide those as possible answers for the user. This will help if they want to think of a solution themselves as well since they can pull from the different options you provided to curate the perfect answer.
-  - If you have prior memory or experience with the user, guage their technical ability/expertise, and shape your questions around that. If they do not seem technically advanced, make sure to ask questions in a way they would understand. Offering explanations for more advanced topics along with the question so they aren't answering them blindly.
-- Based on the current state of the codebase, the users request, and architectural decisions such as game engine, art style, etc. decide which phase of development the game is in, and start with the pipeline outlined for said phase. They are described in the next section.
-- When scaffolding a new project, do not use your embedded knowledge of how to setup the project — many things might have changed since you were trained. Find the newest version of the documentation, or ask the user to find a link and provide it to you. Read the newest installation instructions for the frameworks/libraries you are working with, and follow them according to the stack and setup the project already has set.
-- **Always prefer the engine's or framework's official scaffolding command over hand-rolling files.** Examples: `npm create @phaserjs/game@latest` for Phaser; `npm create vite@latest` (then `npm install three`) for Three.js; Unity's `-createProject` CLI (`"C:\Program Files\Unity\Hub\Editor\<version>\Editor\Unity.exe" -createProject "<path>" -quit` on Windows, `/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/MacOS/Unity -createProject <path> -quit` on macOS) or Unity Hub's "New project" dialog. For Godot/Unreal, ask the user to create the project from the editor. Hand-written `package.json`, bundler configs, or engine entry points cause version mismatches the moment a second library is added — do not do it. If you cannot find an official scaffolder and the user cannot point you to one, ask the user to initialize the project themselves and resume the session once it's ready, rather than improvising a setup. Full guidance and per-engine examples live in [scaffold.md](phase-pipelines/scaffold.md) step 3.
-- If the user has a large change to anything regarding core gameplay loop, architecture, etc., ensure that the relevant documentation in the `docs/` folder is updated to reflect their changes. For large architecture decisions, we should write to `docs/architectural-decisions` that can be referenced later with the changelogs. These changelogs must be detailed and include the reason for changing them. The `docs/gameplan.md` file must also be updated when these decisions are made, with referenced to the AD documents behind the changes.
-- **After every code change in the development phase, run the [live-iterate sub-pipeline](sub-pipelines/live-iterate.md).** It is the canonical real-time verification loop (console → `render_game_to_text()` → `advanceTime()` → screenshot if visual → user check). A change is not "done" until it has been iterated on.
-- **Write failing tests before writing the implementation.** Tests are the executable form of acceptance criteria — every checkable AC for the active milestone must have at least one test that asserts it, written first and confirmed to fail for the right reason before any implementation code is touched. Use Playwright (per `/qa-game`) for gameplay logic and visual baselines; unit tests for pure helpers; multi-client Playwright for multiplayer. Visual/feel AC that can't be meaningfully asserted (juice, polish) must be **explicitly** marked "verified by user playtest" in the milestone — never silently skipped. If the AC is too vague to write a test against, run [playtest / repro](sub-pipelines/playtest-repro.md) first to make it checkable. Loosening a failing test to make it pass is forbidden — fix the implementation, or update the milestone AC and rewrite the test.
-- **Keep every session focused on a single feature.** When the user's request implies more than one independent feature or change, run the [scope-triage sub-pipeline](sub-pipelines/scope-triage.md) before any coding: enumerate the asks, write the deferred ones to `docs/backlog.md`, and pick the single best balance of *important* and *easy to ship in one focused session* via `AskUserQuestion`. Sessions that try to carry multiple unrelated features cause context drift, make live-iterate verification ambiguous (which feature broke?), and leave milestones half-checked. Bundling features is allowed only when the user explicitly insists and acknowledges the trade-off.
-- **Nothing the user mentions gets silently dropped.** If a feature, polish item, refactor, or open question surfaces during a session but is out of scope, it must be appended to `docs/backlog.md` using the shape from [`templates/backlog.md`](templates/backlog.md). The backlog is the single home for "later" — never rely on conversation memory or `docs/STATE.md` notes to remember future work. The development pipeline and milestone planning both read this file.
-- **When the user needs a roadmap, run [milestone planning](sub-pipelines/milestone-planning.md), don't improvise.** Whenever the user asks "what's next?" / "what milestones do we need?" / "what's left to ship?" — or whenever open milestones run out before `docs/gameplan.md` is satisfied — derive the next 1–3 milestones from the **gap between the gameplan and current state + backlog**, ordered architecture-enabling first, then confirm via `AskUserQuestion` before writing any milestone files. Cap proposals at three: future milestones will look different once the next ones ship, so over-committing wastes planning effort. Never propose a milestone whose exit condition can't be written as "User does X → observes Y" — vague targets produce vague milestones.
-- **`AGENTS.md` must exist at the project root** for any project past the idea phase. It is the cross-tool, unconditionally-read enforcement file that guarantees future sessions follow this skill's rules even when the skill itself doesn't auto-trigger. If you find a project past the idea phase without an `AGENTS.md`, run the [agents-bootstrap sub-pipeline](sub-pipelines/agents-bootstrap.md) before continuing other work.
-- You MUST follow the pipelines outlined by each phase when working on the project based on the phase the project is in.
-
-## Minimum-viable doc mode
-
-If the user pushes back on documentation overhead ("just code it", "skip the docs"), do **not** silently abandon the doc rules — that is exactly how cross-session drift starts. Instead, downgrade to **minimum-viable doc mode** and tell the user you're doing so:
-
-- One-line milestone entry (title + one-line AC) is acceptable in place of a full milestone doc.
-- `docs/STATE.md` updates remain mandatory — even one line.
-- `docs/gameplan.md` and `docs/tech.md` remain mandatory if they don't yet exist (otherwise the next session has no source of truth).
-- ADRs may be deferred only if the change is _not_ a top-level architectural decision. Engine, language, and stack ADRs cannot be skipped.
-
-The point is to compress the docs, not delete them. If the user wants no docs at all, that signals they want a different tool — say so honestly rather than running this skill in a degraded state.
+- `docs/product-plan.md` and `docs/tech.md` remain mandatory if they don't yet exist (otherwise the next session has no source of truth).
+  author: application-creator
+  version: "3.0"
+  tags: application, product, workflow, planning, testing, delivery
 
 # 2. Phases
-
+# Application Development
 ## Idea Phase
-
-The user has an idea for a game, but no codebase or documentation around it yet. Maybe there is concept art or some sort of lore they've come up with. In this phase, you should help the user brainstorm, develop, and iron out their game idea and gameplay loop.
+When working with a user to create an application, reference the skills, pipelines, and commands provided to guide the project from product idea to shipped software.
+The user has an idea for a application, but no codebase or documentation around it yet. Maybe there is concept art or some sort of lore they've come up with. In this phase, you should help the user brainstorm, develop, and iron out their application idea and user workflow loop.
 
 ## Pipeline
 
@@ -80,15 +55,15 @@ Refer to [this document](phase-pipelines/idea.md) for the idea phase pipeline. F
 #### Requirements for Phase Completion
 
 - [ ] `docs/` folder is created in the project directory
-- [ ] `docs/gameplan.md` is written with detailed game information based on brainstorming and planning with the user
+- [ ] `docs/product-plan.md` is written with detailed application information based on brainstorming and planning with the user
 - [ ] `docs/tech.md` is written with detailed tech stack information, with the use of each library/framework included
-- [ ] `docs/architectural-decisions/` folder exists with `0001-engine-and-stack.md` locking the engine, language, and art-style decisions
+- [ ] `docs/architectural-decisions/` folder exists with `0001-framework runtime-and-stack.md` locking the framework runtime, language, and art-style decisions
 
 If the project directory has not been created yet, ask the user for permission to create a new project directory and write the folders/files there. Before moving to the next phase, ask the user to start a new session in the project directory so it becomes your CWD. Provide a resume prompt for the new session.
 
 ## Scaffold Phase
 
-After the idea for the game has been solidified, help the user scaffold the project. The methods used to scaffold said project will depend on the tech stack used for the project.
+After the idea for the application has been solidified, help the user scaffold the project. The methods used to scaffold said project will depend on the tech stack used for the project.
 
 ## Pipeline
 
@@ -98,9 +73,9 @@ Refer to [this document](phase-pipelines/scaffold.md) for the scaffold phase pip
 
 - [ ] Initial project files exist in the project directory
 - [ ] Dependencies are installed
-- [ ] Game boots in the browser (or the engine's play mode), the initial scene renders, and the console is error-free
+- [ ] application boots in the browser (or the framework runtime's play mode), the initial screen/view renders, and the console is error-free
 - [ ] `AGENTS.md` and `CLAUDE.md` exist at the project root (see [agents-bootstrap sub-pipeline](sub-pipelines/agents-bootstrap.md))
-- [ ] A future agent can run the project with one well-known command (`npm run dev`, engine equivalent) without further setup
+- [ ] A future agent can run the project with one well-known command (`npm run dev`, framework runtime equivalent) without further setup
 
 "No compilation errors" alone is not sufficient — projects often build clean and crash on boot. The smoke test in [`scaffold.md`](phase-pipelines/scaffold.md) is mandatory before declaring this phase complete.
 
@@ -150,17 +125,17 @@ When in doubt, prefer spawning a new milestone over inflating the current one. A
 
 # 4. Important Files
 
-## `docs/gameplan.md`
+## `docs/product-plan.md`
 
-The main source of truth around the game and idea of the game. Includes gameplay loop, rules, main game idea, art style, etc.
+The main source of truth around the application and idea of the application. Includes user workflow loop, rules, main application idea, art style, etc.
 
 ### When to read
 
-At the start of every session. When reading through milestones. When gathering context about the game around the user's request.
+At the start of every session. When reading through milestones. When gathering context about the application around the user's request.
 
 ### When to write
 
-When the user wants to change how the game works, when rules change, etc. This is the main source of truth for how the game should work.
+When the user wants to change how the application works, when rules change, etc. This is the main source of truth for how the application should work.
 
 ## `docs/tech.md`
 
@@ -172,11 +147,11 @@ At the start of every session. When planning out milestones and architectural de
 
 ### When to write
 
-When adding new tech to the stack or changing out the core game engines/libraries/frameworks being used.
+When adding new tech to the stack or changing out the core application engines/libraries/frameworks being used.
 
 ## `docs/milestones/*.md`
 
-Detailed milestones for different features and tasks that eventually build the game.
+Detailed milestones for different features and tasks that eventually build the application.
 
 ### When to read
 
@@ -190,7 +165,7 @@ You should not have to update milestones once written unless there are explicit 
 
 ## `docs/architectural-decisions/*.md`
 
-Detailed ADRs for different top-level architectural decisions. Use [`templates/adr.md`](templates/adr.md) when creating one. The first ADR (`0001`) should be created at the end of the idea phase to lock in engine / language / art-style decisions.
+Detailed ADRs for different top-level architectural decisions. Use [`templates/adr.md`](templates/adr.md) when creating one. The first ADR (`0001`) should be created at the end of the idea phase to lock in framework runtime / language / art-style decisions.
 
 ## `docs/backlog.md`
 
@@ -231,12 +206,12 @@ Generated by the [agents-bootstrap sub-pipeline](sub-pipelines/agents-bootstrap.
 
 ### When to read
 
-`AGENTS.md` is read by other agents — you don't need to read it during a normal `make-game` session because the source of truth lives in `docs/`. Read it when auditing for drift, when the user reports an outside agent ignored the rules, or before regenerating it.
+`AGENTS.md` is read by other agents — you don't need to read it during a normal `make-application` session because the source of truth lives in `docs/`. Read it when auditing for drift, when the user reports an outside agent ignored the rules, or before regenerating it.
 
 ### When to write
 
 - End of the scaffold phase (mandatory).
-- During the doc-backfill branch of [session-start](sub-pipelines/session-start.md), once `gameplan.md` and `tech.md` exist.
+- During the doc-backfill branch of [session-start](sub-pipelines/session-start.md), once `product-plan.md` and `tech.md` exist.
 - After a top-level stack or architecture change — regenerate.
 - When the [doc-drift audit](sub-pipelines/doc-drift-audit.md) flags `AGENTS.md` as stale.
 
@@ -244,16 +219,16 @@ Every architecture rule in `AGENTS.md` must also live in `docs/tech.md` or an AD
 
 # 5. Templates
 
-When creating any of the docs the skill mandates (`gameplan.md`, `tech.md`, milestones, ADRs, `STATE.md`), copy the structure from [`templates/`](templates/README.md) rather than improvising. Consistent structure across sessions is the highest-leverage anti-drift mechanism in this skill.
+When creating any of the docs the skill mandates (`product-plan.md`, `tech.md`, milestones, ADRs, `STATE.md`), copy the structure from [`templates/`](templates/README.md) rather than improvising. Consistent structure across sessions is the highest-leverage anti-drift mechanism in this skill.
 
 # 6. Sub-pipelines
 
-These sub-pipelines can be used for individual steps during development, such as asset genration, lore building, gameplay loop building, research, etc.
+These sub-pipelines can be used for individual steps during development, such as asset genration, lore building, user workflow loop building, research, etc.
 
 Refer to [this document](sub-pipelines/README.md) to see all currently available sub-pipelines. Use them when necessary only if the task calls for it. Always refer to sub-pipelines to see if there's one available to use before starting your own pipeline of work.
 
 # 7. Other Skills
 
-It may be useful to install other skills to the project. There are many other skills in the `game-creator` Skill suite and plugin that can interlace with this skill.
+It may be useful to install other skills to the project. There are many other skills in the `application-creator` Skill suite and plugin that can interlace with this skill.
 
 Refer to [this document](useful-skills.md) to see skills you can install to the project directory that will help with development, planning, asset generation, etc based on what project you're working on.

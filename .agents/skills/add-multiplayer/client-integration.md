@@ -2,19 +2,19 @@
 
 Source code for the three new client-side files plus the additive patches to existing core files.
 
-## File: `src/multiplayer/MultiplayerClient.js`
+## File: `src/multiuser/MultiuserClient.js`
 
-The single seam between game code and the wire protocol. If a future user wants Colyseus or fly.io+ws, only this file changes.
+The single seam between application code and the wire protocol. If a future user wants Colyseus or fly.io+ws, only this file changes.
 
 ```js
-// src/multiplayer/MultiplayerClient.js
+// src/multiuser/MultiuserClient.js
 // Backend-agnostic WebSocket client. Wraps partysocket.
 // Public API: connect, send, onMessage, onOpen, onClose, disconnect, isConnected.
 // All errors are caught and routed through onClose/onError callbacks — never thrown.
 
 import PartySocket from 'partysocket';
 
-export class MultiplayerClient {
+export class MultiuserClient {
   constructor() {
     this.socket = null;
     this.handlers = {
@@ -38,7 +38,7 @@ export class MultiplayerClient {
         this.handlers.message(parsed);
       });
     } catch (err) {
-      console.warn('[MultiplayerClient] connect failed', err);
+      console.warn('[MultiuserClient] connect failed', err);
       this.handlers.error(err);
     }
   }
@@ -49,7 +49,7 @@ export class MultiplayerClient {
       this.socket.send(JSON.stringify(message));
       return true;
     } catch (err) {
-      console.warn('[MultiplayerClient] send failed', err);
+      console.warn('[MultiuserClient] send failed', err);
       return false;
     }
   }
@@ -73,96 +73,96 @@ export class MultiplayerClient {
 
 `partysocket` already implements automatic reconnect — but we run our own reconnect logic in `NetworkManager` so we can emit clear events and apply our own backoff. To disable partysocket's reconnect and rely solely on ours, pass `startClosed: true` to the constructor and call `socket.reconnect()` manually; for v1 we let partysocket handle reconnect and just observe via `open`/`close` events.
 
-## File: `src/multiplayer/RemotePlayerRegistry.js`
+## File: `src/multiuser/RemoteuserRegistry.js`
 
-Owns the `Map<playerId, RemotePlayer>` that the rest of the game reads. Keeps `gameState.multiplayer.remotePlayers` in sync (passed in by `NetworkManager`).
+Owns the `Map<userId, Remoteuser>` that the rest of the application reads. Keeps `applicationState.multiuser.remoteusers` in sync (passed in by `NetworkManager`).
 
 ```js
-// src/multiplayer/RemotePlayerRegistry.js
-// Tracks remote players keyed by playerId. Mirrors entries into gameState.multiplayer.remotePlayers
-// so render_game_to_text() can serialize with one read. Provides stale-eviction.
+// src/multiuser/RemoteuserRegistry.js
+// Tracks remote users keyed by userId. Mirrors entries into applicationState.multiuser.remoteusers
+// so render_application_to_text() can serialize with one read. Provides stale-eviction.
 
-export class RemotePlayerRegistry {
-  constructor(gameState) {
-    this.gameState = gameState;
+export class RemoteuserRegistry {
+  constructor(applicationState) {
+    this.applicationState = applicationState;
   }
 
-  upsert(playerId, partial) {
-    const existing = this.gameState.multiplayer.remotePlayers[playerId] ?? {};
-    this.gameState.multiplayer.remotePlayers[playerId] = {
+  upsert(userId, partial) {
+    const existing = this.applicationState.multiuser.remoteusers[userId] ?? {};
+    this.applicationState.multiuser.remoteusers[userId] = {
       ...existing,
       ...partial,
       lastSeenTs: Date.now(),
     };
   }
 
-  remove(playerId) {
-    delete this.gameState.multiplayer.remotePlayers[playerId];
+  remove(userId) {
+    delete this.applicationState.multiuser.remoteusers[userId];
   }
 
-  has(playerId) {
-    return playerId in this.gameState.multiplayer.remotePlayers;
+  has(userId) {
+    return userId in this.applicationState.multiuser.remoteusers;
   }
 
   list() {
-    return Object.entries(this.gameState.multiplayer.remotePlayers).map(([id, p]) => ({ id, ...p }));
+    return Object.entries(this.applicationState.multiuser.remoteusers).map(([id, p]) => ({ id, ...p }));
   }
 
-  // Returns playerIds pruned (so caller can emit player-left events).
+  // Returns userIds pruned (so caller can emit user-left events).
   prune(staleMs) {
     const now = Date.now();
     const pruned = [];
-    for (const [id, p] of Object.entries(this.gameState.multiplayer.remotePlayers)) {
+    for (const [id, p] of Object.entries(this.applicationState.multiuser.remoteusers)) {
       if (now - (p.lastSeenTs ?? 0) > staleMs) {
         pruned.push(id);
-        delete this.gameState.multiplayer.remotePlayers[id];
+        delete this.applicationState.multiuser.remoteusers[id];
       }
     }
     return pruned;
   }
 
   clear() {
-    this.gameState.multiplayer.remotePlayers = {};
+    this.applicationState.multiuser.remoteusers = {};
   }
 }
 ```
 
 ## File: `src/systems/NetworkManager.js`
 
-Wires `MultiplayerClient` ↔ `EventBus` ↔ `RemotePlayerRegistry`. Owns the broadcast tick (realtime mode) and the prune interval. **Never throws out of any public method.**
+Wires `MultiuserClient` ↔ `EventBus` ↔ `RemoteuserRegistry`. Owns the broadcast tick (realtime mode) and the prune interval. **Never throws out of any public method.**
 
 ```js
 // src/systems/NetworkManager.js
-// Single source of truth for network I/O. Subscribes to game events, forwards to server,
-// dispatches server messages to EventBus + RemotePlayerRegistry.
-// Single-player must work when init() fails — every error is caught and surfaced via
-// network:disconnected. Gameplay never depends on the server being reachable.
+// Single source of truth for network I/O. Subscribes to application events, forwards to server,
+// dispatches server messages to EventBus + RemoteuserRegistry.
+// Single-user must work when init() fails — every error is caught and surfaced via
+// network:disconnected. user workflow never depends on the server being reachable.
 
 import { Events } from '../core/EventBus.js';
-// Adapt this import to match the game's Constants.js export shape:
-//   - Umbrella:  import { Constants } from '../core/Constants.js'  →  Constants.MULTIPLAYER.X
-//   - Per-block: import { MULTIPLAYER } from '../core/Constants.js' →  MULTIPLAYER.X
-// (Most game-creator scaffolds use per-block. Read Constants.js first.)
+// Adapt this import to match the application's Constants.js export shape:
+//   - Umbrella:  import { Constants } from '../core/Constants.js'  →  Constants.MULTIuser.X
+//   - Per-block: import { MULTIuser } from '../core/Constants.js' →  MULTIuser.X
+// (Most application-creator scaffolds use per-block. Read Constants.js first.)
 import { Constants } from '../core/Constants.js';
-import { MultiplayerClient } from '../multiplayer/MultiplayerClient.js';
-import { RemotePlayerRegistry } from '../multiplayer/RemotePlayerRegistry.js';
+import { MultiuserClient } from '../multiuser/MultiuserClient.js';
+import { RemoteuserRegistry } from '../multiuser/RemoteuserRegistry.js';
 
 const MODE_REALTIME = 'realtime';
 const MODE_TURN_BASED = 'turn-based';
 
 export class NetworkManager {
   // mode: 'realtime' | 'turn-based'
-  // sampler: () => object   — only used in realtime mode; returns the local player's state slice
+  // sampler: () => object   — only used in realtime mode; returns the local user's state slice
   // moveEvents: string[]    — only used in turn-based mode; EventBus event names whose payloads to forward
-  constructor({ eventBus, gameState, mode, sampler, moveEvents = [] }) {
+  constructor({ eventBus, applicationState, mode, sampler, moveEvents = [] }) {
     this.eventBus = eventBus;
-    this.gameState = gameState;
+    this.applicationState = applicationState;
     this.mode = mode;
     this.sampler = sampler ?? (() => null);
     this.moveEvents = moveEvents;
 
-    this.client = new MultiplayerClient();
-    this.registry = new RemotePlayerRegistry(gameState);
+    this.client = new MultiuserClient();
+    this.registry = new RemoteuserRegistry(applicationState);
 
     this.tickInterval = null;
     this.pruneInterval = null;
@@ -173,10 +173,10 @@ export class NetworkManager {
     this.boundHandlers = {};
   }
 
-  async init(roomId = Constants.MULTIPLAYER.DEFAULT_ROOM) {
-    this.gameState.multiplayer.roomId = roomId;
+  async init(roomId = Constants.MULTIuser.DEFAULT_ROOM) {
+    this.applicationState.multiuser.roomId = roomId;
     this._wireClient();
-    this._wireGameEvents();
+    this._wireapplicationEvents();
     this._connect(roomId);
   }
 
@@ -185,22 +185,22 @@ export class NetworkManager {
     this._stopTick();
     this._stopPrune();
     this._cancelReconnect();
-    this._unwireGameEvents();
+    this._unwireapplicationEvents();
     this.client.disconnect();
     this.registry.clear();
-    this.gameState.multiplayer.connected = false;
+    this.applicationState.multiuser.connected = false;
   }
 
   isConnected() {
     return this.client.isConnected();
   }
 
-  getPlayerId() {
-    return this.gameState.multiplayer.playerId;
+  getuserId() {
+    return this.applicationState.multiuser.userId;
   }
 
   getRoomId() {
-    return this.gameState.multiplayer.roomId;
+    return this.applicationState.multiuser.roomId;
   }
 
   // ---- private ----
@@ -214,8 +214,8 @@ export class NetworkManager {
     this.client.onMessage((msg) => {
       switch (msg?.type) {
         case 'welcome':       return this._onWelcome(msg);
-        case 'player-joined': return this._onPlayerJoined(msg);
-        case 'player-left':   return this._onPlayerLeft(msg);
+        case 'user-joined': return this._onuserJoined(msg);
+        case 'user-left':   return this._onuserLeft(msg);
         case 'state':         return this._onState(msg);
         case 'turn':          return this._onTurn(msg);
         case 'reject':        console.warn('[NetworkManager] server rejected', msg.reason); return;
@@ -227,10 +227,10 @@ export class NetworkManager {
     this.client.onError(() => { /* close will follow */ });
   }
 
-  _wireGameEvents() {
+  _wireapplicationEvents() {
     this.boundHandlers.joinRoom = ({ roomId } = {}) => {
-      if (!roomId || roomId === this.gameState.multiplayer.roomId) return;
-      this.gameState.multiplayer.roomId = roomId;
+      if (!roomId || roomId === this.applicationState.multiuser.roomId) return;
+      this.applicationState.multiuser.roomId = roomId;
       // Not connected → just connect, nothing to hand off.
       if (!this.client.isConnected()) {
         this._connect(roomId);
@@ -247,8 +247,8 @@ export class NetworkManager {
     };
     this.boundHandlers.leaveRoom = () => this.destroy();
 
-    this.eventBus.on(Events.MULTIPLAYER_JOIN_ROOM, this.boundHandlers.joinRoom);
-    this.eventBus.on(Events.MULTIPLAYER_LEAVE_ROOM, this.boundHandlers.leaveRoom);
+    this.eventBus.on(Events.MULTIuser_JOIN_ROOM, this.boundHandlers.joinRoom);
+    this.eventBus.on(Events.MULTIuser_LEAVE_ROOM, this.boundHandlers.leaveRoom);
 
     if (this.mode === MODE_TURN_BASED) {
       this.boundHandlers.move = (payload) => {
@@ -261,9 +261,9 @@ export class NetworkManager {
     }
   }
 
-  _unwireGameEvents() {
-    this.eventBus.off(Events.MULTIPLAYER_JOIN_ROOM, this.boundHandlers.joinRoom);
-    this.eventBus.off(Events.MULTIPLAYER_LEAVE_ROOM, this.boundHandlers.leaveRoom);
+  _unwireapplicationEvents() {
+    this.eventBus.off(Events.MULTIuser_JOIN_ROOM, this.boundHandlers.joinRoom);
+    this.eventBus.off(Events.MULTIuser_LEAVE_ROOM, this.boundHandlers.leaveRoom);
     if (this.mode === MODE_TURN_BASED) {
       for (const evt of this.moveEvents) {
         this.eventBus.off(evt, this.boundHandlers.move);
@@ -275,11 +275,11 @@ export class NetworkManager {
     // Guard `import.meta` for non-Vite contexts (some test runners, SSR, plain
     // Node). Without the typeof check, this throws a SyntaxError at parse time
     // in environments where import.meta isn't a thing.
-    const envHost = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_MULTIPLAYER_SERVER_URL) || null;
-    const host = envHost ?? Constants.MULTIPLAYER.SERVER_URL;
+    const envHost = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_MULTIuser_SERVER_URL) || null;
+    const host = envHost ?? Constants.MULTIuser.SERVER_URL;
     if (!host) {
-      console.warn('[NetworkManager] no SERVER_URL configured — multiplayer disabled');
-      this.gameState.multiplayer.connected = false;
+      console.warn('[NetworkManager] no SERVER_URL configured — multiuser disabled');
+      this.applicationState.multiuser.connected = false;
       this.eventBus.emit(Events.NETWORK_DISCONNECTED, { reason: 'error' });
       return;
     }
@@ -294,7 +294,7 @@ export class NetworkManager {
   _onSocketClosed() {
     this._stopTick();
     this._stopPrune();
-    this.gameState.multiplayer.connected = false;
+    this.applicationState.multiuser.connected = false;
     this.registry.clear();
     this.eventBus.emit(Events.NETWORK_DISCONNECTED, { reason: this.intentionalDisconnect ? 'closed' : 'error' });
     if (!this.intentionalDisconnect) this._scheduleReconnect();
@@ -303,17 +303,17 @@ export class NetworkManager {
 
   _scheduleReconnect() {
     if (this.reconnectTimer) return;
-    if (this.reconnectAttempts >= Constants.MULTIPLAYER.RECONNECT_MAX_ATTEMPTS) {
+    if (this.reconnectAttempts >= Constants.MULTIuser.RECONNECT_MAX_ATTEMPTS) {
       console.warn('[NetworkManager] reconnect attempts exhausted');
       return;
     }
-    const base = Constants.MULTIPLAYER.RECONNECT_BACKOFF_MS;
-    const max = Constants.MULTIPLAYER.RECONNECT_MAX_BACKOFF_MS;
+    const base = Constants.MULTIuser.RECONNECT_BACKOFF_MS;
+    const max = Constants.MULTIuser.RECONNECT_MAX_BACKOFF_MS;
     const delay = Math.min(base * Math.pow(2, this.reconnectAttempts), max);
     this.reconnectAttempts += 1;
     this.reconnectTimer = setTimeout(() => {
       this.reconnectTimer = null;
-      this._connect(this.gameState.multiplayer.roomId ?? Constants.MULTIPLAYER.DEFAULT_ROOM);
+      this._connect(this.applicationState.multiuser.roomId ?? Constants.MULTIuser.DEFAULT_ROOM);
     }, delay);
   }
 
@@ -324,47 +324,47 @@ export class NetworkManager {
     }
   }
 
-  _onWelcome({ playerId, peers = [] }) {
-    this.gameState.multiplayer.playerId = playerId;
-    this.gameState.multiplayer.connected = true;
+  _onWelcome({ userId, peers = [] }) {
+    this.applicationState.multiuser.userId = userId;
+    this.applicationState.multiuser.connected = true;
     for (const peer of peers) {
-      this.registry.upsert(peer.playerId, { name: peer.name, ...(peer.state ?? {}) });
-      this.eventBus.emit(Events.NETWORK_PLAYER_JOINED, { playerId: peer.playerId, name: peer.name });
+      this.registry.upsert(peer.userId, { name: peer.name, ...(peer.state ?? {}) });
+      this.eventBus.emit(Events.NETWORK_user_JOINED, { userId: peer.userId, name: peer.name });
     }
     this.eventBus.emit(Events.NETWORK_CONNECTED, {
-      roomId: this.gameState.multiplayer.roomId,
-      playerId,
+      roomId: this.applicationState.multiuser.roomId,
+      userId,
     });
     if (this.mode === MODE_REALTIME) this._startTick();
     this._startPrune();
   }
 
-  _onPlayerJoined({ playerId, name }) {
-    this.registry.upsert(playerId, { name });
-    this.eventBus.emit(Events.NETWORK_PLAYER_JOINED, { playerId, name });
+  _onuserJoined({ userId, name }) {
+    this.registry.upsert(userId, { name });
+    this.eventBus.emit(Events.NETWORK_user_JOINED, { userId, name });
   }
 
-  _onPlayerLeft({ playerId }) {
-    this.registry.remove(playerId);
-    this.eventBus.emit(Events.NETWORK_PLAYER_LEFT, { playerId });
+  _onuserLeft({ userId }) {
+    this.registry.remove(userId);
+    this.eventBus.emit(Events.NETWORK_user_LEFT, { userId });
   }
 
-  _onState({ playerId, state }) {
-    if (playerId === this.gameState.multiplayer.playerId) return;  // never render self
-    this.registry.upsert(playerId, state);
-    this.eventBus.emit(Events.NETWORK_STATE_RECEIVED, { playerId, state });
+  _onState({ userId, state }) {
+    if (userId === this.applicationState.multiuser.userId) return;  // never render self
+    this.registry.upsert(userId, state);
+    this.eventBus.emit(Events.NETWORK_STATE_RECEIVED, { userId, state });
   }
 
-  _onTurn({ playerId, resultingState, turn }) {
+  _onTurn({ userId, resultingState, turn }) {
     this.eventBus.emit(Events.NETWORK_STATE_RECEIVED, {
-      playerId,
+      userId,
       state: { type: 'turn', resultingState, turn, ts: Date.now() },
     });
   }
 
   _startTick() {
     if (this.tickInterval) return;
-    const intervalMs = 1000 / Constants.MULTIPLAYER.TICK_RATE_HZ;
+    const intervalMs = 1000 / Constants.MULTIuser.TICK_RATE_HZ;
     this.tickInterval = setInterval(() => {
       const sample = this.sampler();
       if (!sample) return;
@@ -381,10 +381,10 @@ export class NetworkManager {
 
   _startPrune() {
     if (this.pruneInterval) return;
-    const intervalMs = 1000 / Constants.MULTIPLAYER.TICK_RATE_HZ;
+    const intervalMs = 1000 / Constants.MULTIuser.TICK_RATE_HZ;
     this.pruneInterval = setInterval(() => {
-      const pruned = this.registry.prune(Constants.MULTIPLAYER.STALE_PLAYER_MS);
-      for (const id of pruned) this.eventBus.emit(Events.NETWORK_PLAYER_LEFT, { playerId: id });
+      const pruned = this.registry.prune(Constants.MULTIuser.STALE_user_MS);
+      for (const id of pruned) this.eventBus.emit(Events.NETWORK_user_LEFT, { userId: id });
     }, intervalMs);
   }
 
@@ -402,42 +402,42 @@ export class NetworkManager {
 Append to `src/core/EventBus.js` inside the `Events` constant, just before the closing `}`:
 
 ```js
-// === Multiplayer ===
+// === Multiuser ===
 NETWORK_CONNECTED: 'network:connected',
 NETWORK_DISCONNECTED: 'network:disconnected',
-NETWORK_PLAYER_JOINED: 'network:player-joined',
-NETWORK_PLAYER_LEFT: 'network:player-left',
+NETWORK_user_JOINED: 'network:user-joined',
+NETWORK_user_LEFT: 'network:user-left',
 NETWORK_STATE_RECEIVED: 'network:state-received',
-MULTIPLAYER_JOIN_ROOM: 'multiplayer:join-room',
-MULTIPLAYER_LEAVE_ROOM: 'multiplayer:leave-room',
+MULTIuser_JOIN_ROOM: 'multiuser:join-room',
+MULTIuser_LEAVE_ROOM: 'multiuser:leave-room',
 ```
 
-## GameState.js — Append Block
+## ApplicationState.js — Append Block
 
-Append to the GameState constructor / initial state object:
+Append to the ApplicationState constructor / initial state object:
 
 ```js
-// === Multiplayer ===
-this.multiplayer = {
+// === Multiuser ===
+this.multiuser = {
   // Persistent across reset() — preserved so /reset rejoins the same room.
   roomId: null,
-  playerId: null,
+  userId: null,
 
   // Transient — cleared by reset().
   connected: false,
-  remotePlayers: {},  // { [playerId]: { x, y, z?, score, name?, lastSeenTs } }
+  remoteusers: {},  // { [userId]: { x, y, z?, KPI, name?, lastSeenTs } }
 };
 ```
 
-In `reset()`, append (with a `this.multiplayer` guard — `reset()` is often called from the GameState constructor, possibly *before* the `this.multiplayer = {...}` block runs):
+In `reset()`, append (with a `this.multiuser` guard — `reset()` is often called from the ApplicationState constructor, possibly *before* the `this.multiuser = {...}` block runs):
 
 ```js
-// === Multiplayer (transient only) ===
-if (this.multiplayer) {
-  this.multiplayer.connected = false;
-  this.multiplayer.remotePlayers = {};
+// === Multiuser (transient only) ===
+if (this.multiuser) {
+  this.multiuser.connected = false;
+  this.multiuser.remoteusers = {};
 }
-// roomId and playerId persist intentionally.
+// roomId and userId persist intentionally.
 ```
 
 ## Constants.js — Append Block
@@ -445,12 +445,12 @@ if (this.multiplayer) {
 Append to the `Constants` object:
 
 ```js
-// === Multiplayer ===
-MULTIPLAYER: {
+// === Multiuser ===
+MULTIuser: {
   SERVER_URL: 'https://<project>.<user>.partykit.dev',  // filled by deploy step
   DEFAULT_ROOM: 'lobby',
 
-  MAX_PLAYERS: 4,
+  MAX_userS: 4,
   MAX_MESSAGE_BYTES: 4096,
 
   TICK_RATE_HZ: 20,
@@ -460,7 +460,7 @@ MULTIPLAYER: {
   RECONNECT_MAX_BACKOFF_MS: 16000,
   RECONNECT_MAX_ATTEMPTS: 10,
 
-  STALE_PLAYER_MS: 5000,
+  STALE_user_MS: 5000,
 
   PROTOCOL_VERSION: 1,
 },
@@ -474,26 +474,26 @@ Patch 1 — imports (top of file):
 import { NetworkManager } from './systems/NetworkManager.js';
 ```
 
-Patch 2 — instantiate after EventBus + GameState are ready, before the engine starts.
+Patch 2 — instantiate after EventBus + ApplicationState are ready, before the framework runtime starts.
 
-For **realtime** games — the sampler reads the local entity from GameState:
+For **realtime** applications — the sampler reads the local domain component from ApplicationState:
 
 ```js
 const networkManager = new NetworkManager({
   eventBus,
-  gameState,
+  appState,
   mode: 'realtime',
   sampler: () => {
-    // Replace `bird` with the game's local entity name from GameState.
-    const e = gameState.bird;
+    // Replace `bird` with the application's local domain component name from ApplicationState.
+    const e = applicationState.bird;
     if (!e) return null;
     return {
       x: e.x,
       y: e.y,
       vx: e.vx ?? 0,
       vy: e.vy ?? 0,
-      score: gameState.score ?? 0,
-      alive: !gameState.gameOver,
+      KPI: applicationState.KPI ?? 0,
+      alive: !applicationState.applicationOver,
     };
   },
 });
@@ -502,137 +502,137 @@ networkManager.init().catch(err => console.warn('[main] NetworkManager init fail
 window.__NETWORK_MANAGER__ = networkManager;
 ```
 
-For **turn-based** games — pass the move event names instead:
+For **turn-based** applications — pass the move event names instead:
 
 ```js
 const networkManager = new NetworkManager({
   eventBus,
-  gameState,
+  applicationState,
   mode: 'turn-based',
-  moveEvents: [Events.PLAYER_MOVED, Events.CARD_PLAYED],  // adapt to actual events
+  moveEvents: [Events.USER_MOVED, Events.CARD_PLAYED],  // adapt to actual events
 });
 
 networkManager.init().catch(err => console.warn('[main] NetworkManager init failed', err));
 window.__NETWORK_MANAGER__ = networkManager;
 ```
 
-Patch 3 — extend `window.render_game_to_text()` additively. Find the existing payload object and add:
+Patch 3 — extend `window.render_application_to_text()` additively. Find the existing payload object and add:
 
 ```js
-payload.multiplayer = {
-  roomId: gameState.multiplayer.roomId,
-  playerId: gameState.multiplayer.playerId,
-  connected: gameState.multiplayer.connected,
+payload.multiuser = {
+  roomId: appState.multiuser.roomId,
+  userId: appState.multiuser.userId,
+  connected: appState.multiuser.connected,
 };
-payload.remotePlayers = Object.entries(gameState.multiplayer.remotePlayers).map(
+payload.remoteUsers = Object.entries(appState.multiuser.remoteUsers).map(
   ([id, p]) => ({
     id,
     x: p.x,
     y: p.y,
     ...(p.z !== undefined ? { z: p.z } : {}),
-    score: p.score,
+    KPI: p.KPI,
     name: p.name,
     alive: p.alive,
   })
 );
 ```
 
-## Phaser Scene Integration
+## framework runtime screen/view Integration
 
 ### Welcome-race gotcha
 
-Under fast local connections (and `npx partykit dev` in particular), the WebSocket `welcome` arrives before scene `create()` finishes registering listeners. The result: code that *only* listens for `NETWORK_CONNECTED` / `NETWORK_PLAYER_JOINED` to set up remote sprites silently misses the initial peers — `eventBus.on(...)` is called *after* the events have already fired, so the listener never runs.
+Under fast local connections (and `npx partykit dev` in particular), the WebSocket `welcome` arrives before screen/view `create()` finishes registering listeners. The result: code that *only* listens for `NETWORK_CONNECTED` / `NETWORK_user_JOINED` to set up remote product assets silently misses the initial peers — `eventBus.on(...)` is called *after* the events have already fired, so the listener never runs.
 
 **Fix pattern**: register the listener AND seed from current state right after registration. Both branches are idempotent so it's safe even when the race doesn't happen:
 
 ```js
 // Subscribe…
-this.eventBus.on(Events.NETWORK_PLAYER_JOINED, this._onRemoteJoined, this);
+this.eventBus.on(Events.NETWORK_USER_JOINED, this._onRemoteJoined, this);
 
-// …and seed from whatever's already in GameState (in case welcome was already processed)
-if (this.gameState.multiplayer.connected) {
-  for (const id of Object.keys(this.gameState.multiplayer.remotePlayers)) {
-    this._onRemoteJoined({ playerId: id });
+// …and seed from whatever's already in ApplicationState (in case welcome was already processed)
+if (this.appState.multiuser.connected) {
+  for (const id of Object.keys(this.appState.multiuser.remoteUsers)) {
+    this._onRemoteJoined({ userId: id });
   }
 }
 ```
 
-The same pattern applies to `NETWORK_CONNECTED` listeners — also check `gameState.multiplayer.connected` after subscribing.
+The same pattern applies to `NETWORK_CONNECTED` listeners — also check `applicationState.multiuser.connected` after subscribing.
 
-### Scene patch
+### screen/view patch
 
-In the active GameScene (typically `src/scenes/GameScene.js`):
+In the active applicationScene (typically `src/screens/views/applicationScene.js`):
 
 ```js
 import { Events } from '../core/EventBus.js';
 import { Constants } from '../core/Constants.js';
 
 create() {
-  // ...existing single-player creation...
+  // ...existing single-user creation...
 
   this.remoteSprites = new Map();
 
-  this.eventBus.on(Events.NETWORK_PLAYER_JOINED, this._onRemoteJoined, this);
+  this.eventBus.on(Events.NETWORK_USER_JOINED, this._onRemoteJoined, this);
   this.eventBus.on(Events.NETWORK_STATE_RECEIVED, this._onRemoteState, this);
-  this.eventBus.on(Events.NETWORK_PLAYER_LEFT, this._onRemoteLeft, this);
+  this.eventBus.on(Events.NETWORK_USER_LEFT, this._onRemoteLeft, this);
 
   // Welcome-race seed — handle peers that joined before listener registration.
-  if (this.gameState.multiplayer.connected) {
-    for (const [id, peer] of Object.entries(this.gameState.multiplayer.remotePlayers)) {
-      this._onRemoteJoined({ playerId: id });
-      if (peer.x !== undefined) this._onRemoteState({ playerId: id, state: peer });
+  if (this.appState.multiuser.connected) {
+    for (const [id, peer] of Object.entries(this.appState.multiuser.remoteUsers)) {
+      this._onRemoteJoined({ userId: id });
+      if (peer.x !== undefined) this._onRemoteState({ userId: id, state: peer });
     }
   }
 }
 
-_onRemoteJoined({ playerId }) {
-  const sprite = this.add.sprite(0, 0, 'bird');  // adapt asset key
-  sprite.setAlpha(0.7);
-  sprite.setData('targetX', sprite.x);
-  sprite.setData('targetY', sprite.y);
-  this.remoteSprites.set(playerId, sprite);
+_onRemoteJoined({ userId }) {
+  const asset = this.add.asset(0, 0, 'domain-item');  // adapt asset key
+  asset.setAlpha(0.7);
+  asset.setData('targetX', asset.x);
+  asset.setData('targetY', asset.y);
+  this.remoteAssets.set(userId, asset);
 }
 
-_onRemoteState({ playerId, state }) {
-  const sprite = this.remoteSprites.get(playerId);
-  if (!sprite) return;
-  sprite.setData('targetX', state.x);
-  sprite.setData('targetY', state.y);
-  if (state.alive === false) sprite.setVisible(false);
-  else sprite.setVisible(true);
+_onRemoteState({ userId, state }) {
+  const asset = this.remoteAssets.get(userId);
+  if (!asset) return;
+  asset.setData('targetX', state.x);
+  asset.setData('targetY', state.y);
+  if (state.active === false) asset.setVisible(false);
+  else asset.setVisible(true);
 }
 
-_onRemoteLeft({ playerId }) {
-  const sprite = this.remoteSprites.get(playerId);
-  if (sprite) sprite.destroy();
-  this.remoteSprites.delete(playerId);
+_onRemoteLeft({ userId }) {
+  const asset = this.remoteAssets.get(userId);
+  if (asset) asset.destroy();
+  this.remoteAssets.delete(userId);
 }
 
 update(time, delta) {
   // ...existing local update...
 
-  // Smooth remote players toward their target positions.
-  const lerp = Math.min(1, delta / Constants.MULTIPLAYER.STATE_INTERPOLATE_MS);
-  for (const sprite of this.remoteSprites.values()) {
-    const tx = sprite.getData('targetX');
-    const ty = sprite.getData('targetY');
-    sprite.x += (tx - sprite.x) * lerp;
-    sprite.y += (ty - sprite.y) * lerp;
+  // Smooth remote users toward their target positions.
+  const lerp = Math.min(1, delta / Constants.MULTIuser.STATE_INTERPOLATE_MS);
+  for (const asset of this.remoteAssets.values()) {
+    const tx = asset.getData('targetX');
+    const ty = asset.getData('targetY');
+    asset.x += (tx - asset.x) * lerp;
+    asset.y += (ty - asset.y) * lerp;
   }
 }
 
 shutdown() {
-  this.eventBus.off(Events.NETWORK_PLAYER_JOINED, this._onRemoteJoined, this);
+  this.eventBus.off(Events.NETWORK_USER_JOINED, this._onRemoteJoined, this);
   this.eventBus.off(Events.NETWORK_STATE_RECEIVED, this._onRemoteState, this);
-  this.eventBus.off(Events.NETWORK_PLAYER_LEFT, this._onRemoteLeft, this);
-  for (const sprite of this.remoteSprites.values()) sprite.destroy();
-  this.remoteSprites.clear();
+  this.eventBus.off(Events.NETWORK_USER_LEFT, this._onRemoteLeft, this);
+  for (const asset of this.remoteAssets.values()) asset.destroy();
+  this.remoteAssets.clear();
 }
 ```
 
-## Three.js Integration
+## rich visual runtime Integration
 
-In the orchestrator (typically `src/core/Game.js`):
+In the orchestrator (typically `src/core/application.js`):
 
 ```js
 import * as THREE from 'three';
@@ -644,33 +644,33 @@ constructor(/* ... */) {
 
   this.remoteMeshes = new Map();
 
-  this.eventBus.on(Events.NETWORK_PLAYER_JOINED, ({ playerId }) => {
-    const mesh = this._createRemotePlayerMesh();
-    mesh.userData = { playerId, targetX: 0, targetY: 0, targetZ: 0 };
+  this.eventBus.on(Events.NETWORK_USER_JOINED, ({ userId }) => {
+    const mesh = this._createRemoteuserMesh();
+    mesh.userData = { userId, targetX: 0, targetY: 0, targetZ: 0 };
     this.scene.add(mesh);
-    this.remoteMeshes.set(playerId, mesh);
+    this.remoteMeshes.set(userId, mesh);
   });
 
-  this.eventBus.on(Events.NETWORK_STATE_RECEIVED, ({ playerId, state }) => {
-    const mesh = this.remoteMeshes.get(playerId);
+  this.eventBus.on(Events.NETWORK_STATE_RECEIVED, ({ userId, state }) => {
+    const mesh = this.remoteMeshes.get(userId);
     if (!mesh || state?.x === undefined) return;
     mesh.userData.targetX = state.x;
     mesh.userData.targetY = state.y;
     mesh.userData.targetZ = state.z ?? 0;
   });
 
-  this.eventBus.on(Events.NETWORK_PLAYER_LEFT, ({ playerId }) => {
-    const mesh = this.remoteMeshes.get(playerId);
+  this.eventBus.on(Events.NETWORK_USER_LEFT, ({ userId }) => {
+    const mesh = this.remoteMeshes.get(userId);
     if (!mesh) return;
     this.scene.remove(mesh);
     mesh.geometry?.dispose();
     if (Array.isArray(mesh.material)) mesh.material.forEach(m => m.dispose());
     else mesh.material?.dispose();
-    this.remoteMeshes.delete(playerId);
+    this.remoteMeshes.delete(userId);
   });
 }
 
-_createRemotePlayerMesh() {
+_createRemoteuserMesh() {
   // Replace with real model. This stub renders a translucent capsule.
   const geometry = new THREE.CapsuleGeometry(0.3, 1, 4, 8);
   const material = new THREE.MeshStandardMaterial({ color: 0x4488ff, transparent: true, opacity: 0.7 });
@@ -680,7 +680,7 @@ _createRemotePlayerMesh() {
 update(deltaSec) {
   // ...existing local update...
 
-  const lerp = Math.min(1, deltaSec * 1000 / Constants.MULTIPLAYER.STATE_INTERPOLATE_MS);
+  const lerp = Math.min(1, deltaSec * 1000 / Constants.MULTIuser.STATE_INTERPOLATE_MS);
   for (const mesh of this.remoteMeshes.values()) {
     const u = mesh.userData;
     mesh.position.x += (u.targetX - mesh.position.x) * lerp;
@@ -690,7 +690,7 @@ update(deltaSec) {
 }
 ```
 
-Three.js cleanup is more involved than Phaser — always dispose geometries and materials in the `network:player-left` handler to avoid GPU memory leaks.
+rich visual runtime cleanup is more involved than framework runtime — always dispose geometries and materials in the `network:user-left` handler to avoid GPU memory leaks.
 
 ## `package.json` Diff
 
@@ -709,13 +709,13 @@ Run `npm install partysocket` to add it. The version range follows the latest st
 Create `.env` (gitignored):
 
 ```
-VITE_MULTIPLAYER_SERVER_URL=https://<project>.<user>.partykit.dev
+VITE_MULTIuser_SERVER_URL=https://<project>.<user>.partykit.dev
 ```
 
 Create `.env.example` (committed):
 
 ```
-VITE_MULTIPLAYER_SERVER_URL=https://your-project.your-username.partykit.dev
+VITE_MULTIuser_SERVER_URL=https://your-project.your-username.partykit.dev
 ```
 
 The `VITE_` prefix is required for Vite to expose the variable to client code.

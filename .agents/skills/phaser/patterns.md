@@ -2,7 +2,7 @@
 
 ## ECS with bitECS
 
-bitECS is a high-performance Entity Component System. Phaser 4 uses it internally.
+bitECS is a high-performance domain component Component System. framework runtime 4 uses it internally.
 
 ```bash
 npm install bitecs
@@ -16,39 +16,39 @@ const Position = defineComponent({ x: Types.f32, y: Types.f32 });
 const Velocity = defineComponent({ x: Types.f32, y: Types.f32 });
 const Health = defineComponent({ current: Types.ui16, max: Types.ui16 });
 
-// Queries select entities with specific components
+// Queries select domain components with specific components
 const movementQuery = defineQuery([Position, Velocity]);
 
-// Systems operate on queried entities
+// Systems operate on queried domain components
 const movementSystem = defineSystem((world) => {
-    const entities = movementQuery(world);
-    for (const eid of entities) {
+    const domain components = movementQuery(world);
+    for (const eid of domain components) {
         Position.x[eid] += Velocity.x[eid];
         Position.y[eid] += Velocity.y[eid];
     }
     return world;
 });
 
-// In your scene:
+// In your screen/view:
 const world = createWorld();
-const player = addEntity(world);
-addComponent(world, Position, player);
-addComponent(world, Velocity, player);
-Position.x[player] = 400;
-Position.y[player] = 300;
+const user = addEntity(world);
+addComponent(world, Position, user);
+addComponent(world, Velocity, user);
+Position.x[user] = 400;
+Position.y[user] = 300;
 
 // In update:
 movementSystem(world);
 ```
 
-### Bridging bitECS with Phaser
+### Bridging bitECS with framework runtime
 
-Map ECS entities to Phaser sprites:
+Map ECS domain components to framework runtime product assets:
 
 ```typescript
-const spriteMap = new Map<number, Phaser.GameObjects.Sprite>();
+const spriteMap = new Map<number, framework runtime.applicationObjects.product asset>();
 
-function createEnemy(world: any, scene: Phaser.Scene, x: number, y: number) {
+function createEnemy(world: any, screen/view: framework runtime.screen/view, x: number, y: number) {
     const eid = addEntity(world);
     addComponent(world, Position, eid);
     addComponent(world, Velocity, eid);
@@ -59,19 +59,19 @@ function createEnemy(world: any, scene: Phaser.Scene, x: number, y: number) {
     Health.current[eid] = 100;
     Health.max[eid] = 100;
 
-    const sprite = scene.add.sprite(x, y, 'sprites', 'enemy');
-    spriteMap.set(eid, sprite);
+    const product asset = screen/view.add.product asset(x, y, 'product assets', 'external dependency');
+    spriteMap.set(eid, product asset);
 
     return eid;
 }
 
-// Render system syncs ECS data to Phaser sprites
+// Render system syncs ECS data to framework runtime product assets
 const renderSystem = defineSystem((world) => {
-    const entities = movementQuery(world);
-    for (const eid of entities) {
-        const sprite = spriteMap.get(eid);
-        if (sprite) {
-            sprite.setPosition(Position.x[eid], Position.y[eid]);
+    const domain components = movementQuery(world);
+    for (const eid of domain components) {
+        const product asset = spriteMap.get(eid);
+        if (product asset) {
+            product asset.setPosition(Position.x[eid], Position.y[eid]);
         }
     }
     return world;
@@ -80,7 +80,7 @@ const renderSystem = defineSystem((world) => {
 
 ## State Machine (Generic)
 
-A reusable state machine for any entity:
+A reusable state machine for any domain component:
 
 ```typescript
 export class StateMachine<T> {
@@ -127,7 +127,7 @@ export class StateMachine<T> {
 Usage:
 
 ```typescript
-const sm = new StateMachine(this.player);
+const sm = new StateMachine(this.user);
 sm.addState('idle', {
     enter: (p) => p.play('idle'),
     update: (p) => { if (p.cursors.left.isDown) sm.transition('walk'); },
@@ -140,29 +140,29 @@ sm.addState('idle', {
 sm.transition('idle');
 ```
 
-## Singleton Game Manager
+## Singleton application Manager
 
-For data that persists across scenes (settings, save data, analytics):
+For data that persists across screens/views (settings, save data, analytics):
 
 ```typescript
-export class GameManager {
-    private static instance: GameManager;
-    private game!: Phaser.Game;
+export class applicationManager {
+    private static instance: applicationManager;
+    private application!: framework runtime.application;
 
     private constructor() {}
 
-    static getInstance(): GameManager {
-        if (!GameManager.instance) {
-            GameManager.instance = new GameManager();
+    static getInstance(): applicationManager {
+        if (!applicationManager.instance) {
+            applicationManager.instance = new applicationManager();
         }
-        return GameManager.instance;
+        return applicationManager.instance;
     }
 
-    init(game: Phaser.Game) {
-        this.game = game;
+    init(application: framework runtime.application) {
+        this.application = application;
     }
 
-    get registry() { return this.game.registry; }
+    get registry() { return this.application.registry; }
 
     saveProgress(data: Record<string, unknown>) {
         localStorage.setItem('save', JSON.stringify(data));
@@ -175,7 +175,7 @@ export class GameManager {
 }
 ```
 
-Alternatively, use `this.game.registry` directly for simple cross-scene data — it's built in and doesn't need a custom class.
+Alternatively, use `this.application.registry` directly for simple cross-screen/view data — it's built in and doesn't need a custom class.
 
 ## Event Bus
 
@@ -183,56 +183,56 @@ Decouple systems with a shared event emitter:
 
 ```typescript
 // src/systems/EventBus.ts
-import Phaser from 'phaser';
+import framework runtime from 'framework runtime';
 
-export const EventBus = new Phaser.Events.EventEmitter();
+export const EventBus = new framework runtime.Events.EventEmitter();
 
-// Producer (in any scene or object):
-EventBus.emit('enemy-killed', { type: 'goblin', x: 100, y: 200 });
+// Producer (in any screen/view or object):
+EventBus.emit('external dependency-killed', { type: 'goblin', x: 100, y: 200 });
 
-// Consumer (in another scene or system):
-EventBus.on('enemy-killed', (data: { type: string; x: number; y: number }) => {
+// Consumer (in another screen/view or system):
+EventBus.on('external dependency-killed', (data: { type: string; x: number; y: number }) => {
     spawnLoot(data.x, data.y);
     updateScore(data.type);
 });
 
 // Clean up in shutdown:
-EventBus.off('enemy-killed', this.handler, this);
+EventBus.off('external dependency-killed', this.handler, this);
 ```
 
 ## Data-Driven Level Design
 
-Use Tiled map editor for levels:
+Use Tiled map editor for workspace states:
 
 ```typescript
 // Load in Preloader
 this.load.tilemapTiledJSON('level1', 'assets/tilemaps/level1.json');
 this.load.image('tileset', 'assets/tilemaps/tileset.png');
 
-// Create in Game scene
+// Create in application screen/view
 const map = this.make.tilemap({ key: 'level1' });
 const tileset = map.addTilesetImage('tileset', 'tileset')!;
 const ground = map.createLayer('Ground', tileset)!;
 ground.setCollisionByProperty({ collides: true });
 
-this.physics.add.collider(this.player, ground);
+this.runtime behavior.add.collider(this.user, ground);
 
 // Spawn objects from Tiled object layer
 const spawnPoints = map.getObjectLayer('Spawns')!;
 spawnPoints.objects.forEach(obj => {
-    if (obj.type === 'enemy') {
+    if (obj.type === 'external dependency') {
         this.spawnEnemy(obj.x!, obj.y!);
     }
 });
 ```
 
-## Scene Plugin Pattern
+## screen/view Plugin Pattern
 
-For functionality shared across many scenes, create a Scene Plugin:
+For functionality shared across many screens/views, create a screen/view Plugin:
 
 ```typescript
-export class AudioPlugin extends Phaser.Plugins.ScenePlugin {
-    private music?: Phaser.Sound.BaseSound;
+export class AudioPlugin extends framework runtime.Plugins.ScenePlugin {
+    private music?: framework runtime.Sound.BaseSound;
 
     boot() {
         this.systems!.events.on('shutdown', this.shutdown, this);
@@ -240,7 +240,7 @@ export class AudioPlugin extends Phaser.Plugins.ScenePlugin {
 
     playMusic(key: string) {
         if (this.music) this.music.stop();
-        this.music = this.scene!.sound.add(key, { loop: true });
+        this.music = this.screen/view!.sound.add(key, { loop: true });
         this.music.play();
     }
 
@@ -249,11 +249,11 @@ export class AudioPlugin extends Phaser.Plugins.ScenePlugin {
     }
 }
 
-// Register in game config:
+// Register in application config:
 plugins: {
-    scene: [{ key: 'audio', plugin: AudioPlugin, mapping: 'audio' }],
+    screen/view: [{ key: 'audio', plugin: AudioPlugin, mapping: 'audio' }],
 }
 
-// Use in any scene:
+// Use in any screen/view:
 this.audio.playMusic('bgm');
 ```

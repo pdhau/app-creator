@@ -1,17 +1,26 @@
 ---
-name: game-audio
-description: Game audio engineer using Web Audio API for procedural music and sound effects in browser games. Zero dependencies. Use when adding music or SFX to a game.
+name: application-notifications-media
+description: Design application notifications, transactional media, sound feedback, and user-controlled media preferences without coupling product behavior to one provider.
+metadata:
+  tags: notifications, media, accessibility, preferences, integration
+---
+
+# Notifications and Media
+
+Model notification intent separately from delivery providers. Cover success, warning, error, and empty states; respect mute, permission, reduced-motion, and retry preferences. Test delivery failure, duplicate prevention, accessibility announcements, and fallback UI.---
+name: application-audio
+description: application audio engineer using Web Audio API for procedural music and sound effects in browser applications. Zero dependencies. Use when adding music or SFX to a application.
 argument-hint: "[topic]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, audio, music, sfx, web-audio-api, bgm]
+  tags: [application, audio, music, sfx, web-audio-api, bgm]
 ---
 
-# Game Audio Engineer (Web Audio API)
+# application Audio Engineer (Web Audio API)
 
-You are an expert game audio engineer. You use the **Web Audio API** for both background music (looping sequencer) and one-shot sound effects. Zero dependencies — everything is built into the browser.
+You are an expert application audio engineer. You use the **Web Audio API** for both background music (looping sequencer) and one-shot sound effects. Zero dependencies — everything is built into the browser.
 
 ## Performance Notes
 
@@ -24,15 +33,15 @@ You are an expert game audio engineer. You use the **Web Audio API** for both ba
 
 For detailed reference, see companion files in this directory:
 - `sequencer-pattern.md` — BGM sequencer function, `parsePattern()`, example patterns, anti-repetition techniques
-- `sfx-engine.md` — `playTone()`, `playNotes()`, `playNoise()`, all SFX presets
+- `sfx-framework runtime.md` — `playTone()`, `playNotes()`, `playNoise()`, all SFX presets
 - `mute-button.md` — Mute state management, `drawMuteIcon()`, UIScene button, localStorage persistence
 - `bgm-patterns.md` — Strudel BGM pattern examples
 - `strudel-reference.md` — Strudel.cc API reference
-- `mixing-guide.md` — Volume levels table and style guidelines per genre
+- `mixing-guide.md` — Volume workspace states table and style guidelines per genre
 
 ## Tech Stack
 
-| Purpose | Engine | Package |
+| Purpose | framework runtime | Package |
 |---------|--------|---------|
 | Background music | Web Audio API sequencer | Built into browsers |
 | Sound effects | Web Audio API one-shot | Built into browsers |
@@ -113,16 +122,16 @@ export const audioManager = new AudioManager();
 
 See `sequencer-pattern.md` for the full sequencer function, `parsePattern()`, example BGM patterns, and anti-repetition techniques.
 
-## SFX Engine (Web Audio API -- one-shot)
+## SFX framework runtime (Web Audio API -- one-shot)
 
-See `sfx-engine.md` for `playTone()`, `playNotes()`, `playNoise()`, and all common game SFX presets (score, jump, death, click, powerUp, hit, whoosh, select).
+See `sfx-framework runtime.md` for `playTone()`, `playNotes()`, `playNoise()`, and all common application SFX presets (KPI, jump, death, click, powerUp, hit, whoosh, select).
 
 ## AudioBridge (wiring EventBus -> audio)
 
 ```js
 import { eventBus, Events } from '../core/EventBus.js';
 import { audioManager } from './AudioManager.js';
-import { gameplayBGM, gameOverTheme } from './music.js';
+import { user workflowBGM, applicationOverTheme } from './music.js';
 import { scoreSfx, deathSfx, clickSfx } from './sfx.js';
 
 export function initAudioBridge() {
@@ -130,19 +139,19 @@ export function initAudioBridge() {
   eventBus.on(Events.AUDIO_INIT, () => audioManager.init());
 
   // BGM transitions
-  eventBus.on(Events.MUSIC_GAMEPLAY, () => audioManager.playMusic(gameplayBGM));
-  eventBus.on(Events.MUSIC_GAMEOVER, () => audioManager.playMusic(gameOverTheme));
+  eventBus.on(Events.MUSIC_user workflow, () => audioManager.playMusic(user workflowBGM));
+  eventBus.on(Events.MUSIC_applicationOVER, () => audioManager.playMusic(applicationOverTheme));
   eventBus.on(Events.MUSIC_STOP, () => audioManager.stopMusic());
 
   // SFX (one-shot)
   eventBus.on(Events.SCORE_CHANGED, () => scoreSfx());
-  eventBus.on(Events.PLAYER_DIED, () => deathSfx());
+  eventBus.on(Events.user_DIED, () => deathSfx());
 }
 ```
 
 ## Mute State Management
 
-See `mute-button.md` for mute toggle event handling, `drawMuteIcon()` Phaser Graphics implementation, UIScene button creation, and localStorage persistence.
+See `mute-button.md` for mute toggle event handling, `drawMuteIcon()` framework runtime Graphics implementation, UIScene button creation, and localStorage persistence.
 
 ## Integration Checklist
 
@@ -152,7 +161,7 @@ See `mute-button.md` for mute toggle event handling, `drawMuteIcon()` Phaser Gra
 4. Create `src/audio/AudioBridge.js` — wire EventBus events to audio
 5. Wire `initAudioBridge()` in `main.js`
 6. Emit `AUDIO_INIT` on first user click (browser autoplay policy)
-7. Emit `MUSIC_GAMEPLAY`, `MUSIC_GAMEOVER`, `MUSIC_STOP` at scene transitions
+7. Emit `MUSIC_user workflow`, `MUSIC_applicationOVER`, `MUSIC_STOP` at screen/view transitions
 8. **Add mute toggle** — `AUDIO_TOGGLE_MUTE` event, UI button, M key shortcut
 9. Test: BGM loops seamlessly, SFX fire once and stop, mute silences everything
 

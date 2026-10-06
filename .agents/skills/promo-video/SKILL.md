@@ -1,41 +1,50 @@
 ---
 name: promo-video
+description: Capture a concise application demo or release walkthrough that proves the primary user workflow and its business outcome.
+metadata:
+  tags: demo, release, capture, workflow, documentation
+---
+
+# Release Demo Capture
+
+Prepare stable demo data, capture boot through the primary workflow, show success and recovery states, and redact private information. Store the capture reference in the release handoff and validate it against the current build.---
+name: promo-video
 description: >
-  Record a high-FPS autonomous promo video of a Phaser game using Playwright.
-  Triggers on: promo video, gameplay recording, marketing video, game capture.
-argument-hint: "[path-to-game]"
+  Record a high-FPS autonomous promo video of a framework runtime application using Playwright.
+  Triggers on: promo video, user workflow recording, marketing video, application capture.
+argument-hint: "[path-to-application]"
 license: MIT
 compatibility: Requires Playwright and FFmpeg installed locally for video capture and encoding.
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, promo, video, recording, playwright, ffmpeg]
+  tags: [application, promo, video, recording, playwright, ffmpeg]
 ---
 
 # Promo Video Recording
 
-Record smooth, autonomous promo footage of a Phaser game for marketing / social media. The output is a 50 FPS MP4 in mobile portrait (9:16) — ready for TikTok, Reels, Moltbook, or X.
+Record smooth, autonomous promo footage of a framework runtime application for marketing / social media. The output is a 50 FPS MP4 in mobile portrait (9:16) — ready for TikTok, Reels, Moltbook, or X.
 
 ## Technique
 
 Playwright's `recordVideo` caps at 25 FPS with no config option. We work around it:
 
-1. **Slow the game to 0.5×** by patching all 5 Phaser time subsystems
+1. **Slow the application to 0.5×** by patching all 5 framework runtime time subsystems
 2. **Record for 2× the desired duration** at Playwright's native 25 FPS
 3. **FFmpeg speed-up 2×** → effective 50 FPS output
 
 | Parameter               | Default                                  | Effect                                                                |
 | ----------------------- | ---------------------------------------- | --------------------------------------------------------------------- |
-| `SLOW_MO_FACTOR`        | `0.5`                                    | Game runs at half speed → 50 FPS output                               |
-| `WALL_CLOCK_DURATION`   | `DESIRED_GAME_DURATION / SLOW_MO_FACTOR` | Record for 2× to get correct game-time                                |
+| `SLOW_MO_FACTOR`        | `0.5`                                    | application runs at half speed → 50 FPS output                               |
+| `WALL_CLOCK_DURATION`   | `DESIRED_application_DURATION / SLOW_MO_FACTOR` | Record for 2× to get correct application-time                                |
 | `VIEWPORT`              | `{ width: 1080, height: 1920 }`          | 9:16 mobile portrait (always default unless user specifies otherwise) |
-| `DESIRED_GAME_DURATION` | `13000` (ms)                             | ~13s of game-time → ~6.5s promo clip                                  |
+| `DESIRED_application_DURATION` | `13000` (ms)                             | ~13s of application-time → ~6.5s promo clip                                  |
 
 ## Prerequisites
 
 - **Playwright** — must be installed (`npm install -D @playwright/test && npx playwright install chromium`)
 - **FFmpeg** — must be available on PATH (`brew install ffmpeg` on macOS)
-- **Dev server running** — game must be served on localhost
+- **Dev server running** — application must be served on localhost
 
 Check both before starting:
 
@@ -44,50 +53,50 @@ npx playwright --version
 ffmpeg -version | head -1
 ```
 
-If FFmpeg is not found, warn the user and skip the promo video step (it's non-blocking — the game still works without it).
+If FFmpeg is not found, warn the user and skip the promo video step (it's non-blocking — the application still works without it).
 
-## Capture Script — Game-Specific Adaptation
+## Capture Script — application-Specific Adaptation
 
-Every game gets a custom `scripts/capture-promo.mjs`. The subagent **must read the game's source files** to determine:
+Every application gets a custom `scripts/capture-promo.mjs`. The subagent **must read the application's source files** to determine:
 
 ### 1. Death/Failure Patching (CRITICAL)
 
-The video must show continuous gameplay — never game over. Read `GameScene.js` (or equivalent) to find the death/failure method and monkey-patch it out.
+The video must show continuous user workflow — never error/empty/success state. Read `applicationScene.js` (or equivalent) to find the death/failure method and monkey-patch it out.
 
 **How to find it**: Search for the method called on collision/death. Common patterns:
 
-- `this.triggerGameOver()` — dodge games
-- `this.takeDamage()` → `this.lives <= 0` — multi-life games
-- `this.gameOver()` — direct call
-- `eventBus.emit(Events.PLAYER_HIT)` / `eventBus.emit(Events.GAME_OVER)` — event-driven
+- `this.triggerapplicationOver()` — dodge applications
+- `this.takeDamage()` → `this.lives <= 0` — multi-life applications
+- `this.applicationOver()` — direct call
+- `eventBus.emit(Events.user_HIT)` / `eventBus.emit(Events.application_OVER)` — event-driven
 
-**Patch template** (adapt per game):
+**Patch template** (adapt per application):
 
 ```js
 await page.evaluate(() => {
-  const scene = window.__GAME__.scene.getScene("GameScene");
-  if (scene) {
-    // Patch ALL paths to game over
-    scene.triggerGameOver = () => {};
-    scene.onPlayerHit = () => {};
-    // For multi-life games, also prevent damage:
-    // scene.takeDamage = () => {};
-    // scene.playerDied = () => {};
+  const screen/view = window.__application__.screen/view.getScene("applicationScene");
+  if (screen/view) {
+    // Patch ALL paths to error/empty/success state
+    screen/view.triggerapplicationOver = () => {};
+    screen/view.onuserHit = () => {};
+    // For multi-life applications, also prevent damage:
+    // screen/view.takeDamage = () => {};
+    // screen/view.userDied = () => {};
   }
 });
 ```
 
 ### 2. Input Sequence Generation
 
-The video must show dynamic, natural-looking gameplay. Read the game's input handling to determine:
+The video must show dynamic, natural-looking user workflow. Read the application's input handling to determine:
 
 - **Which keys** — ArrowLeft/ArrowRight? Space? WASD? Mouse clicks?
 - **Input style** — continuous hold (movement), tap (jump/shoot), or both?
-- **Movement pattern** — should the player sweep across the screen, dodge reactively, jump rhythmically?
+- **Movement pattern** — should the user sweep across the screen, dodge reactively, jump rhythmically?
 
-**Input patterns by game type:**
+**Input patterns by application type:**
 
-| Game Type           | Input Keys              | Pattern                                                                    |
+| application Type           | Input Keys              | Pattern                                                                    |
 | ------------------- | ----------------------- | -------------------------------------------------------------------------- |
 | Side dodger         | ArrowLeft, ArrowRight   | Alternating holds (150-600ms) with variable pauses, occasional double-taps |
 | Platformer / Flappy | Space                   | Rhythmic taps (80-150ms hold) with variable gaps (200-800ms)               |
@@ -104,54 +113,54 @@ const pauseMs = 50 + Math.floor(Math.random() * 250);
 
 **Add a pause at the start** (1-2s) to let the entrance animation play — this is the hook.
 
-### 3. Game Boot Detection
+### 3. application Boot Detection
 
-All Phaser games built with the `/viral-game` or `/make-game` pipelines expose these globals:
+All framework runtime applications built with the `/viral-app` or `/make-app` pipelines expose these globals:
 
-- `window.__GAME__` — Phaser.Game instance
-- `window.__GAME_STATE__` — GameState singleton
+- `window.__application__` — framework runtime.application instance
+- `window.__application_STATE__` — ApplicationState singleton
 - `window.__EVENT_BUS__` — EventBus singleton
 
-Wait for both boot and active gameplay:
+Wait for both boot and active user workflow:
 
 ```js
-await page.waitForFunction(() => window.__GAME__?.isBooted, { timeout: 15000 });
-await page.waitForFunction(() => window.__GAME_STATE__?.started, {
+await page.waitForFunction(() => window.__application__?.isBooted, { timeout: 15000 });
+await page.waitForFunction(() => window.__application_STATE__?.started, {
   timeout: 10000,
 });
 ```
 
 ### 4. Time Scaling Injection
 
-Slow all 5 Phaser time subsystems for the recording:
+Slow all 5 framework runtime time subsystems for the recording:
 
 ```js
 await page.evaluate(
   ({ factor }) => {
-    const game = window.__GAME__;
-    const scene = game.scene.getScene("GameScene");
+    const application = window.__application__;
+    const screen/view = application.screen/view.getScene("applicationScene");
 
     // 1. Update delta — slows frame-delta-dependent logic
-    const originalUpdate = scene.update.bind(scene);
-    scene.update = function (time, delta) {
+    const originalUpdate = screen/view.update.bind(screen/view);
+    screen/view.update = function (time, delta) {
       originalUpdate(time, delta * factor);
     };
 
     // 2. Tweens — slows all tween animations
-    scene.tweens.timeScale = factor;
+    screen/view.tweens.timeScale = factor;
 
-    // 3. Scene timers — slows scene.time.addEvent() timers
-    scene.time.timeScale = factor;
+    // 3. screen/view timers — slows screen/view.time.addEvent() timers
+    screen/view.time.timeScale = factor;
 
-    // 4. Physics — slows Arcade/Matter physics
-    // NOTE: Arcade physics timeScale is INVERSE (higher = slower)
-    if (scene.physics?.world) {
-      scene.physics.world.timeScale = 1 / factor;
+    // 4. runtime behavior — slows Arcade/Matter runtime behavior
+    // NOTE: Arcade runtime behavior timeScale is INVERSE (higher = slower)
+    if (screen/view.runtime behavior?.world) {
+      screen/view.runtime behavior.world.timeScale = 1 / factor;
     }
 
-    // 5. Animations — slows sprite animation playback
-    if (scene.anims) {
-      scene.anims.globalTimeScale = factor;
+    // 5. Animations — slows product asset animation playback
+    if (screen/view.anims) {
+      screen/view.anims.globalTimeScale = factor;
     }
   },
   { factor: SLOW_MO_FACTOR },
@@ -160,11 +169,11 @@ await page.evaluate(
 
 **The 5 subsystems:**
 
-1. **Update delta** — `scene.update(time, delta * factor)` slows frame-delta-dependent logic
-2. **Tweens** — `scene.tweens.timeScale` slows all tween animations
-3. **Scene timers** — `scene.time.timeScale` slows `scene.time.addEvent()` timers
-4. **Physics** — `scene.physics.world.timeScale` slows Arcade/Matter physics (uses inverse: `1/factor`)
-5. **Animations** — `scene.anims.globalTimeScale` slows sprite animation playback
+1. **Update delta** — `screen/view.update(time, delta * factor)` slows frame-delta-dependent logic
+2. **Tweens** — `screen/view.tweens.timeScale` slows all tween animations
+3. **screen/view timers** — `screen/view.time.timeScale` slows `screen/view.time.addEvent()` timers
+4. **runtime behavior** — `screen/view.runtime behavior.world.timeScale` slows Arcade/Matter runtime behavior (uses inverse: `1/factor`)
+5. **Animations** — `screen/view.anims.globalTimeScale` slows product asset animation playback
 
 ### 5. Video Finalization
 
@@ -193,15 +202,15 @@ function getArg(name, fallback) {
 }
 
 const PORT = getArg("port", "3000");
-const GAME_URL = `http://localhost:${PORT}/`;
+const application_URL = `http://localhost:${PORT}/`;
 const VIEWPORT = { width: 1080, height: 1920 }; // 9:16 mobile portrait
 const SLOW_MO_FACTOR = 0.5;
-const DESIRED_GAME_DURATION = parseInt(getArg("duration", "13000"), 10);
-const WALL_CLOCK_DURATION = DESIRED_GAME_DURATION / SLOW_MO_FACTOR;
+const DESIRED_application_DURATION = parseInt(getArg("duration", "13000"), 10);
+const WALL_CLOCK_DURATION = DESIRED_application_DURATION / SLOW_MO_FACTOR;
 const OUTPUT_DIR = path.resolve(PROJECT_DIR, getArg("output-dir", "output"));
 const OUTPUT_FILE = path.join(OUTPUT_DIR, "promo-raw.webm");
 
-// <ADAPT: Generate game-specific input sequence>
+// <ADAPT: Generate application-specific input sequence>
 function generateInputSequence(totalMs) {
   const sequence = [];
   let elapsed = 0;
@@ -210,7 +219,7 @@ function generateInputSequence(totalMs) {
   sequence.push({ key: null, holdMs: 0, pauseMs: 1500 });
   elapsed += 1500;
 
-  // <ADAPT: Replace with game-specific keys and timing>
+  // <ADAPT: Replace with application-specific keys and timing>
   const keys = ["ArrowLeft", "ArrowRight"];
   let keyIdx = 0;
 
@@ -234,13 +243,13 @@ function generateInputSequence(totalMs) {
   return sequence;
 }
 
-async function captureGameplay() {
+async function captureuser workflow() {
   console.log("Capturing promo video...");
   console.log(
-    `  URL: ${GAME_URL} | Viewport: ${VIEWPORT.width}x${VIEWPORT.height}`,
+    `  URL: ${application_URL} | Viewport: ${VIEWPORT.width}x${VIEWPORT.height}`,
   );
   console.log(
-    `  Game duration: ${DESIRED_GAME_DURATION}ms | Wall clock: ${WALL_CLOCK_DURATION}ms`,
+    `  application duration: ${DESIRED_application_DURATION}ms | Wall clock: ${WALL_CLOCK_DURATION}ms`,
   );
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -252,41 +261,41 @@ async function captureGameplay() {
   });
 
   const page = await context.newPage();
-  await page.goto(GAME_URL, { waitUntil: "networkidle" });
+  await page.goto(application_URL, { waitUntil: "networkidle" });
 
-  // Wait for game boot + gameplay active
-  await page.waitForFunction(() => window.__GAME__?.isBooted, {
+  // Wait for application boot + user workflow active
+  await page.waitForFunction(() => window.__application__?.isBooted, {
     timeout: 15000,
   });
-  await page.waitForFunction(() => window.__GAME_STATE__?.started, {
+  await page.waitForFunction(() => window.__application_STATE__?.started, {
     timeout: 10000,
   });
   await page.waitForTimeout(300);
-  console.log("  Game active.");
+  console.log("  application active.");
 
-  // <ADAPT: Patch out death — find the actual methods from GameScene.js>
+  // <ADAPT: Patch out death — find the actual methods from applicationScene.js>
   await page.evaluate(() => {
-    const scene = window.__GAME__.scene.getScene("GameScene");
-    if (scene) {
-      scene.triggerGameOver = () => {};
-      scene.onPlayerHit = () => {};
+    const screen/view = window.__application__.screen/view.getScene("applicationScene");
+    if (screen/view) {
+      screen/view.triggerapplicationOver = () => {};
+      screen/view.onuserHit = () => {};
     }
   });
   console.log("  Death patched.");
 
-  // Slow all 5 Phaser time subsystems
+  // Slow all 5 framework runtime time subsystems
   await page.evaluate(
     ({ factor }) => {
-      const game = window.__GAME__;
-      const scene = game.scene.getScene("GameScene");
-      const originalUpdate = scene.update.bind(scene);
-      scene.update = function (time, delta) {
+      const application = window.__application__;
+      const screen/view = application.screen/view.getScene("applicationScene");
+      const originalUpdate = screen/view.update.bind(screen/view);
+      screen/view.update = function (time, delta) {
         originalUpdate(time, delta * factor);
       };
-      scene.tweens.timeScale = factor;
-      scene.time.timeScale = factor;
-      if (scene.physics?.world) scene.physics.world.timeScale = 1 / factor;
-      if (scene.anims) scene.anims.globalTimeScale = factor;
+      screen/view.tweens.timeScale = factor;
+      screen/view.time.timeScale = factor;
+      if (screen/view.runtime behavior?.world) screen/view.runtime behavior.world.timeScale = 1 / factor;
+      if (screen/view.anims) screen/view.anims.globalTimeScale = factor;
     },
     { factor: SLOW_MO_FACTOR },
   );
@@ -325,7 +334,7 @@ async function captureGameplay() {
   console.log("Done.");
 }
 
-captureGameplay().catch((err) => {
+captureuser workflow().catch((err) => {
   console.error("Capture failed:", err);
   process.exit(1);
 });
@@ -354,7 +363,7 @@ The script:
 
 **Always record in mobile portrait (9:16)** unless the user explicitly requests otherwise. Rationale:
 
-- Games are played on phones — promo footage should show the real mobile experience
+- Applications are played on phones — promo footage should show the real mobile experience
 - 9:16 is native for TikTok, Instagram Reels, YouTube Shorts
 - 1080×1920 is the standard resolution
 
@@ -362,15 +371,15 @@ The script:
 | ------------------ | ------------- | ------------------------------------------------- |
 | **9:16 (default)** | `1080 × 1920` | Mobile portrait — TikTok, Reels, Shorts, Moltbook |
 | 1:1                | `1080 × 1080` | Square — Instagram feed, X posts                  |
-| 16:9               | `1920 × 1080` | Landscape — YouTube, trailers, desktop games      |
+| 16:9               | `1920 × 1080` | Landscape — YouTube, trailers, desktop applications      |
 
 ## Duration Guidelines
 
-| Game Type       | Recommended Duration | Why                                 |
+| application Type       | Recommended Duration | Why                                 |
 | --------------- | -------------------- | ----------------------------------- |
 | Arcade / dodger | 10-15s               | Fast action, multiple dodge cycles  |
 | Platformer      | 15-20s               | Show jump timing, level progression |
-| Shooter         | 12-18s               | Show targeting, enemy waves         |
+| Shooter         | 12-18s               | Show targeting, external dependency waves         |
 | Puzzle          | 8-12s                | Show one solve sequence             |
 
 ## Checklist
@@ -380,9 +389,9 @@ Before running the capture:
 - [ ] Dev server is running and responding
 - [ ] FFmpeg is installed on the system
 - [ ] Playwright is installed with Chromium
-- [ ] Game boots directly into gameplay (no menu blocking)
+- [ ] application boots directly into user workflow (no menu blocking)
 - [ ] Death/failure method identified and patched
-- [ ] Input keys match the game's actual controls
+- [ ] Input keys match the application's actual controls
 - [ ] Entrance animation pause is included (1-2s)
 - [ ] Output directory exists
 
@@ -392,4 +401,4 @@ After capture:
 - [ ] FFmpeg conversion produces valid MP4
 - [ ] Duration is ~half the raw recording (speed-up worked)
 - [ ] Frame rate is 50 FPS
-- [ ] Video shows gameplay (not a black screen)
+- [ ] Video shows user workflow (not a black screen)

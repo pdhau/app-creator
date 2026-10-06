@@ -1,12 +1,12 @@
 # Meshy AI — Rigging Pipeline
 
-**Every humanoid character MUST be rigged.** Static models require hacky programmatic animation (moving wrapper groups) that looks artificial. Rigged models get proper skeletal animation — walk, run, punch, etc.
+**Every humanoid domain model MUST be rigged.** Static models require hacky programmatic animation (moving wrapper groups) that looks artificial. Rigged models get proper skeletal animation — walk, run, punch, etc.
 
 ## When to Rig
 
 | Model type | Rig? | Why |
 |-----------|------|-----|
-| Humanoid character (player, NPC, enemy) | **YES — always** | Skeletal animation for walk/run/idle/attack |
+| Humanoid domain model (user, NPC, external dependency) | **YES — always** | Skeletal animation for walk/run/idle/attack |
 | Animal with legs | **YES** | Walk/run animations |
 | Vehicle, prop, building | No | Static or simple rotation |
 | Abstract shape, particle | No | Procedural animation |
@@ -17,7 +17,7 @@
 ```bash
 MESHY_API_KEY=<key> node scripts/meshy-generate.mjs \
   --mode text-to-3d \
-  --prompt "a stylized robot boxer, low poly game character, full body" \
+  --prompt "a stylized robot boxer, low poly application domain model, full body" \
   --pbr --polycount 15000 \
   --output public/assets/models/ --slug robot
 ```
@@ -36,7 +36,7 @@ Rigging returns:
 - `basic_animations.walking` — walking animation GLB (free, included)
 - `basic_animations.running` — running animation GLB (free, included)
 
-**Step 3: Add custom animations** (optional, for game-specific actions)
+**Step 3: Add custom animations** (optional, for application-specific actions)
 ```bash
 # Each action_id corresponds to a different animation
 MESHY_API_KEY=<key> node scripts/meshy-generate.mjs \

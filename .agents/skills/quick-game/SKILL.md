@@ -1,12 +1,21 @@
 ---
-name: quick-game
-description: Rapidly scaffold and implement a playable game — no assets, design, audio, deploy, or monetize. Get something on screen fast. Use when the user says "quick game", "fast prototype", "just get something playable", or wants a game without the full pipeline. For the complete one-shot pipeline (deploy + monetize), use /viral-game instead. For a milestone-driven project, use /make-game. Do NOT use for production games.
-argument-hint: "[2d|3d] [game-name] OR [tweet-url]"
+name: quick-application
+description: Rapidly scaffold a small application prototype with one useful workflow, minimal dependencies, and a bootable verification path.
+metadata:
+  tags: prototype, scaffold, workflow, validation
+---
+
+# Quick Application
+
+Choose one user and one outcome, scaffold with the selected framework/runtime, implement one vertical slice, and verify boot plus the primary workflow. Keep a short product plan and record follow-up work in the backlog.---
+name: quick-application
+description: Rapidly scaffold and implement a playable application — no assets, design, audio, deploy, or monetize. Get something on screen fast. Use when the user says "quick application", "fast prototype", "just get something playable", or wants a application without the full pipeline. For the complete one-shot pipeline (deploy + monetize), use /viral-application instead. For a milestone-driven project, use /make-application. Do NOT use for production applications.
+argument-hint: "[2d|3d] [application-name] OR [tweet-url]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, prototype, scaffold, fast]
+  tags: [application, prototype, scaffold, fast]
 ---
 
 ## Performance Notes
@@ -15,37 +24,37 @@ metadata:
 - Quality is more important than speed
 - Do not skip validation steps
 
-# Quick Game (Fast Prototype)
+# Quick application (Fast Prototype)
 
-Build a playable game prototype as fast as possible. This is `/viral-game` without the polish — just scaffold + implement the core loop. Get something on screen, then incrementally add layers with `/add-assets`, `/design-game`, `/add-audio`, `/game-deploy`, and `/monetize-game`.
+Build a playable application prototype as fast as possible. This is `/viral-application` without the polish — just scaffold + implement the core loop. Get something on screen, then incrementally add layers with `/add-assets`, `/design-application`, `/add-audio`, `/application-deploy`, and `/monetize-application`.
 
 **What you'll get:**
-1. A scaffolded game project with clean architecture
-2. Core gameplay — input, movement, scoring, fail condition, restart
+1. A scaffolded application project with clean architecture
+2. Core user workflow — input, movement, scoring, fail condition, restart
 3. A running dev server you can play immediately
 
 **What you skip** (run these later if you want):
-- `/add-assets` — pixel art sprites (2D) or 3D models
-- `/design-game` — visual polish, particles, transitions
+- `/add-assets` — product artwork product assets (2D) or 3D models
+- `/design-application` — visual polish, particles, transitions
 - `/add-audio` — music and sound effects
 - `/record-promo` — promo video capture
-- `/game-deploy` — deploy to here.now
-- `/monetize-game` — Play.fun integration
+- `/application-deploy` — deploy to here.now
+- `/monetize-application` — billing provider integration
 
 ## Instructions
 
 ### Step 0: Parse arguments
 
-Parse `$ARGUMENTS` to determine the game concept:
+Parse `$ARGUMENTS` to determine the application concept:
 
-**Direct specification:** `[2d|3d] [game-name]`
-- **Engine**: `2d` (Phaser) or `3d` (Three.js). If not specified, default to `2d`.
+**Direct specification:** `[2d|3d] [application-name]`
+- **framework runtime**: `2d` (framework runtime) or `3d` (rich visual runtime). If not specified, default to `2d`.
 - **Name**: kebab-case. If not specified, ask the user.
 
 **Tweet URL:** If arguments contain a tweet URL (`x.com/*/status/*`, `twitter.com/*/status/*`, `fxtwitter.com/*/status/*`):
 1. Fetch the tweet using the `fetch-tweet` skill
 2. Default to 2D
-3. Creatively abstract a game concept from the tweet
+3. Creatively abstract a application concept from the tweet
 4. Generate a kebab-case name
 5. Tell the user what you'll build
 
@@ -55,47 +64,47 @@ Parse `$ARGUMENTS` to determine the game concept:
 
 **Infrastructure (main thread):**
 
-1. Locate the template directory — check `~/.claude/plugins/cache/local-plugins/game-creator/*/templates/` or `templates/` relative to this plugin
-2. **Target directory**: If inside the `game-creator` repo, create in `examples/<game-name>/`. Otherwise, create in `./<game-name>/`.
+1. Locate the template directory — check `~/.claude/plugins/cache/local-plugins/application-creator/*/templates/` or `templates/` relative to this plugin
+2. **Target directory**: If inside the `application-creator` repo, create in `examples/<application-name>/`. Otherwise, create in `./<application-name>/`.
 3. Copy the template:
-   - 2D: `templates/phaser-2d/` → target
+   - 2D: `templates/framework runtime-2d/` → target
    - 3D: `templates/threejs-3d/` → target
 4. Update `package.json` name and `index.html` title
 5. Run `npm install`
 6. Start the dev server (`npm run dev`) in the background. Check port availability first — if 3000 is taken, try 3001, 3002, etc.
 
-**Game implementation (subagent via Task):**
+**application implementation (subagent via Task):**
 
 Launch a `Task` subagent with:
 
-> You are building a quick game prototype. Speed is the priority — get a playable core loop working.
+> You are building a quick application prototype. Speed is the priority — get a playable core loop working.
 >
 > **Project path**: `<project-dir>`
-> **Engine**: `<2d|3d>`
-> **Game concept**: `<description>`
-> **Skill to load**: `phaser` (2D) or `threejs-game` (3D)
+> **framework runtime**: `<2d|3d>`
+> **application concept**: `<description>`
+> **Skill to load**: `framework runtime` (2D) or `threejs-application` (3D)
 >
 > **Implement in this order:**
 > 1. Input (touch + keyboard from the start)
-> 2. Player movement / core mechanic
+> 2. user movement / core mechanic
 > 3. Fail condition (death, collision, timer)
 > 4. Scoring
-> 5. Restart flow (GameState.reset() → clean slate)
+> 5. Restart flow (ApplicationState.reset() → clean slate)
 >
-> **Scope: 1 scene, 1 mechanic, 1 fail condition.** Keep it tight.
+> **Scope: 1 screen/view, 1 mechanic, 1 fail condition.** Keep it tight.
 >
 > Rules:
 > - All cross-module communication via EventBus
 > - All magic numbers in Constants.js
-> - No title screen — boot directly into gameplay
-> - No in-game score HUD — Play.fun widget handles score display
+> - No title screen — boot directly into user workflow
+> - No in-application KPI HUD — billing provider widget handles KPI display
 > - Mobile-first input: touch + keyboard, use unified InputSystem pattern
 > - Import `SAFE_ZONE` from Constants.js — keep UI below `SAFE_ZONE.TOP`
 > - Minimum 7-8% canvas width for collectibles/hazards
-> - Character sizing: `GAME.WIDTH * 0.12` to `GAME.WIDTH * 0.15` for character-driven games
-> - Preserve the template's `createButton()` helper in GameOverScene — do NOT rewrite it
+> - domain model sizing: `application.WIDTH * 0.12` to `application.WIDTH * 0.15` for domain model-driven applications
+> - Preserve the template's `createButton()` helper in applicationOverScene — do NOT rewrite it
 > - Wire spectacle events: `SPECTACLE_ENTRANCE`, `SPECTACLE_ACTION`, `SPECTACLE_HIT`, `SPECTACLE_COMBO`, `SPECTACLE_STREAK`, `SPECTACLE_NEAR_MISS`
-> - Add `isMuted` to GameState for future audio support
+> - Add `isMuted` to ApplicationState for future audio support
 > - Ensure restart is clean — 3 restarts in a row should work identically
 
 ### Step 2: Verify
@@ -108,39 +117,39 @@ After the subagent returns:
 
 ## Example Usage
 
-### 2D game
+### 2D application
 ```
-/quick-game 2d asteroid-dodge
+/quick-application 2d asteroid-dodge
 ```
-Result: Copies Phaser template → implements player ship, asteroid spawning, collision death, score counter, restart flow → dev server running at localhost:3000 in ~2 minutes. Shapes only, no polish.
+Result: Copies framework runtime template → implements user ship, asteroid spawning, collision death, KPI counter, restart flow → dev server running at localhost:3000 in ~2 minutes. Shapes only, no polish.
 
 ### From tweet
 ```
-/quick-game https://x.com/user/status/123456
+/quick-application https://x.com/user/status/123456
 ```
-Result: Fetches tweet → abstracts game concept → scaffolds and implements a playable prototype inspired by the tweet content.
+Result: Fetches tweet → abstracts application concept → scaffolds and implements a playable prototype inspired by the tweet content.
 
 ## Troubleshooting
 
-### Game scaffolds but won't start
+### application scaffolds but won't start
 **Cause:** Vite config or import paths incorrect.
 **Fix:** Verify vite.config.js has correct root. Check that main.js is referenced in index.html.
 
 ### Missing core files
-**Cause:** Scaffold skipped EventBus/GameState/Constants.
-**Fix:** Every game needs core/EventBus.js, core/GameState.js, core/Constants.js. Re-run scaffold or create manually.
+**Cause:** Scaffold skipped EventBus/ApplicationState/Constants.
+**Fix:** Every application needs core/EventBus.js, core/ApplicationState.js, core/Constants.js. Re-run scaffold or create manually.
 
 ### Done
 
 Tell the user:
 
-> Your game is running at `http://localhost:<port>`. Open it in a browser to play!
+> Your application is running at `http://localhost:<port>`. Open it in a browser to play!
 >
 > **To keep building, run these commands:**
-> - `/add-assets` — replace shapes with pixel art sprites
-> - `/design-game` — add visual polish (particles, gradients, juice)
+> - `/add-assets` — replace shapes with product artwork product assets
+> - `/design-application` — add visual polish (particles, gradients, juice)
 > - `/add-audio` — add music and sound effects
-> - `/game-deploy` — deploy to the web
-> - `/monetize-game` — add Play.fun integration
+> - `/application-deploy` — deploy to the web
+> - `/monetize-application` — add billing provider integration
 >
-> Or run `/viral-game` next time for the full one-shot pipeline (assets, polish, deploy, monetize all in one go).
+> Or run `/viral-application` next time for the full one-shot pipeline (assets, polish, deploy, monetize all in one go).

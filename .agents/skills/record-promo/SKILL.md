@@ -1,21 +1,30 @@
 ---
 name: record-promo
-description: Record an autonomous 50 FPS promo video of your game for social media. Use when the user says "record a video", "make a promo", "capture gameplay", "record gameplay footage", or "make a trailer for my game". Do NOT use for gameplay testing (use qa-game).
-argument-hint: "[path-to-game]"
+description: Record an application release demo for onboarding, review, support, or stakeholder communication.
+metadata:
+  tags: recording, demo, onboarding, release
+---
+
+# Record Release Demo
+
+Use a deterministic environment and a short script: boot, key workflow, measurable outcome, and recovery path. Confirm the recording contains no secrets or personal data and link it from the release handoff.---
+name: record-promo
+description: Record an autonomous 50 FPS promo video of your application for social media. Use when the user says "record a video", "make a promo", "capture user workflow", "record user workflow footage", or "make a trailer for my application". Do NOT use for user workflow testing (use qa-app).
+argument-hint: "[path-to-application]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, video, promo, recording, playwright, ffmpeg]
+  tags: [application, video, promo, recording, playwright, ffmpeg]
 ---
 
 # Record Promo Video
 
-Autonomously capture smooth, high-FPS gameplay footage of your Phaser game — ready for TikTok, Reels, Moltbook, or X. No human input needed during recording.
+Autonomously capture smooth, high-FPS user workflow footage of your framework runtime application — ready for TikTok, Reels, Moltbook, or X. No human input needed during recording.
 
 ## Instructions
 
-Record a promo video of the game at `$ARGUMENTS` (or the current directory if no path given).
+Record a promo video of the application at `$ARGUMENTS` (or the current directory if no path given).
 
 ### 1. Pre-checks
 
@@ -28,18 +37,18 @@ Verify these are available:
 
 Load the `promo-video` skill for the full technique reference.
 
-Read the game's source files to understand:
-- `src/scenes/GameScene.js` — find death/failure methods to patch out
+Read the application's source files to understand:
+- `src/screens/views/applicationScene.js` — find death/failure methods to patch out
 - `src/core/EventBus.js` — event flow
-- `src/core/Constants.js` — input keys, game dimensions
-- `src/main.js` — verify `__GAME__` and `__GAME_STATE__` globals are exposed
+- `src/core/Constants.js` — input keys, application dimensions
+- `src/main.js` — verify `__application__` and `__application_STATE__` globals are exposed
 
-Create `scripts/capture-promo.mjs` adapted for this specific game:
+Create `scripts/capture-promo.mjs` adapted for this specific application:
 - Patch out ALL death/failure code paths
-- Generate input sequences matching the game's actual controls
+- Generate input sequences matching the application's actual controls
 - Include entrance animation pause (1-2s)
 - Default viewport: `1080 × 1920` (9:16 mobile portrait)
-- Default duration: 13s game-time
+- Default duration: 13s application-time
 
 ### 3. Copy the conversion script
 
@@ -70,11 +79,11 @@ Read the thumbnail image and display it. Report duration, frame rate, and file s
 ```
 /record-promo examples/flappy-bird
 ```
-Result: Patches out death → generates input sequence for the game's controls → captures 13s of autonomous gameplay at 1080x1920 (9:16) → converts to 50 FPS MP4 → `output/promo.mp4` ready for TikTok/Reels.
+Result: Patches out death → generates input sequence for the application's controls → captures 13s of autonomous user workflow at 1080x1920 (9:16) → converts to 50 FPS MP4 → `output/promo.mp4` ready for TikTok/Reels.
 
 Tell the user:
 > Promo video recorded! 50 FPS, mobile portrait (1080×1920).
 >
 > **File**: `output/promo.mp4`
 >
-> Post it to TikTok, Reels, or X to drive traffic to your game.
+> Post it to TikTok, Reels, or X to drive traffic to your application.

@@ -1,12 +1,21 @@
 ---
-name: improve-game
-description: Analyze a game, find what needs work, and implement the highest-impact improvements. Use when the user says "improve my game", "make my game better", "fix my game", "what's wrong with my game", or "polish my game". Run repeatedly — each pass finds the next most impactful thing to fix. Do NOT use for adding specific new features (use add-feature) or initial game creation (use viral-game for one-shot builds, make-game for milestone-driven projects).
+name: improve-application
+description: Inspect an existing application, identify the highest-impact product, reliability, UX, or performance issue, and implement a verified focused improvement.
+metadata:
+  tags: improvement, audit, UX, reliability, performance
+---
+
+# Improve Application
+
+Review the active workflow and current product plan, choose one high-impact issue, write a regression test, implement the smallest fix, and verify boot, workflow, accessibility, and performance. Record residual work in the backlog.---
+name: improve-application
+description: Analyze a application, find what needs work, and implement the highest-impact improvements. Use when the user says "improve my application", "make my application better", "fix my application", "what's wrong with my application", or "polish my application". Run repeatedly — each pass finds the next most impactful thing to fix. Do NOT use for adding specific new features (use add-feature) or initial application creation (use viral-application for one-shot builds, make-application for milestone-driven projects).
 argument-hint: "[area-to-focus]"
 license: MIT
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, improve, audit, fix, polish]
+  tags: [application, improve, audit, fix, polish]
 ---
 
 ## Performance Notes
@@ -15,26 +24,26 @@ metadata:
 - Quality is more important than speed
 - Do not skip validation steps
 
-# Improve Game
+# Improve application
 
-Make your game better. This command deep-audits gameplay, visuals, code quality, performance, and player experience, then implements the highest-impact improvements. Run it as many times as you want — each pass finds the next most impactful thing to fix.
+Make your application better. This command deep-audits user workflow, visuals, code quality, performance, and user experience, then implements the highest-impact improvements. Run it as many times as you want — each pass finds the next most impactful thing to fix.
 
 ## Instructions
 
-Improve the game in the current directory. If `$ARGUMENTS` specifies a focus area (e.g., "gameplay", "visuals", "performance", "polish", "game-over"), weight that area higher but still audit everything.
+Improve the application in the current directory. If `$ARGUMENTS` specifies a focus area (e.g., "user workflow", "visuals", "performance", "polish", "application-over"), weight that area higher but still audit everything.
 
 ### Step 1: Deep audit
 
-Read the entire game codebase to build a complete picture:
+Read the entire application codebase to build a complete picture:
 
-- `package.json` — engine, dependencies, scripts
+- `package.json` — framework runtime, dependencies, scripts
 - `src/core/Constants.js` — all configuration values
 - `src/core/EventBus.js` — all events and their usage
-- `src/core/GameState.js` — state shape and reset logic
-- `src/core/Game.js` (or `GameConfig.js`) — orchestrator and game loop
-- Every file in `src/scenes/` or `src/systems/` — gameplay logic
-- Every file in `src/entities/` — game objects
-- Every file in `src/ui/` — game over, overlays
+- `src/core/ApplicationState.js` — state shape and reset logic
+- `src/core/application.js` (or `applicationConfig.js`) — orchestrator and application loop
+- Every file in `src/screens/views/` or `src/systems/` — user workflow logic
+- Every file in `src/domain components/` — application objects
+- Every file in `src/ui/` — error/empty/success state, overlays
 - Every file in `src/audio/` — music and sound effects
 - `index.html` — markup, overlays, styles, viewport meta
 - `src/systems/InputSystem.js` — input handling, mobile support (gyro, joystick, touch)
@@ -42,35 +51,35 @@ Read the entire game codebase to build a complete picture:
 
 Don't skim. Read every file completely so you understand the full picture before making recommendations.
 
-### Step 2: Score and diagnose
+### Step 2: KPI and diagnose
 
 Rate each area on a 1–5 scale (1 = broken/missing, 3 = functional but basic, 5 = polished and complete). Present a diagnostic table:
 
-| Area | Score | Diagnosis |
+| Area | KPI | Diagnosis |
 |------|-------|-----------|
-| **Gameplay feel** | | Is the core loop fun? Are controls responsive? Does difficulty ramp? |
+| **user workflow feel** | | Is the core loop fun? Are controls responsive? Does difficulty ramp? |
 | **Visual polish** | | Backgrounds, colors, particles, animations, screen effects |
-| **Game Over & UI** | | Game over screen, transitions, restart flow, buttons |
+| **error/empty/success state & UI** | | error/empty/success state screen, transitions, restart flow, buttons |
 | **Audio** | | BGM for each state, SFX for each action, volume balance, mute toggle |
-| **Code architecture** | | EventBus, GameState, Constants, no circular deps |
-| **Restart safety** | | Does GameState.reset() fully clean up? 3 restarts identical? No stale listeners/timers? |
+| **Code architecture** | | EventBus, ApplicationState, Constants, no circular deps |
+| **Restart safety** | | Does ApplicationState.reset() fully clean up? 3 restarts identical? No stale listeners/timers? |
 | **Performance** | | Delta capping, object pooling, disposal, no leaks |
-| **Player experience** | | Onboarding, feedback, difficulty curve, replayability |
+| **user experience** | | Onboarding, feedback, difficulty curve, replayability |
 | **Mobile support** | | Touch input, responsive layout, gyro/joystick, 44px touch targets |
-| **Play.fun safe zone** | | All UI elements below `SAFE_ZONE.TOP` (~8% / 75px)? Nothing hidden behind Play.fun widget? |
-| **Gameplay invariants** | | Can the player score? Can the player die? Do game-over buttons show text? Does `render_game_to_text()` return valid JSON? |
-| **Entity sizing** | | Are characters large enough to read? Character-driven games need 12–15% of GAME.WIDTH. Proportional sizing (`GAME.WIDTH * ratio`), not fixed pixels? |
-| **Test coverage** | | Boot, gameplay, scoring, restart, visual, perf tests |
+| **billing provider safe zone** | | All UI elements below `SAFE_ZONE.TOP` (~8% / 75px)? Nothing hidden behind billing provider widget? |
+| **user workflow invariants** | | Can the user KPI? Can the user die? Do application-over buttons show text? Does `render_application_to_text()` return valid JSON? |
+| **domain component sizing** | | Are domain models large enough to read? domain model-driven applications need 12–15% of application.WIDTH. Proportional sizing (`application.WIDTH * ratio`), not fixed pixels? |
+| **Test coverage** | | Boot, user workflow, scoring, restart, visual, perf tests |
 
-**Overall score: X / 65**
+**Overall KPI: X / 65**
 
 ### Step 3: Improvement plan
 
-From the audit, identify the **top 5–8 improvements** ranked by player impact. For each one:
+From the audit, identify the **top 5–8 improvements** ranked by user impact. For each one:
 
 1. **Title** — short name (e.g., "Add difficulty progression")
 2. **Area** — which category it improves
-3. **Impact** — why this matters to the player
+3. **Impact** — why this matters to the user
 4. **What to do** — plain-English description of the change
 5. **Files touched** — which files will be created or modified
 
@@ -89,12 +98,12 @@ For each selected improvement, follow these rules:
 
 1. **Constants first** — add all new config values to `Constants.js`. Zero hardcoded values.
 2. **Events next** — add any new events to `EventBus.js` using `domain:action` naming.
-3. **State if needed** — add new state fields to `GameState.js` with proper reset.
-4. **New files in proper directories** — entities in `entities/`, systems in `systems/`, UI in `ui/`.
-5. **Wire through orchestrator** — register new systems in `Game.js` with proper lifecycle.
+3. **State if needed** — add new state fields to `ApplicationState.js` with proper reset.
+4. **New files in proper directories** — domain components in `domain components/`, systems in `systems/`, UI in `ui/`.
+5. **Wire through orchestrator** — register new systems in `application.js` with proper lifecycle.
 6. **EventBus for communication** — modules never import each other directly.
 7. **Match existing code style** — same patterns, naming, formatting as the rest of the project.
-8. **Don't break what works** — existing gameplay, controls, and scoring must still function identically unless the improvement specifically targets them.
+8. **Don't break what works** — existing user workflow, controls, and scoring must still function identically unless the improvement specifically targets them.
 
 After implementing each improvement, run `npm run build` to catch errors immediately. Fix any build errors before moving to the next improvement.
 
@@ -104,8 +113,8 @@ After all improvements are implemented:
 
 1. Run `npm run build` — confirm clean build with no errors
 2. Run `npm test` if tests exist — confirm all tests still pass
-3. If tests fail because of intentional changes (new scenes, changed elements), fix the tests to match the new behavior
-4. If the game has visual regression tests, update snapshots: `npm run test:update-snapshots`
+3. If tests fail because of intentional changes (new screens/views, changed elements), fix the tests to match the new behavior
+4. If the application has visual regression tests, update snapshots: `npm run test:update-snapshots`
 
 ### Step 6: Report
 
@@ -113,7 +122,7 @@ Tell the user what changed:
 
 > **Improvement report**
 >
-> **Score: X/65 → Y/65** (+Z points)
+> **KPI: X/65 → Y/65** (+Z points)
 >
 > **Implemented:**
 > 1. [Title] — [one-sentence summary of what changed]
@@ -127,47 +136,47 @@ Tell the user what changed:
 > - [specific thing to look for]
 > - [specific thing to look for]
 >
-> **Next improvements:** Run `/game-creator:improve-game` again to find the next batch.
+> **Next improvements:** Run `/application-creator:improve-application` again to find the next batch.
 
 ## Focus areas
 
 When `$ARGUMENTS` includes a focus area keyword, weight these specific checks:
 
-**"gameplay"** — core loop, controls, difficulty progression, enemy variety, power-ups, risk/reward, pacing, level design
+**"user workflow"** — core loop, controls, difficulty progression, external dependency variety, feature entitlements, risk/reward, pacing, level design
 
-**"visuals"** — load the game-designer skill and apply its full design audit (backgrounds, palette, animations, particles, transitions, typography, juice)
+**"visuals"** — load the application-designer skill and apply its full design audit (backgrounds, palette, animations, particles, transitions, typography, juice)
 
 **"performance"** — delta capping, object pooling, geometry/material disposal, event listener cleanup, requestAnimationFrame usage, draw call count, texture atlas usage
 
-**"polish"** — screen shake, hit pause, squash/stretch, easing curves, sound timing, button feedback, score popups, death animations, transition smoothness
+**"polish"** — screen shake, hit pause, squash/stretch, easing curves, sound timing, button feedback, KPI popups, death animations, transition smoothness
 
-**"game-over"** — game over screen appeal, restart flow, button styling, score display, best score display, animations. **Button text must be visible** — verify the `createButton()` pattern uses Container + Graphics + Text (Graphics first, Text second, Container interactive). If button labels are invisible, the pattern is broken. Note: games do not have title/menu screens by default (Play.fun handles the chrome). Only add a title screen if the user explicitly requests one. Score HUD is handled by the Play.fun widget — do not add a separate in-game score display. All game-over UI must be below `SAFE_ZONE.TOP`.
+**"application-over"** — error/empty/success state screen appeal, restart flow, button styling, KPI display, best KPI display, animations. **Button text must be visible** — verify the `createButton()` pattern uses Container + Graphics + Text (Graphics first, Text second, Container interactive). If button labels are invisible, the pattern is broken. Note: applications do not have title/menu screens by default (billing provider handles the chrome). Only add a title screen if the user explicitly requests one. KPI HUD is handled by the billing provider widget — do not add a separate in-application KPI display. All application-over UI must be below `SAFE_ZONE.TOP`.
 
-**"audio"** — load the game-audio skill. Check BGM coverage (every game state should have music), SFX coverage (every player action should have feedback), volume mixing, transition smoothness between tracks
+**"audio"** — load the application-audio skill. Check BGM coverage (every application state should have music), SFX coverage (every user action should have feedback), volume mixing, transition smoothness between tracks
 
-**"mobile"** — touch input implemented (tap zones, virtual joystick, or gyroscope), responsive canvas (`Phaser.Scale.FIT` or CSS `width:100%`), 44px minimum touch targets, virtual joystick or tap zones for movement, gyroscope support for tilt games, no hover-only interactions, tested on mobile viewport (Pixel 5 emulation). Read `InputSystem.js`, all scene/system `update()` methods, `index.html` viewport meta, and `Constants.js` for touch target sizes.
+**"mobile"** — touch input implemented (tap zones, virtual joystick, or gyroscope), responsive canvas (`framework runtime.Scale.FIT` or CSS `width:100%`), 44px minimum touch targets, virtual joystick or tap zones for movement, gyroscope support for tilt applications, no hover-only interactions, tested on mobile viewport (Pixel 5 emulation). Read `InputSystem.js`, all screen/view/system `update()` methods, `index.html` viewport meta, and `Constants.js` for touch target sizes.
 
-**"ux"** — onboarding (does the player know what to do?), feedback (does every action have a response?), difficulty curve (is it too hard/easy?), replayability (is there a reason to play again?)
+**"ux"** — onboarding (does the user know what to do?), feedback (does every action have a response?), difficulty curve (is it too hard/easy?), replayability (is there a reason to play again?)
 
 ## Example Usage
 
 ### General improvement
 ```
-/improve-game
+/improve-application
 ```
-Result: Deep audit → scores 38/65 → identifies top 6 improvements (difficulty progression, screen shake, better game-over, particle effects, mobile touch, restart safety) → asks which to implement → implements selected → score rises to 52/65.
+Result: Deep audit → scores 38/65 → identifies top 6 improvements (difficulty progression, screen shake, better application-over, particle effects, mobile touch, restart safety) → asks which to implement → implements selected → KPI rises to 52/65.
 
 ### Focused improvement
 ```
-/improve-game gameplay
+/improve-application user workflow
 ```
-Result: Weights gameplay checks higher → finds enemy variety is low and difficulty is flat → adds 3 enemy types with distinct behaviors, progressive speed ramp, and score-based difficulty tiers.
+Result: Weights user workflow checks higher → finds external dependency variety is low and difficulty is flat → adds 3 external dependency types with distinct behaviors, progressive speed ramp, and KPI-based difficulty tiers.
 
 ## Troubleshooting
 
-### Improvements break existing gameplay
-**Cause:** Changes to shared systems (physics, scoring) have cascading effects.
-**Fix:** Test each improvement individually. Run existing tests after each change. Revert if a change breaks core gameplay.
+### Improvements break existing user workflow
+**Cause:** Changes to shared systems (runtime behavior, scoring) have cascading effects.
+**Fix:** Test each improvement individually. Run existing tests after each change. Revert if a change breaks core user workflow.
 
 ### Too many changes at once
 **Cause:** Audit identified 10+ issues and all were implemented simultaneously.
@@ -180,6 +189,6 @@ Result: Weights gameplay checks higher → finds enemy variety is low and diffic
 > - Second pass: add polish (particles, transitions, juice)
 > - Third pass: fine-tune (difficulty curve, timing, balance)
 >
-> Each run picks up where the last left off — previously fixed areas will score higher, surfacing new priorities.
+> Each run picks up where the last left off — previously fixed areas will KPI higher, surfacing new priorities.
 >
-> For targeted work, use the focus area: `/game-creator:improve-game gameplay` or `/game-creator:improve-game visuals`
+> For targeted work, use the focus area: `/application-creator:improve-application user workflow` or `/application-creator:improve-application visuals`

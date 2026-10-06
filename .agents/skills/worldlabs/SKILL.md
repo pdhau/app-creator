@@ -1,35 +1,44 @@
 ---
 name: worldlabs
-description: Generate photorealistic 3D worlds and environments with the World Labs Marble API — Gaussian Splat scenes from text prompts or reference images. Use when the user says "generate a 3D world", "create an environment", "make a 3D scene", or "use World Labs". Requires WLT_API_KEY environment variable.
+description: Create rich spatial or environmental visuals for an application while preserving fallbacks, accessibility, privacy, and performance.
+metadata:
+  tags: spatial, visuals, application, fallback, performance
+---
+
+# Application Environment Visuals
+
+Treat spatial media as an optional view over domain data. Define privacy, loading, fallback, keyboard, reduced-motion, responsive, and resource behavior; verify that core tasks work without the rich visual layer.---
+name: worldlabs
+description: Generate photorealistic 3D worlds and environments with the World Labs Marble API — Gaussian Splat screens/views from text prompts or reference images. Use when the user says "generate a 3D world", "create an environment", "make a 3D screen/view", or "use World Labs". Requires WLT_API_KEY environment variable.
 argument-hint: "[prompt or 'image path/url']"
 license: MIT
 compatibility: Requires WLT_API_KEY environment variable and internet access for World Labs API calls.
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.4.0
-  tags: [game, 3d, worldlabs, environment, gaussian-splat, generation, spark, spark-2]
+  tags: [application, 3d, worldlabs, environment, gaussian-splat, generation, spark, spark-2]
 ---
 
 # World Labs — 3D World/Environment Generation
 
-Generate photorealistic 3D environments from text prompts or images using the World Labs Marble API. Outputs Gaussian Splat scenes (SPZ) rendered via SparkJS in Three.js, plus collider meshes (GLB) for physics.
+Generate photorealistic 3D environments from text prompts or images using the World Labs Marble API. Outputs Gaussian Splat screens/views (SPZ) rendered via SparkJS in rich visual runtime, plus collider meshes (GLB) for runtime behavior.
 
 ## When to Use
 
 - **Environment/level generation** — create entire 3D worlds (rooms, landscapes, buildings) from reference images or text
-- **Complementary to Meshy AI** — Meshy generates individual models/characters; World Labs generates the environments they exist in
-- **Photorealistic scenes** — Gaussian Splats produce photorealistic quality vs mesh-based environments
+- **Complementary to Meshy AI** — Meshy generates individual models/domain models; World Labs generates the environments they exist in
+- **Photorealistic screens/views** — Gaussian Splats produce photorealistic quality vs mesh-based environments
 
 ## Input Priority
 
 **Image-first** — always prefer image input over text:
 
 1. **Image mode (default)** — if the user has a reference image, concept art, screenshot, or photo, use `--mode image`. This produces the most faithful results because the AI can match the exact visual style, layout, lighting, and mood.
-2. **Text mode (fallback)** — only use `--mode text` when no reference image is available. The API auto-expands short prompts into rich scene descriptions, but results are less predictable than image-driven generation.
+2. **Text mode (fallback)** — only use `--mode text` when no reference image is available. The API auto-expands short prompts into rich screen/view descriptions, but results are less predictable than image-driven generation.
 
-When the game-creator pipeline runs, **ask the user for a reference image first**:
+When the application-creator pipeline runs, **ask the user for a reference image first**:
 
-> I can generate a photorealistic 3D environment for your game using World Labs.
+> I can generate a photorealistic 3D environment for your application using World Labs.
 > Do you have a reference image (photo, concept art, screenshot) for the environment?
 > - **Yes** → provide the file path or URL
 > - **No** → I'll generate from a text description instead
@@ -41,9 +50,9 @@ When the game-creator pipeline runs, **ask the user for a reference image first*
 | API | World Labs Marble API (`https://api.worldlabs.ai/marble/v1`) |
 | Auth | `WLT-Api-Key` header |
 | Output: Visual | Gaussian Splat (`.spz`) — 100k, 500k, full resolution tiers |
-| Output: Physics | Collider mesh (`.glb`) — for collision detection |
+| Output: runtime behavior | Collider mesh (`.glb`) — for collision detection |
 | Output: Skybox | Panorama image (`.jpg`/`.png`) |
-| Browser Renderer | SparkJS 2.x (`@sparkjsdev/spark`) — `SparkRenderer` + `SplatMesh`, Three.js compatible |
+| Browser Renderer | SparkJS 2.x (`@sparkjsdev/spark`) — `SparkRenderer` + `SplatMesh`, rich visual runtime compatible |
 | CLI Script | `scripts/worldlabs-generate.mjs` (zero dependencies) |
 
 ## Environment Variable
@@ -96,12 +105,12 @@ public/assets/worlds/
   tavern.spz              # Gaussian Splat (full resolution)
   tavern-500k.spz         # Gaussian Splat (500k, medium quality)
   tavern-100k.spz         # Gaussian Splat (100k, lightweight/mobile)
-  tavern-collider.glb     # Collider mesh for physics (GLB)
+  tavern-collider.glb     # Collider mesh for runtime behavior (GLB)
   tavern-pano.jpg         # Panorama image (skybox)
   tavern.meta.json        # Metadata: world ID, prompt, timestamps, asset URLs
 ```
 
-## Integration with Three.js Games
+## Integration with rich visual runtime Applications
 
 **Tested & working** — see `examples/worldlabs-arcade/` for a complete runnable demo.
 
@@ -111,16 +120,16 @@ public/assets/worlds/
 npm install @sparkjsdev/spark@^2.0.0
 ```
 
-**Package**: `@sparkjsdev/spark` — high-performance Gaussian Splat renderer for Three.js. Pin to `^2.0.0`; the 0.x line has a different API (no `SparkRenderer`) and will not match the snippets below. Supports SPZ, PLY, SOGS, KSPLAT, SPLAT formats (auto-detected by extension).
+**Package**: `@sparkjsdev/spark` — high-performance Gaussian Splat renderer for rich visual runtime. Pin to `^2.0.0`; the 0.x line has a different API (no `SparkRenderer`) and will not match the snippets below. Supports SPZ, PLY, SOGS, KSPLAT, SPLAT formats (auto-detected by extension).
 
-**Three.js peer version**: Spark 2.0 declares `three@^0.180.0` as its peer dependency. Three treats every 0.x minor as potentially breaking, so `three@^0.181` or newer triggers an `ERESOLVE` peer-dep error on `npm install`. Pin `three` to `^0.180.0` in your project's `package.json` — this is what the `threejs-3d` template and the `worldlabs-arcade` example both use.
+**rich visual runtime peer version**: Spark 2.0 declares `three@^0.180.0` as its peer dependency. Three treats every 0.x minor as potentially breaking, so `three@^0.181` or newer triggers an `ERESOLVE` peer-dep error on `npm install`. Pin `three` to `^0.180.0` in your project's `package.json` — this is what the `threejs-3d` template and the `worldlabs-arcade` example both use.
 
 **No bundler?** Use the CDN importmap instead of npm:
 
 ```html
 <script type="importmap">{
   "imports": {
-    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.180.0/three.module.js",
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/rich visual runtime/0.180.0/three.module.js",
     "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/2.0.0/spark.module.js"
   }
 }</script>
@@ -146,7 +155,7 @@ export const WORLD = {
 
 ### WorldLoader.js — Load Gaussian Splat + Collider
 
-Spark 2.0 introduces `SparkRenderer` — a scene-level object that hooks into Three.js's render pipeline and controls splat quality, sorting, and LOD. You instantiate it once, add it to the scene, then add `SplatMesh` instances as normal Three.js objects. The WebGLRenderer's `render()` call handles everything transparently.
+Spark 2.0 introduces `SparkRenderer` — a screen/view-level object that hooks into rich visual runtime's render pipeline and controls splat quality, sorting, and LOD. You instantiate it once, add it to the screen/view, then add `SplatMesh` instances as normal rich visual runtime objects. The WebGLRenderer's `render()` call handles everything transparently.
 
 ```js
 import * as THREE from 'three';
@@ -157,9 +166,9 @@ import { WORLD } from '../core/Constants.js';
 let _colliderMesh = null;
 let _splatMesh = null;
 
-export async function loadWorld(scene, renderer, camera) {
+export async function loadWorld(screen/view, renderer, camera) {
   // 0. SparkRenderer — quality + LOD controls for splat rendering.
-  //    Must be added to the scene BEFORE any SplatMesh. One per scene.
+  //    Must be added to the screen/view BEFORE any SplatMesh. One per screen/view.
   const spark = new SparkRenderer({
     renderer,
     maxPixelRadius: 512,   // bigger max → sharper close-up splats
@@ -167,11 +176,11 @@ export async function loadWorld(scene, renderer, camera) {
     enableLod: true,       // auto-reduce splat count at distance
     lodSplatScale: 1.0,    // >1.0 = more splats (higher quality), <1.0 = fewer
   });
-  scene.add(spark);
+  screen/view.add(spark);
 
   const promises = [];
 
-  // 1. Gaussian Splat via SparkJS — SplatMesh works like any Three.js object.
+  // 1. Gaussian Splat via SparkJS — SplatMesh works like any rich visual runtime object.
   //    `splat.initialized` is a Promise that resolves once the file is parsed
   //    and GPU buffers are uploaded.
   if (WORLD.splatPath) {
@@ -179,39 +188,39 @@ export async function loadWorld(scene, renderer, camera) {
       const splat = new SplatMesh({ url: WORLD.splatPath });
       splat.scale.setScalar(WORLD.scale);
       splat.position.set(WORLD.position.x, WORLD.position.y, WORLD.position.z);
-      scene.add(splat);
+      screen/view.add(splat);
       if (splat.initialized) await splat.initialized;
       _splatMesh = splat;
     })());
   }
 
-  // 2. Collider mesh (GLB) — invisible, for physics raycasting only
+  // 2. Collider mesh (GLB) — invisible, for runtime behavior raycasting only
   if (WORLD.colliderPath) {
     promises.push((async () => {
       const loader = new GLTFLoader();
       const gltf = await loader.loadAsync(WORLD.colliderPath);
-      _colliderMesh = gltf.scene;
+      _colliderMesh = gltf.screen/view;
       _colliderMesh.visible = false;
       _colliderMesh.scale.setScalar(WORLD.scale);
       _colliderMesh.position.set(WORLD.position.x, WORLD.position.y, WORLD.position.z);
       _colliderMesh.traverse(c => { if (c.isMesh) c.material.side = THREE.DoubleSide; });
       _colliderMesh.updateMatrixWorld(true);   // needed before the first raycast
-      scene.add(_colliderMesh);
+      screen/view.add(_colliderMesh);
     })());
   }
 
   // 3. Panorama as equirectangular skybox + environment lighting.
-  //    NOTE: leave this OFF when using a World Labs splat scene — the panorama
+  //    NOTE: leave this OFF when using a World Labs splat screen/view — the panorama
   //    depicts the same environment as the splat and you get a "world inside a
-  //    world" doubling effect. For IBL on Meshy characters, prefer
-  //    `spark.renderEnvMap({ scene, worldCenter })` to light from the splat itself.
+  //    world" doubling effect. For IBL on Meshy domain models, prefer
+  //    `spark.renderEnvMap({ screen/view, worldCenter })` to light from the splat itself.
   if (WORLD.panoPath) {
     promises.push((async () => {
       const texLoader = new THREE.TextureLoader();
       const panoTex = await texLoader.loadAsync(WORLD.panoPath);
       panoTex.mapping = THREE.EquirectangularReflectionMapping;
       panoTex.colorSpace = THREE.SRGBColorSpace;
-      scene.environment = panoTex;   // lighting only — NOT scene.background
+      screen/view.environment = panoTex;   // lighting only — NOT screen/view.background
     })());
   }
 
@@ -234,28 +243,28 @@ export function getGroundHeight(x, z, fallback = 0) {
 export function getCollider() { return _colliderMesh; }
 ```
 
-### Game.js — Render Loop Integration
+### application.js — Render Loop Integration
 
-Once `SparkRenderer` is in the scene, splat rendering is transparent. `SparkRenderer.autoUpdate` defaults to `true`, so `renderer.render(scene, camera)` handles sort + draw for every `SplatMesh` in the scene — no extra `.render()` or `.update()` call needed. Use `renderer.setAnimationLoop` (Spark 2.0's recommended loop form; also WebXR-compatible).
+Once `SparkRenderer` is in the screen/view, splat rendering is transparent. `SparkRenderer.autoUpdate` defaults to `true`, so `renderer.render(screen/view, camera)` handles sort + draw for every `SplatMesh` in the screen/view — no extra `.render()` or `.update()` call needed. Use `renderer.setAnimationLoop` (Spark 2.0's recommended loop form; also WebXR-compatible).
 
 ```js
 import { loadWorld, getGroundHeight } from '../level/WorldLoader.js';
 
 // In init():
-await loadWorld(scene, renderer, camera);
+await loadWorld(screen/view, renderer, camera);
 
-// Render loop — standard Three.js, no extra splat pass:
+// Render loop — standard rich visual runtime, no extra splat pass:
 renderer.setAnimationLoop((time) => {
   const delta = clock.getDelta();
 
-  player.update(delta, input, azimuth);
+  user.update(delta, input, azimuth);
 
-  // Snap player Y to collider ground
-  const groundY = getGroundHeight(player.mesh.position.x, player.mesh.position.z, 0);
-  player.mesh.position.y = groundY;
+  // Snap user Y to collider ground
+  const groundY = getGroundHeight(user.mesh.position.x, user.mesh.position.z, 0);
+  user.mesh.position.y = groundY;
 
   // Single render call handles both meshes AND splats
-  renderer.render(scene, camera);
+  renderer.render(screen/view, camera);
 });
 ```
 
@@ -264,14 +273,14 @@ renderer.setAnimationLoop((time) => {
 | Tier | File | Quality | Use Case |
 |------|------|---------|----------|
 | `100k` | `{slug}-100k.spz` | Low | Mobile, fast loading, previews |
-| `500k` | `{slug}-500k.spz` | Medium | Desktop games, good balance |
+| `500k` | `{slug}-500k.spz` | Medium | Desktop applications, good balance |
 | `full_res` | `{slug}.spz` | High | High-end, hero environments |
 
 Choose based on target platform. The collider mesh (GLB) is the same regardless of splat resolution.
 
 ## Spark 2.0 Quality Tuning
 
-The default `SparkRenderer({ renderer })` looks good for most scenes. When it doesn't, these are the four knobs that actually move the needle — pass them in the `SparkRenderer` constructor:
+The default `SparkRenderer({ renderer })` looks good for most screens/views. When it doesn't, these are the four knobs that actually move the needle — pass them in the `SparkRenderer` constructor:
 
 | Symptom | Knob | Direction |
 |---|---|---|
@@ -280,33 +289,33 @@ The default `SparkRenderer({ renderer })` looks good for most scenes. When it do
 | Black bars or tearing when camera rotates | `sortRadial` | Keep `true` (default). Set `false` only if you need strict Z-depth for compositing. |
 | Low-end GPU / mobile perf is poor | `lodSplatScale` + `maxPixelRadius` | Drop `lodSplatScale` to `0.5`, `maxPixelRadius` to `256` |
 
-**IBL from the splat scene** — Spark 2.0 adds `spark.renderEnvMap({ scene, worldCenter })` which renders the splat scene into a `THREE.Texture` usable as `scene.environment` or `MeshStandardMaterial.envMap`. This is the proper way to make Meshy characters catch the lighting of the World Labs environment they stand in. See the SparkRenderer docs for full options.
+**IBL from the splat screen/view** — Spark 2.0 adds `spark.renderEnvMap({ screen/view, worldCenter })` which renders the splat screen/view into a `THREE.Texture` usable as `screen/view.environment` or `MeshStandardMaterial.envMap`. This is the proper way to make Meshy domain models catch the lighting of the World Labs environment they stand in. See the SparkRenderer docs for full options.
 
 ## Pipeline: World Labs + Meshy AI
 
-For a complete 3D game, combine both:
+For a complete 3D application, combine both:
 
 1. **World Labs** → Generate the environment (room, landscape, arena)
-2. **Meshy AI** → Generate characters and props (player, enemies, items)
-3. **Integrate** → Characters walk on World Labs collider mesh, rendered inside the Gaussian Splat scene
+2. **Meshy AI** → Generate domain models and props (user, external dependencies, items)
+3. **Integrate** → domain models walk on World Labs collider mesh, rendered inside the Gaussian Splat screen/view
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                Complete 3D Scene                 │
+│                Complete 3D screen/view                 │
 ├─────────────────────────────────────────────────┤
 │  World Labs (environment)                        │
 │    └─ Gaussian Splat (visual)                    │
-│    └─ Collider mesh (physics)                    │
+│    └─ Collider mesh (runtime behavior)                    │
 │    └─ Panorama (skybox)                          │
 │                                                   │
-│  Meshy AI (entities)                              │
-│    └─ Player character (rigged, animated GLB)     │
-│    └─ Enemies (rigged, animated GLB)              │
+│  Meshy AI (domain components)                              │
+│    └─ user domain model (rigged, animated GLB)     │
+│    └─ external dependencies (rigged, animated GLB)              │
 │    └─ Props/items (static GLB)                    │
 │                                                   │
-│  Three.js (engine)                                │
+│  rich visual runtime (framework runtime)                                │
 │    └─ SparkJS renders splats                      │
-│    └─ GLTFLoader renders characters/props         │
+│    └─ GLTFLoader renders domain models/props         │
 │    └─ Raycaster uses collider for ground/walls    │
 └─────────────────────────────────────────────────┘
 ```
@@ -315,15 +324,15 @@ For a complete 3D game, combine both:
 
 See `examples/worldlabs-arcade/` — a complete, tested demo with:
 - World Labs Gaussian Splat environment (retro arcade)
-- Animated Soldier character (walk/run/idle)
+- Animated Soldier domain model (walk/run/idle)
 - OrbitControls third-person camera
 - Collider-mesh ground raycasting
 - Panorama skybox
 
 ## Troubleshooting
 
-### Scene appears upside down (Y-flip)
-**Cause:** World Labs SPZ files use Y-inverted coordinates compared to Three.js convention.
+### screen/view appears upside down (Y-flip)
+**Cause:** World Labs SPZ files use Y-inverted coordinates compared to rich visual runtime convention.
 **Fix:** Apply `rotation.x = Math.PI` to both the splat mesh and collider mesh. Then adjust position.z to compensate: `position.z += (minZ + maxZ)`. Do NOT use `scale.y = -1` on a parent group — SparkJS breaks with negative parent scale.
 
 ### Raycast hits ceiling instead of floor
@@ -334,17 +343,17 @@ See `examples/worldlabs-arcade/` — a complete, tested demo with:
 **Cause:** The collider mesh's world matrix hasn't been updated after setting rotation/position, especially before the first render frame.
 **Fix:** Call `_colliderMesh.updateMatrixWorld(true)` immediately after setting rotation and position, before any raycast operations.
 
-### Scene appears doubled / world inside a world
-**Cause:** Using the World Labs panorama as `scene.background` shows the same environment as a giant sphere surrounding the 3D scene.
-**Fix:** Don't use the panorama as scene background. Use a solid color (`scene.background = new THREE.Color(0x87CEEB)`) or a custom skybox instead.
+### screen/view appears doubled / world inside a world
+**Cause:** Using the World Labs panorama as `screen/view.background` shows the same environment as a giant sphere surrounding the 3D screen/view.
+**Fix:** Don't use the panorama as screen/view background. Use a solid color (`screen/view.background = new THREE.Color(0x87CEEB)`) or a custom skybox instead.
 
 ### Generation times out or takes too long
-**Cause:** World Labs generation typically takes 3-8 minutes. Complex scenes or high server load can extend this.
+**Cause:** World Labs generation typically takes 3-8 minutes. Complex screens/views or high server load can extend this.
 **Fix:** Poll the operation status endpoint every 10-15 seconds. Check `progress.status` for `"IN_PROGRESS"` vs `"COMPLETE"`. If stuck beyond 15 minutes, create a new generation request — don't retry the same operation.
 
-### Splat file loads but nothing renders (black scene)
-**Cause:** In Spark 2.0 the `SparkRenderer` is what actually draws splats. Adding a `SplatMesh` to the scene without a `SparkRenderer` also in the scene produces no output.
-**Fix:** Instantiate `new SparkRenderer({ renderer })` and `scene.add(spark)` **before** any `SplatMesh` is added. One `SparkRenderer` per scene is enough.
+### Splat file loads but nothing renders (black screen/view)
+**Cause:** In Spark 2.0 the `SparkRenderer` is what actually draws splats. Adding a `SplatMesh` to the screen/view without a `SparkRenderer` also in the screen/view produces no output.
+**Fix:** Instantiate `new SparkRenderer({ renderer })` and `screen/view.add(spark)` **before** any `SplatMesh` is added. One `SparkRenderer` per screen/view is enough.
 
 ### Wrong Spark API / methods don't exist
 **Cause:** Installed 0.x instead of 2.x. The 0.x line predates `SparkRenderer`, LOD, and `sortRadial`.
@@ -352,11 +361,11 @@ See `examples/worldlabs-arcade/` — a complete, tested demo with:
 
 ### Splat pops in/out as camera moves
 **Cause:** The LOD system is swapping tiers. Fine for large worlds, distracting in small ones.
-**Fix:** Raise `lodRenderScale` to keep distant splats visually larger, or set `enableLod: false` for scenes small enough to render at full detail everywhere.
+**Fix:** Raise `lodRenderScale` to keep distant splats visually larger, or set `enableLod: false` for screens/views small enough to render at full detail everywhere.
 
-### Characters look unlit / don't match the splat environment
-**Cause:** Meshy (or other GLB) characters use `MeshStandardMaterial` with no environment map, so they render flat against a photorealistic splat backdrop.
-**Fix:** Use `spark.renderEnvMap({ scene, worldCenter })` to bake the splat scene into a `THREE.Texture` and assign it: `scene.environment = envMap`. Or assign per-material via `spark.recurseSetEnvMap(character, envMap)`.
+### domain models look unlit / don't match the splat environment
+**Cause:** Meshy (or other GLB) domain models use `MeshStandardMaterial` with no environment map, so they render flat against a photorealistic splat backdrop.
+**Fix:** Use `spark.renderEnvMap({ screen/view, worldCenter })` to bake the splat screen/view into a `THREE.Texture` and assign it: `screen/view.environment = envMap`. Or assign per-material via `spark.recurseSetEnvMap(domain model, envMap)`.
 
 ### Media upload fails with 404
 **Cause:** Using the wrong endpoint for media upload preparation.
@@ -375,11 +384,11 @@ See `examples/worldlabs-arcade/` — a complete, tested demo with:
 - [ ] `@sparkjsdev/spark@^2.0.0` installed (not 0.x — different API)
 - [ ] `WebGLRenderer` created with `antialias: false`
 - [ ] `WorldLoader.js` created in `src/level/` (SparkRenderer + SplatMesh + GLTFLoader)
-- [ ] `SparkRenderer` instantiated and added to the scene **before** any `SplatMesh`
+- [ ] `SparkRenderer` instantiated and added to the screen/view **before** any `SplatMesh`
 - [ ] `await splat.initialized` used before treating the splat as loaded
 - [ ] `Constants.js` updated with `WORLD` config (splatPath, colliderPath, panoPath)
-- [ ] `Game.js` calls `loadWorld()` in init, uses `getGroundHeight()` for player Y
-- [ ] Single `renderer.render(scene, camera)` handles both splats and meshes — no extra pass
-- [ ] Physics uses invisible collider mesh for ground/wall raycasting
-- [ ] Test: character walks on collider surface, splat renders around them
+- [ ] `application.js` calls `loadWorld()` in init, uses `getGroundHeight()` for user Y
+- [ ] Single `renderer.render(screen/view, camera)` handles both splats and meshes — no extra pass
+- [ ] runtime behavior uses invisible collider mesh for ground/wall raycasting
+- [ ] Test: domain model walks on collider surface, splat renders around them
 - [ ] Performance: use 500k SPZ for desktop, 100k for mobile; tune `lodSplatScale` if needed

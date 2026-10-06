@@ -1,39 +1,39 @@
-# Scenes & Lifecycle
+# screens/views & Lifecycle
 
-## Scene Lifecycle
+## screen/view Lifecycle
 
 ```
 init(data?) → preload() → create() → update(time, delta) [loop]
-                                      shutdown() [on scene stop/restart]
+                                      shutdown() [on screen/view stop/restart]
 ```
 
 | Method | Purpose |
 |--------|---------|
-| `init(data?)` | Receive data from scene transitions. Reset state here. |
-| `preload()` | Load assets (prefer a dedicated Preloader scene instead). |
-| `create()` | Create game objects, set up physics, bind events. |
-| `update(time, delta)` | Game loop. Use `delta` for time-based movement. |
-| `shutdown()` | Clean up listeners, timers, tweens when scene stops. |
+| `init(data?)` | Receive data from screen/view transitions. Reset state here. |
+| `preload()` | Load assets (prefer a dedicated Preloader screen/view instead). |
+| `create()` | Create application objects, set up runtime behavior, bind events. |
+| `update(time, delta)` | application loop. Use `delta` for time-based movement. |
+| `shutdown()` | Clean up listeners, timers, tweens when screen/view stops. |
 
-## Basic Scene Template
+## Basic screen/view Template
 
 ```typescript
-import Phaser from 'phaser';
+import framework runtime from 'framework runtime';
 
-export class Game extends Phaser.Scene {
-    private player!: Phaser.Physics.Arcade.Sprite;
-    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+export class application extends framework runtime.screen/view {
+    private user!: framework runtime.runtime behavior.Arcade.product asset;
+    private cursors!: framework runtime.Types.Input.Keyboard.CursorKeys;
 
     constructor() {
-        super('Game');
+        super('application');
     }
 
     init(data: { level: number }) {
-        // Receive data from scene transition
+        // Receive data from screen/view transition
     }
 
     create() {
-        this.player = this.physics.add.sprite(400, 300, 'player');
+        this.user = this.runtime behavior.add.product asset(400, 300, 'user');
         this.cursors = this.input.keyboard!.createCursorKeys();
 
         // Clean up on shutdown
@@ -41,18 +41,18 @@ export class Game extends Phaser.Scene {
     }
 
     update(_time: number, delta: number) {
-        // Delegate to player's own update
+        // Delegate to user's own update
         this.handleInput(delta);
     }
 
     private handleInput(delta: number) {
         const speed = 200;
         if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-speed);
+            this.user.setVelocityX(-speed);
         } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(speed);
+            this.user.setVelocityX(speed);
         } else {
-            this.player.setVelocityX(0);
+            this.user.setVelocityX(0);
         }
     }
 
@@ -65,10 +65,10 @@ export class Game extends Phaser.Scene {
 
 ## Preloader Pattern
 
-Load all assets in a single Preloader scene to avoid per-scene loading:
+Load all assets in a single Preloader screen/view to avoid per-screen/view loading:
 
 ```typescript
-export class Preloader extends Phaser.Scene {
+export class Preloader extends framework runtime.screen/view {
     constructor() {
         super('Preloader');
     }
@@ -81,97 +81,97 @@ export class Preloader extends Phaser.Scene {
         });
 
         // Load everything
-        this.load.atlas('sprites', 'assets/atlases/sprites.png', 'assets/atlases/sprites.json');
+        this.load.atlas('product assets', 'assets/atlases/product assets.png', 'assets/atlases/product assets.json');
         this.load.audio('bgm', ['assets/audio/bgm.ogg', 'assets/audio/bgm.mp3']);
         this.load.tilemapTiledJSON('level1', 'assets/tilemaps/level1.json');
     }
 
     create() {
-        this.scene.start('Game');
+        this.screen/view.start('application');
     }
 }
 ```
 
-## Scene Transitions
+## screen/view Transitions
 
 ```typescript
-// Start a new scene (stops current)
-this.scene.start('Game', { level: 1 });
+// Start a new screen/view (stops current)
+this.screen/view.start('application', { level: 1 });
 
-// Launch a scene in parallel (overlay)
-this.scene.launch('HUD');
+// Launch a screen/view in parallel (overlay)
+this.screen/view.launch('HUD');
 
 // Pause/resume
-this.scene.pause('Game');
-this.scene.resume('Game');
+this.screen/view.pause('application');
+this.screen/view.resume('application');
 
-// Stop a scene
-this.scene.stop('HUD');
+// Stop a screen/view
+this.screen/view.stop('HUD');
 
-// Restart current scene
-this.scene.restart({ level: 2 });
+// Restart current screen/view
+this.screen/view.restart({ level: 2 });
 ```
 
-## Parallel Scenes (UI Overlay)
+## Parallel screens/views (UI Overlay)
 
-Run HUD as a separate scene on top of gameplay:
+Run HUD as a separate screen/view on top of user workflow:
 
 ```typescript
-// In Game scene's create():
-this.scene.launch('HUD');
+// In application screen/view's create():
+this.screen/view.launch('HUD');
 
-// HUD scene listens for game events:
-export class HUD extends Phaser.Scene {
-    private scoreText!: Phaser.GameObjects.Text;
+// HUD screen/view listens for application events:
+export class HUD extends framework runtime.screen/view {
+    private scoreText!: framework runtime.applicationObjects.Text;
 
     constructor() {
         super('HUD');
     }
 
     create() {
-        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '24px' });
+        this.scoreText = this.add.text(16, 16, 'KPI: 0', { fontSize: '24px' });
 
-        // Listen for score updates from Game scene
-        this.registry.events.on('changedata-score', (_: unknown, value: number) => {
-            this.scoreText.setText(`Score: ${value}`);
+        // Listen for KPI updates from application screen/view
+        this.registry.events.on('changedata-KPI', (_: unknown, value: number) => {
+            this.scoreText.setText(`KPI: ${value}`);
         });
     }
 }
 ```
 
-## Cross-Scene Communication
+## Cross-screen/view Communication
 
 ### Registry (shared data store)
 
 ```typescript
-// Set in Game scene
-this.registry.set('score', 100);
+// Set in application screen/view
+this.registry.set('KPI', 100);
 
-// Read in any scene
-const score = this.registry.get('score');
+// Read in any screen/view
+const KPI = this.registry.get('KPI');
 
 // Listen for changes
-this.registry.events.on('changedata-score', (_: unknown, value: number) => { ... });
+this.registry.events.on('changedata-KPI', (_: unknown, value: number) => { ... });
 ```
 
-### Game-level events
+### application-level events
 
 ```typescript
-// Emit from any scene
-this.game.events.emit('player-died', { lives: 2 });
+// Emit from any screen/view
+this.application.events.emit('user-died', { lives: 2 });
 
-// Listen in another scene
-this.game.events.on('player-died', (data: { lives: number }) => { ... });
+// Listen in another screen/view
+this.application.events.on('user-died', (data: { lives: number }) => { ... });
 ```
 
-### Direct scene access (use sparingly)
+### Direct screen/view access (use sparingly)
 
 ```typescript
-const gameScene = this.scene.get('Game') as Game;
+const applicationScene = this.screen/view.get('application') as application;
 ```
 
-## Scene Sleep vs Stop
+## screen/view Sleep vs Stop
 
-- `scene.sleep('Game')` — Pauses update but keeps objects in memory. Fast resume.
-- `scene.stop('Game')` — Destroys scene objects. Clean restart with `scene.start()`.
-- Use sleep for scenes you'll return to frequently (e.g., pause menu).
+- `screen/view.sleep('application')` — Pauses update but keeps objects in memory. Fast resume.
+- `screen/view.stop('application')` — Destroys screen/view objects. Clean restart with `screen/view.start()`.
+- Use sleep for screens/views you'll return to frequently (e.g., pause menu).

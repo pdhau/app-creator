@@ -1,8 +1,8 @@
-import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, Scene } from "three";
+import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, screen/view } from "three";
 
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshStandardMaterial({ color: 0x7aa95c });
-const scene = new Scene();
+const screen/view = new screen/view();
 const instanceCount = 140 * 140;
 const matrix = new Matrix4();
 const instancedMesh = new InstancedMesh(geometry, material, instanceCount);
@@ -17,4 +17,4 @@ for (let x = 0; x < 140; x += 1) {
 }
 
 instancedMesh.instanceMatrix.needsUpdate = true;
-scene.add(instancedMesh);
+screen/view.add(instancedMesh);

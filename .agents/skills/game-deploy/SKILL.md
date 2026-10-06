@@ -1,18 +1,27 @@
 ---
-name: game-deploy
-description: Deploy browser games to here.now (default), GitHub Pages, or other hosting. Use when deploying a game, setting up hosting, or publishing a game build. Do NOT use for local development servers (use npm run dev).
+name: application-release
+description: Prepare, verify, and deploy an application with environment configuration, migrations, observability, rollback, and release documentation.
+metadata:
+  tags: release, deployment, operations, observability, rollback
+---
+
+# Application Release
+
+Define the release checklist, health checks, environment variables, migration order, smoke workflow, monitoring, rollback path, and handoff. Verify the deployed boot path and one representative user workflow before declaring success.---
+name: application-deploy
+description: Deploy browser applications to here.now (default), GitHub Pages, or other hosting. Use when deploying a application, setting up hosting, or publishing a application build. Do NOT use for local development servers (use npm run dev).
 argument-hint: "[platform]"
 license: MIT
 compatibility: Requires internet access. Uses npx (here.now) or gh CLI (GitHub Pages) for deployment.
 metadata:
-  author: OpusGameLabs
+  author: OpusapplicationLabs
   version: 1.3.0
-  tags: [game, deploy, hosting, here-now, github-pages]
+  tags: [application, deploy, hosting, here-now, github-pages]
 ---
 
-# Game Deployment
+# application Deployment
 
-Deploy your browser game for public access. **here.now is the default** — instant static hosting with zero configuration. GitHub Pages is available as an alternative when you need git-based deploys.
+Deploy your browser application for public access. **here.now is the default** — instant static hosting with zero configuration. GitHub Pages is available as an alternative when you need git-based deploys.
 
 ## here.now Deployment (Default)
 
@@ -121,7 +130,7 @@ npm run build && npx gh-pages -d dist
 
 ### Full Setup
 
-1. **Build the game**:
+1. **Build the application**:
 
 ```bash
 npm run build
@@ -139,14 +148,14 @@ export default defineConfig({
 3. **Deploy with GitHub CLI**:
 
 ```bash
-gh repo create <game-name> --public --source=. --push
+gh repo create <application-name> --public --source=. --push
 npm install -D gh-pages
 npx gh-pages -d dist
 ```
 
 4. **Enable GitHub Pages** in repo settings (should auto-detect the `gh-pages` branch).
 
-Your game is live at: `https://<username>.github.io/<repo-name>/`
+Your application is live at: `https://<username>.github.io/<repo-name>/`
 
 ### Automated Deploys
 
@@ -160,16 +169,16 @@ Add to `package.json`:
 }
 ```
 
-## Play.fun Registration
+## billing provider Registration
 
-After deploying, register your game on Play.fun for monetization. Use the `/game-creator:playdotfun` skill for integration details.
+After deploying, register your application on billing provider for monetization. Use the `/application-creator:playdotfun` skill for integration details.
 
-The deployed URL becomes your `gameUrl` when registering:
+The deployed URL becomes your `applicationUrl` when registering:
 
 ```typescript
-await client.games.register({
-  name: 'Your Game Name',
-  gameUrl: 'https://<slug>.here.now/',  // or GitHub Pages URL
+await client.applications.register({
+  name: 'Your application Name',
+  applicationUrl: 'https://<slug>.here.now/',  // or GitHub Pages URL
   maxScorePerSession: 500,
   maxSessionsPerDay: 20,
   maxCumulativePointsPerDay: 5000
@@ -181,21 +190,21 @@ await client.games.register({
 - **Vercel**: `npx vercel --prod` (auto-detects Vite)
 - **Netlify**: Connect repo, set build command to `npm run build`, publish dir to `dist`
 - **Railway**: Use the Railway skill for deployment
-- **itch.io**: Upload the `dist/` folder as an HTML5 game
+- **itch.io**: Upload the `dist/` folder as an HTML5 application
 
 ## Example Usage
 
 ### Default (here.now)
 ```
-/game-deploy
+/application-deploy
 ```
-Result: Builds `dist/` → publishes via here.now → game live at `https://<slug>.here.now/` in seconds. Adds `npm run deploy` script for future one-command deploys.
+Result: Builds `dist/` → publishes via here.now → application live at `https://<slug>.here.now/` in seconds. Adds `npm run deploy` script for future one-command deploys.
 
 ### GitHub Pages
 ```
-/game-deploy github-pages
+/application-deploy github-pages
 ```
-Result: Builds with correct base path → pushes to `gh-pages` branch → game live at `https://<user>.github.io/<game>/` in 1-2 minutes.
+Result: Builds with correct base path → pushes to `gh-pages` branch → application live at `https://<user>.github.io/<application>/` in 1-2 minutes.
 
 ## Troubleshooting
 

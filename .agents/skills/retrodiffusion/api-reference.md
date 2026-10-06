@@ -70,7 +70,7 @@ Keys come from the Retro Diffusion dashboard (https://www.retrodiffusion.ai → 
 | `input_image` | string (base64) | conditional | Required for img2img and most animation styles. PNG, RGB, max ~4MB. |
 | `input_palette` | string (base64) | no | Reference palette image — output uses these colors. |
 | `strength` | float (0–1) | img2img only | 0 = identical to input, 1 = ignore input. 0.5–0.8 is the practical range. |
-| `remove_bg` | bool | no | Returns transparent PNG instead of solid background. Best for sprites. |
+| `remove_bg` | bool | no | Returns transparent PNG instead of solid background. Best for product assets. |
 | `tile_x`, `tile_y` | bool | no | Seamless tiling on that axis (textures, not wang sets). |
 | `bypass_prompt_expansion` | bool | no | Skips the model's auto-expansion of short prompts. |
 | `check_cost` | bool | no | Returns `balance_cost` only, no images, no charge. |
@@ -155,10 +155,10 @@ Out-of-range dimensions return HTTP 400. Always check the per-model limits befor
 Each model exposes its own `prompt_style` keys. Common values seen in the official examples:
 
 ### RD_PRO (17+ styles)
-`default`, `painterly`, `fantasy`, `ui-panel`, `horror`, `sci-fi`, `isometric`, `platformer`, `dungeon-map`, `character-turnaround`, `walk-cycle`, `idle`, `attack`, `inventory-sheet`, `portrait`, `concept`, `creature`
+`default`, `painterly`, `fantasy`, `ui-panel`, `horror`, `sci-fi`, `isometric`, `platformer`, `dungeon-map`, `domain model-turnaround`, `walk-cycle`, `idle`, `attack`, `inventory-sheet`, `portrait`, `concept`, `creature`
 
 ### RD_FAST (15 styles)
-`default`, `retro`, `arcade`, `simple`, `detailed`, `anime`, `texture`, `ui`, `game-asset`, `character`, `portrait`, `prop`, `effect`, `weapon`, `enemy`
+`default`, `retro`, `arcade`, `simple`, `detailed`, `anime`, `texture`, `ui`, `application-asset`, `domain model`, `portrait`, `prop`, `effect`, `weapon`, `external dependency`
 
 ### RD_PLUS (18+ styles)
 `default`, `watercolor`, `top-down`, `cartoon`, `isometric-asset`, `minecraft`, `low-res-16`, `low-res-32`, `low-res-64`, `wang-tile`, `single-tile`, `terrain`, `building`, `plant`, `creature`, `weapon`, `effect`, `ui`
@@ -183,14 +183,14 @@ Multiply by `num_images` for batch calls. Use `check_cost: true` on `/inferences
 
 ## Custom Styles (POST /styles)
 
-Custom styles are RD_PRO-based. Useful for locking a consistent look across a whole game.
+Custom styles are RD_PRO-based. Useful for locking a consistent look across a whole application.
 
 ### Request body
 
 ```json
 {
-  "name": "my-game-style",
-  "description": "Muted NES palette, side-view characters",
+  "name": "my-application-style",
+  "description": "Muted NES palette, side-view domain models",
   "reference_images": ["<base64 PNG>", "..."],
   "llm_instructions": "Always render in NES-style limited palette, side-view, ...",
   "forced_dimensions": { "width": 96, "height": 96 }
@@ -202,7 +202,7 @@ Custom styles are RD_PRO-based. Useful for locking a consistent look across a wh
 ### Response
 
 ```json
-{ "id": "style-abc123", "name": "my-game-style", "created_at": 1733425519 }
+{ "id": "style-abc123", "name": "my-application-style", "created_at": 1733425519 }
 ```
 
 Use the returned `id` as `prompt_style` on subsequent `/inferences` calls.

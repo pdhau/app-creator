@@ -4,7 +4,7 @@ set -euo pipefail
 # Speed up a slow-mo Playwright recording to produce high-FPS output.
 # Usage: convert-highfps.sh <input.webm> <output.mp4> [slow_mo_factor]
 #
-# Technique: Playwright recordVideo caps at 25 FPS. By recording the game
+# Technique: Playwright recordVideo caps at 25 FPS. By recording the application
 # at half speed (0.5x) for 2x duration, then speeding up here, we get
 # effective 50 FPS output.
 

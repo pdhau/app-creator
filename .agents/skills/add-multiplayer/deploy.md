@@ -6,14 +6,14 @@ End-to-end walkthrough: local dev → first deploy → client redeploy. Covers C
 
 - Node.js 18+
 - Cloudflare account (free tier — no credit card required for prototyping)
-- The game's existing deploy mechanism configured (here.now / GitHub Pages / Vercel — same as the deploy detection used by `monetize-game`)
+- The application's existing deploy mechanism configured (here.now / GitHub Pages / Vercel — same as the deploy detection used by `monetize-app`)
 
 ## Step 1: Local Development
 
 Get the server running locally before deploying. PartyKit's dev mode is a local Cloudflare Workers emulator.
 
 ```bash
-cd <game-path>/multiplayer-server
+cd <application-path>/multiuser-server
 npm install
 npx partykit dev
 ```
@@ -28,10 +28,10 @@ Output:
 
 Leave this terminal running.
 
-In a second terminal, point the client at the local server. Add to `<game-path>/.env`:
+In a second terminal, point the client at the local server. Add to `<application-path>/.env`:
 
 ```
-VITE_MULTIPLAYER_SERVER_URL=http://127.0.0.1:1999
+VITE_MULTIuser_SERVER_URL=http://127.0.0.1:1999
 ```
 
 (`partysocket` accepts `http://` and rewrites to `ws://` for the actual connection.)
@@ -39,11 +39,11 @@ VITE_MULTIPLAYER_SERVER_URL=http://127.0.0.1:1999
 Then start the client:
 
 ```bash
-cd <game-path>
+cd <application-path>
 npm run dev
 ```
 
-Open `http://localhost:3000` in two browser tabs. Both should fire `network:connected` (visible in the console) and see each other in `window.render_game_to_text().remotePlayers`.
+Open `http://localhost:3000` in two browser tabs. Both should fire `network:connected` (visible in the console) and see each other in `window.render_application_to_text().remoteusers`.
 
 If two tabs do not see each other locally, debug **before** deploying — the production deploy will not surface different bugs.
 
@@ -52,7 +52,7 @@ If two tabs do not see each other locally, debug **before** deploying — the pr
 PartyKit was acquired by Cloudflare in 2024. As of 2026, the **default login provider (`clerk`) is broken** — it redirects through `https://dashboard.partykit.io/patience` ("under construction") and never completes. Use the **GitHub device-code flow** instead, which is reliable and independent of the deprecated dashboard:
 
 ```bash
-cd <game-path>/multiplayer-server
+cd <application-path>/multiuser-server
 npx partykit login --provider github
 ```
 
@@ -86,12 +86,12 @@ Successful output:
 [partykit] Building...
 [partykit] Uploading...
 [partykit] Deployed to:
-  https://<game-name>-multiplayer.<cf-username>.partykit.dev
+  https://<application-name>-multiuser.<cf-username>.partykit.dev
 ```
 
-Capture this URL — it's the value for `Constants.MULTIPLAYER.SERVER_URL` and `VITE_MULTIPLAYER_SERVER_URL`.
+Capture this URL — it's the value for `Constants.MULTIuser.SERVER_URL` and `VITE_MULTIuser_SERVER_URL`.
 
-The `<game-name>` portion is whatever was set in `multiplayer-server/partykit.json`'s `name` field. The `<cf-username>` is the Cloudflare account's subdomain (visible in the dashboard sidebar).
+The `<application-name>` portion is whatever was set in `multiuser-server/partykit.json`'s `name` field. The `<cf-username>` is the Cloudflare account's subdomain (visible in the dashboard sidebar).
 
 ## Step 4: Wire the Deployed URL Into the Client
 
@@ -100,43 +100,43 @@ Update three places:
 **1. `src/core/Constants.js`:**
 
 ```diff
- MULTIPLAYER: {
+ MULTIuser: {
 -  SERVER_URL: 'https://<project>.<user>.partykit.dev',
-+  SERVER_URL: 'https://<game-name>-multiplayer.<cf-username>.partykit.dev',
++  SERVER_URL: 'https://<application-name>-multiuser.<cf-username>.partykit.dev',
    ...
  },
 ```
 
-**2. `<game-path>/.env`** (replace the localhost URL from Step 1):
+**2. `<application-path>/.env`** (replace the localhost URL from Step 1):
 
 ```
-VITE_MULTIPLAYER_SERVER_URL=https://<game-name>-multiplayer.<cf-username>.partykit.dev
+VITE_MULTIuser_SERVER_URL=https://<application-name>-multiuser.<cf-username>.partykit.dev
 ```
 
-**3. `<game-path>/.env.example`** (committed, with placeholder):
+**3. `<application-path>/.env.example`** (committed, with placeholder):
 
 ```
-VITE_MULTIPLAYER_SERVER_URL=https://your-project.your-username.partykit.dev
+VITE_MULTIuser_SERVER_URL=https://your-project.your-username.partykit.dev
 ```
 
 Confirm `.env` is in `.gitignore` (the env-files rule requires this). If not, add it:
 
 ```bash
-echo ".env" >> <game-path>/.gitignore
+echo ".env" >> <application-path>/.gitignore
 ```
 
-The `Constants.MULTIPLAYER.SERVER_URL` is the deployed default; `VITE_MULTIPLAYER_SERVER_URL` lets developers override locally. NetworkManager prefers the env var when present.
+The `Constants.MULTIuser.SERVER_URL` is the deployed default; `VITE_MULTIuser_SERVER_URL` lets developers override locally. NetworkManager prefers the env var when present.
 
 ## Step 5: Rebuild and Redeploy the Client
 
 ```bash
-cd <game-path>
+cd <application-path>
 npm run build
 ```
 
-If the build fails, the most likely cause is a syntax error in `NetworkManager.js` or `MultiplayerClient.js`. Fix and rebuild before continuing.
+If the build fails, the most likely cause is a syntax error in `NetworkManager.js` or `MultiuserClient.js`. Fix and rebuild before continuing.
 
-Detect the existing host using the same logic as `monetize-game`:
+Detect the existing host using the same logic as `monetize-app`:
 
 **here.now (default):**
 
@@ -160,11 +160,11 @@ If the existing deploy mechanism is unclear, ask the user before proceeding.
 
 ## Step 6: Verify End-to-End
 
-1. Open the deployed game URL in two browser tabs (or two devices).
+1. Open the deployed application URL in two browser tabs (or two devices).
 2. Confirm `network:connected` fires on both.
-3. Move the local entity in tab A and confirm tab B's remote-player rendering updates within `1000 / TICK_RATE_HZ * 2` ms (≈100ms at default 20Hz).
-4. Close tab A and confirm tab B receives `network:player-left`.
-5. Reopen tab A and confirm tab B receives `network:player-joined`.
+3. Move the local domain component in tab A and confirm tab B's remote-user rendering updates within `1000 / TICK_RATE_HZ * 2` ms (≈100ms at default 20Hz).
+4. Close tab A and confirm tab B receives `network:user-left`.
+5. Reopen tab A and confirm tab B receives `network:user-joined`.
 
 ## Step 7: Cost Awareness
 
@@ -174,42 +174,42 @@ Cloudflare Workers free tier (as of 2026):
 - **1 GB Durable Object SQLite storage**
 - **30 seconds of CPU / day**
 
-Each multiplayer message is one Worker request. At a 20Hz tick, one always-on player generates ~1.7M requests/day — **above the free tier**. For prototyping with bursty play sessions (a few minutes at a time), free tier is comfortable. For production, upgrade to Workers Paid ($5/month flat) which raises the cap to 10M requests/day.
+Each multiuser message is one Worker request. At a 20Hz tick, one always-on user generates ~1.7M requests/day — **above the free tier**. For prototyping with bursty play sessions (a few minutes at a time), free tier is comfortable. For production, upgrade to Workers Paid ($5/month flat) which raises the cap to 10M requests/day.
 
 To stay under the free tier:
 
 - Lower `TICK_RATE_HZ` in `Constants.js` (10Hz halves traffic; 5Hz quarters it).
 - Add session timeouts so idle rooms hibernate (PartyKit does this automatically when `options.hibernate: true`).
 
-The Cloudflare project is owned by the user, not OpusGameLabs. Costs accrue to their Cloudflare account.
+The Cloudflare project is owned by the user, not OpusapplicationLabs. Costs accrue to their Cloudflare account.
 
 ## Re-deploys
 
 Subsequent deploys are one command:
 
 ```bash
-cd <game-path>/multiplayer-server && npx partykit deploy
+cd <application-path>/multiuser-server && npx partykit deploy
 ```
 
 The URL stays the same. No client rebuild required for server-only changes.
 
 ## Switching Modes (realtime ↔ turn-based)
 
-The two server templates are interchangeable. To switch, replace `multiplayer-server/src/server.ts` with the other template (see `partykit-server.md`), update `NetworkManager` instantiation in `main.js` to the matching mode, then redeploy both server and client.
+The two server templates are interchangeable. To switch, replace `multiuser-server/src/server.ts` with the other template (see `partykit-server.md`), update `NetworkManager` instantiation in `main.js` to the matching mode, then redeploy both server and client.
 
 ## Troubleshooting
 
 ### `partykit: command not found`
 
-**Cause:** `npm install` was skipped or failed in `multiplayer-server/`.
-**Fix:** `cd multiplayer-server && npm install`.
+**Cause:** `npm install` was skipped or failed in `multiuser-server/`.
+**Fix:** `cd multiuser-server && npm install`.
 
 ### `npx partykit login` redirects to `dashboard.partykit.io/patience` and hangs
 
 **Cause:** The default `clerk` provider was retired after Cloudflare absorbed PartyKit. The dashboard the OAuth callback expects no longer exists.
 **Fix:** Run `npx partykit login --provider github` instead — it uses GitHub's device-code OAuth flow and writes credentials to `~/.partykit/config.json` cleanly.
 
-### `npm install` in `multiplayer-server/` reports security vulnerabilities
+### `npm install` in `multiuser-server/` reports security vulnerabilities
 
 **Cause:** `partykit` pulls in older transitive deps (wrangler, esbuild). The vulnerabilities are flagged by npm audit but are not exploitable in the server template's usage.
 **Fix:** Ignore the warning. **Do not run `npm audit fix --force`** — it'll attempt major-version bumps that break the partykit toolchain.
@@ -218,7 +218,7 @@ The two server templates are interchangeable. To switch, replace `multiplayer-se
 
 **Cause:** PartyKit's dev server walks upward looking for `.env` files. Logs `Loading environment variables from ../.env` when it does.
 **Effect:** Your client's `VITE_*` vars leak into the dev server's process env. Harmless for the standard template (server doesn't read them), but worth knowing if you ever store secrets in the client `.env`.
-**Fix:** If isolation matters, put a separate `multiplayer-server/.env` and add `multiplayer-server/.env.local` to override.
+**Fix:** If isolation matters, put a separate `multiuser-server/.env` and add `multiuser-server/.env.local` to override.
 
 ### Deploy hangs at "Uploading..."
 
@@ -232,23 +232,23 @@ The two server templates are interchangeable. To switch, replace `multiplayer-se
 
 ### Browser console: "WebSocket connection failed: SSL_PROTOCOL_ERROR"
 
-**Cause:** Mixed content — the deployed game is HTTP but the server URL is HTTPS, or vice versa.
-**Fix:** Confirm both are HTTPS. Use the full `https://` URL in `Constants.MULTIPLAYER.SERVER_URL`. `partysocket` derives `wss://` automatically.
+**Cause:** Mixed content — the deployed application is HTTP but the server URL is HTTPS, or vice versa.
+**Fix:** Confirm both are HTTPS. Use the full `https://` URL in `Constants.MULTIuser.SERVER_URL`. `partysocket` derives `wss://` automatically.
 
 ### Browser console: "Failed to construct 'WebSocket': The URL ... is invalid"
 
 **Cause:** `SERVER_URL` contains a placeholder like `<project>.<user>` that wasn't replaced after deploy.
-**Fix:** Update `Constants.MULTIPLAYER.SERVER_URL` with the actual deployed URL.
+**Fix:** Update `Constants.MULTIuser.SERVER_URL` with the actual deployed URL.
 
 ### Two tabs connect but never see each other in production
 
 **Cause:** They joined different rooms. URL-based room detection isn't wired by default; both tabs default to `'lobby'`.
-**Fix:** Confirm both `window.render_game_to_text().multiplayer.roomId === 'lobby'`. If you wired room-from-URL parsing, ensure both tabs use the same query param.
+**Fix:** Confirm both `window.render_application_to_text().multiuser.roomId === 'lobby'`. If you wired room-from-URL parsing, ensure both tabs use the same query param.
 
 ### `Error: Could not deploy: project name conflicts`
 
-**Cause:** `multiplayer-server/partykit.json` has a `name` that's already taken in the user's CF account.
-**Fix:** Rename to `<game-name>-multiplayer-<random-suffix>` and retry.
+**Cause:** `multiuser-server/partykit.json` has a `name` that's already taken in the user's CF account.
+**Fix:** Rename to `<application-name>-multiuser-<random-suffix>` and retry.
 
 ### Deploy succeeds but the deployed Worker logs nothing in `wrangler tail`
 
@@ -263,7 +263,7 @@ The two server templates are interchangeable. To switch, replace `multiplayer-se
 ### Local dev: `EADDRINUSE` on port 1999
 
 **Cause:** A previous `partykit dev` is still running (or another tool is on 1999).
-**Fix:** `lsof -i :1999` to find the PID, `kill <pid>`. Or pass `--port 2000` to `partykit dev` and update `VITE_MULTIPLAYER_SERVER_URL` to match.
+**Fix:** `lsof -i :1999` to find the PID, `kill <pid>`. Or pass `--port 2000` to `partykit dev` and update `VITE_MULTIuser_SERVER_URL` to match.
 
 ### Server connects but never sends `welcome`
 

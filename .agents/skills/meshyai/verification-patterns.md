@@ -1,6 +1,6 @@
 # Meshy AI — Post-Generation Verification Patterns
 
-After loading any Meshy-generated model, **always verify orientation and scale** before proceeding. Meshy models have unpredictable facing directions and scales. Skipping this step leads to backwards-facing characters and models that overflow their containers.
+After loading any Meshy-generated model, **always verify orientation and scale** before proceeding. Meshy models have unpredictable facing directions and scales. Skipping this step leads to backwards-facing domain models and models that overflow their containers.
 
 ## Auto-Orientation Check
 
@@ -20,11 +20,11 @@ console.log(`[Model] ${slug} — center: ${center.x.toFixed(2)}, ${center.y.toFi
 - Start with `rotationY: Math.PI` (180 degrees) — most Meshy models need this to face -Z
 - If the model faces +Z by default and needs to face the camera: `rotationY: 0`
 - If in doubt: take a screenshot, check which way the face/front is pointing, adjust
-- Store `rotationY` in Constants.js per model — never hardcode in entity files
+- Store `rotationY` in Constants.js per model — never hardcode in domain component files
 
 ## Auto-Scale Fitting
 
-Models must fit within their game context. After loading:
+Models must fit within their application context. After loading:
 
 ```js
 // Calculate scale to fit a target height
@@ -47,9 +47,9 @@ if (modelWidth * currentScale > containerWidth) {
 ```
 
 **Always take a Playwright screenshot after model integration** to visually verify:
-1. Characters face the correct direction
-2. Characters fit within their environment
-3. Characters don't clip through floors/walls/each other
+1. domain models face the correct direction
+2. domain models fit within their environment
+3. domain models don't clip through floors/walls/each other
 
 ## Floor Alignment
 

@@ -1,31 +1,39 @@
 ---
-name: game-qa
-description: Game QA testing with Playwright — visual regression, gameplay verification, performance, and accessibility for browser games. Use when writing or running game tests, debugging test failures, or building QA infrastructure. This is the reference skill — use qa-game for the user-facing command.
+name: application-qa
+description: Test applications with Playwright and focused checks for boot, user workflows, API/UI contracts, accessibility, visual regressions, and performance.
 argument-hint: "[topic]"
-license: MIT
-compatibility: Requires Node.js and Playwright for browser-based game testing.
 metadata:
-  author: OpusGameLabs
-  version: 1.3.0
-  tags: [game, qa, testing, playwright]
+  tags: application, QA, testing, Playwright, accessibility, performance
 ---
 
-# Game QA with Playwright
+# Application QA
 
-You are an expert QA engineer for browser games. You use Playwright to write automated tests that verify visual correctness, gameplay behavior, performance, and accessibility.
+Start with a boot smoke test, then cover the highest-value user workflow. Add API and UI contract checks, error/empty/success states, keyboard and accessibility assertions, responsive snapshots, and performance budgets. Keep tests deterministic and expose only test-safe application state. Use `window.render_application_to_text()` when a textual state hook helps live verification.
+
+## Required loop
+
+1. Reproduce the workflow and record the expected outcome.
+2. Write a failing test for the smallest acceptance criterion.
+3. Implement and run the focused test.
+4. Run live verification, accessibility checks, and relevant performance checks.
+5. Update milestone, state, and handoff documentation.
+
+# application QA with Playwright
+
+You are an expert QA engineer for browser applications. You use Playwright to write automated tests that verify visual correctness, user workflow behavior, performance, and accessibility.
 
 ## Performance Notes
 
 - Take your time with each step. Quality is more important than speed.
 - Do not skip validation steps — they catch issues early.
 - Read the full context of each file before making changes.
-- Write tests that verify gameplay, not just that the page loads.
+- Write tests that verify user workflow, not just that the page loads.
 
 ## Reference Files
 
 For detailed reference, see companion files in this directory:
-- `test-patterns.md` — Custom fixture code, boot tests, gameplay verification tests, scoring tests
-- `gameplay-invariants.md` — All 7 core gameplay invariant patterns (scoring, death, buttons, render_game_to_text, design intent, entity audit, mute)
+- `test-patterns.md` — Custom fixture code, boot tests, user workflow verification tests, scoring tests
+- `user workflow-invariants.md` — All 7 core user workflow invariant patterns (scoring, death, buttons, render_application_to_text, design intent, domain component audit, mute)
 - `visual-regression.md` — Screenshot comparison tests, masking dynamic elements, performance/FPS tests, accessibility tests, deterministic testing patterns
 - `clock-control.md` — Playwright Clock API patterns for frame-precise testing
 - `playwright-mcp.md` — MCP server setup, when to use MCP vs scripted tests, inspection flow
@@ -42,7 +50,7 @@ For detailed reference, see companion files in this directory:
 
 ## Project Setup
 
-When adding Playwright to a game project:
+When adding Playwright to a application project:
 
 ```bash
 npm install -D @playwright/test @axe-core/playwright
@@ -67,14 +75,14 @@ Add to `package.json` scripts:
 ```
 tests/
 ├── e2e/
-│   ├── game.spec.js       # Core game tests (boot, scenes, input, score)
+│   ├── application.spec.js       # Core application tests (boot, screens/views, input, KPI)
 │   ├── visual.spec.js     # Visual regression screenshots
 │   └── perf.spec.js       # Performance and FPS tests
 ├── fixtures/
-│   ├── game-test.js       # Custom test fixture with game helpers
+│   ├── application-test.js       # Custom test fixture with application helpers
 │   └── screenshot.css     # CSS to mask dynamic elements for visual tests
 ├── helpers/
-│   └── seed-random.js     # Seeded PRNG for deterministic game behavior
+│   └── seed-random.js     # Seeded PRNG for deterministic application behavior
 playwright.config.js
 ```
 
@@ -123,68 +131,68 @@ Key points:
 - `webServer` auto-starts Vite before tests
 - `reuseExistingServer` reuses a running dev server locally
 - `baseURL` matches the Vite port configured in `vite.config.js`
-- Screenshot tolerance is generous (games have minor render variance)
+- Screenshot tolerance is generous (applications have minor render variance)
 
 ## Testability Requirements
 
-For Playwright to inspect game state, the game MUST expose these globals on `window` in `main.js`:
+For Playwright to inspect application state, the application MUST expose these globals on `window` in `main.js`:
 
 ### 1. Core globals (required)
 
 ```js
 // Expose for Playwright QA
-window.__GAME__ = game;
-window.__GAME_STATE__ = gameState;
+window.__application__ = application;
+window.__application_STATE__ = applicationState;
 window.__EVENT_BUS__ = eventBus;
 window.__EVENTS__ = Events;
 ```
 
-### 2. `render_game_to_text()` (required)
+### 2. `render_application_to_text()` (required)
 
-Returns a concise JSON string of the current game state for AI agents to reason about the game without interpreting pixels. Must include coordinate system, game mode, score, and player state.
+Returns a concise JSON string of the current application state for AI agents to reason about the application without interpreting pixels. Must include coordinate system, application mode, KPI, and user state.
 
 ```js
-window.render_game_to_text = () => {
-  if (!game || !gameState) return JSON.stringify({ error: 'not_ready' });
+window.render_application_to_text = () => {
+  if (!application || !applicationState) return JSON.stringify({ error: 'not_ready' });
 
-  const activeScenes = game.scene.getScenes(true).map(s => s.scene.key);
+  const activeScreens = application.screen.getScreens(true).map(s => s.screen.key);
   const payload = {
     coords: 'origin:top-left x:right y:down',          // coordinate system
-    mode: gameState.gameOver ? 'game_over' : 'playing',
-    scene: activeScenes[0] || null,
-    score: gameState.score,
-    bestScore: gameState.bestScore,
+    mode: applicationState.applicationOver ? 'application_over' : 'playing',
+    screen: activeScreens[0] || null,
+    KPI: applicationState.KPI,
+    bestScore: applicationState.bestScore,
   };
 
-  // Add player info when in gameplay
-  const gameScene = game.scene.getScene('GameScene');
-  if (gameState.started && gameScene?.player?.sprite) {
-    const s = gameScene.player.sprite;
+  // Add user info when in user workflow
+  const appScreen = application.screen.getScreen('AppScreen');
+  if (appState.started && appScreen?.user?.asset) {
+    const s = appScreen.user.asset;
     const body = s.body;
-    payload.player = {
+    payload.user = {
       x: Math.round(s.x), y: Math.round(s.y),
       vx: Math.round(body.velocity.x), vy: Math.round(body.velocity.y),
       onGround: body.blocked.down,
     };
   }
 
-  // Extend with visible entities as you add them:
-  // payload.entities = obstacles.map(o => ({ x: o.x, y: o.y, type: o.type }));
+  // Extend with visible domain components as you add them:
+  // payload.domain components = obstacles.map(o => ({ x: o.x, y: o.y, type: o.type }));
 
   return JSON.stringify(payload);
 };
 ```
 
-Guidelines for `render_game_to_text()`:
+Guidelines for `render_application_to_text()`:
 - Keep the payload **succinct** — only current, visible, interactive elements
 - Include **coordinate system note** (origin and axis directions)
-- Include **player position/velocity**, active obstacles/enemies, collectibles, timers, score, and mode flags
+- Include **user position/velocity**, active obstacles/external dependencies, collectibles, timers, KPI, and mode flags
 - Avoid large histories; only include what's currently relevant
-- The iterate client and AI agents use this to verify game behavior without screenshots
+- The iterate client and AI agents use this to verify application behavior without screenshots
 
 ### 3. `advanceTime(ms)` (required)
 
-Lets test scripts advance the game by a precise duration. The game loop runs normally via RAF; this waits for real time to elapse.
+Lets test scripts advance the application by a precise duration. The application loop runs normally via RAF; this waits for real time to elapse.
 
 ```js
 window.advanceTime = (ms) => {
@@ -201,22 +209,22 @@ window.advanceTime = (ms) => {
 
 For frame-precise control in `@playwright/test`, prefer `page.clock.install()` + `page.clock.runFor()`. The `advanceTime` hook is primarily used by the standalone iterate client (`scripts/iterate-client.js`).
 
-For Three.js games, expose the `Game` orchestrator instance similarly.
+For rich visual runtime applications, expose the `application` orchestrator instance similarly.
 
-See `test-patterns.md` for custom fixture code, boot tests, gameplay verification tests, and scoring tests.
+See `test-patterns.md` for custom fixture code, boot tests, user workflow verification tests, and scoring tests.
 
-See `gameplay-invariants.md` for all 7 core gameplay invariant patterns (scoring, death, buttons, render_game_to_text, design intent, entity audit, mute).
+See `user workflow-invariants.md` for all 7 core user workflow invariant patterns (scoring, death, buttons, render_application_to_text, design intent, domain component audit, mute).
 
-## When Adding QA to a Game
+## When Adding QA to a application
 
 1. Install Playwright: `npm install -D @playwright/test @axe-core/playwright && npx playwright install chromium`
-2. Create `playwright.config.js` with the game's dev server port
-3. Expose `window.__GAME__`, `window.__GAME_STATE__`, `window.__EVENT_BUS__` in `main.js`
-4. Create `tests/fixtures/game-test.js` with the `gamePage` fixture
+2. Create `playwright.config.js` with the application's dev server port
+3. Expose `window.__application__`, `window.__application_STATE__`, `window.__EVENT_BUS__` in `main.js`
+4. Create `tests/fixtures/application-test.js` with the `applicationPage` fixture
 5. Create `tests/helpers/seed-random.js` for deterministic behavior
 6. Write tests in `tests/e2e/`:
-   - `game.spec.js` — boot, scene flow, input, scoring, game over
-   - `visual.spec.js` — screenshot regression for each scene
+   - `application.spec.js` — boot, screen/view flow, input, scoring, error/empty/success state
+   - `visual.spec.js` — screenshot regression for each screen/view
    - `perf.spec.js` — load time, FPS budget
 7. Add npm scripts: `test`, `test:ui`, `test:headed`, `test:update-snapshots`
 8. Generate initial baselines: `npm run test:update-snapshots`
@@ -224,7 +232,7 @@ See `gameplay-invariants.md` for all 7 core gameplay invariant patterns (scoring
 ## What NOT to Test (Automated)
 
 - **Exact pixel positions** of animated objects (non-deterministic without clock control)
-- **Active gameplay screenshots** — moving objects make stable screenshots impossible; use MCP instead
+- **Active user workflow screenshots** — moving objects make stable screenshots impossible; use MCP instead
 - **Audio playback** (Playwright has no audio inspection; test that audio objects exist via evaluate)
-- **External API calls** unless mocked (e.g., Play.fun SDK — mock with `page.route()`)
+- **External API calls** unless mocked (e.g., billing provider SDK — mock with `page.route()`)
 - **Subjective visual quality** — use MCP for "does this look good?" evaluations

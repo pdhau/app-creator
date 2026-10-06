@@ -90,7 +90,7 @@ Supports `image_url` as public URL, base64 data URI (`data:image/png;base64,...`
 **GET** `/v1/rigging/:id` — Retrieve task
 
 Result includes:
-- `rigged_character_glb_url` — rigged GLB ready for Three.js
+- `rigged_character_glb_url` — rigged GLB ready for rich visual runtime
 - `rigged_character_fbx_url` — rigged FBX
 - `basic_animations` — walking/running GLB URLs included free
 

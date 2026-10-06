@@ -2,34 +2,34 @@
 
 ## Texture Atlases
 
-Always pack sprites into atlases instead of loading individual images:
+Always pack product assets into atlases instead of loading individual images:
 
 ```typescript
 // Bad: individual images (one draw call each)
-this.load.image('player', 'assets/player.png');
-this.load.image('enemy', 'assets/enemy.png');
+this.load.image('user', 'assets/user.png');
+this.load.image('external dependency', 'assets/external dependency.png');
 this.load.image('coin', 'assets/coin.png');
 
 // Good: single atlas (one draw call for all)
-this.load.atlas('sprites', 'assets/atlases/sprites.png', 'assets/atlases/sprites.json');
+this.load.atlas('product assets', 'assets/atlases/product assets.png', 'assets/atlases/product assets.json');
 ```
 
 Create atlases with TexturePacker or free-tex-packer. Export as **JSON Hash** format.
 
 ```typescript
 // Using atlas frames
-this.add.image(100, 100, 'sprites', 'player-idle');
-this.add.sprite(200, 200, 'sprites', 'enemy-walk-01');
+this.add.image(100, 100, 'product assets', 'user-idle');
+this.add.product asset(200, 200, 'product assets', 'external dependency-walk-01');
 ```
 
 ## Atlas Animations
 
 ```typescript
-// In Preloader or Boot scene
+// In Preloader or Boot screen/view
 this.anims.create({
-    key: 'player-walk',
-    frames: this.anims.generateFrameNames('sprites', {
-        prefix: 'player-walk-',
+    key: 'user-walk',
+    frames: this.anims.generateFrameNames('product assets', {
+        prefix: 'user-walk-',
         start: 1,
         end: 8,
         zeroPad: 2,
@@ -44,7 +44,7 @@ this.anims.create({
 Use Groups for anything created/destroyed frequently:
 
 ```typescript
-const coins = this.physics.add.group({
+const coins = this.runtime behavior.add.group({
     classType: Coin,
     maxSize: 20,
     runChildUpdate: true,
@@ -71,31 +71,31 @@ function collectCoin(coin: Coin) {
 ```typescript
 // Bad: iterating all children
 update() {
-    this.enemies.getChildren().forEach(enemy => {
-        (enemy as Enemy).update();
+    this.external dependencies.getChildren().forEach(external dependency => {
+        (external dependency as external dependency).update();
     });
 }
 
 // Good: only update active children
 update() {
-    this.enemies.getChildren()
+    this.external dependencies.getChildren()
         .filter(e => e.active)
-        .forEach(enemy => (enemy as Enemy).update());
+        .forEach(external dependency => (external dependency as external dependency).update());
 }
 
-// Best: use runChildUpdate on the group and let Phaser handle it
+// Best: use runChildUpdate on the group and let framework runtime handle it
 // (automatically skips inactive children)
 ```
 
 ## Camera Culling
 
-For large worlds, objects off-screen still render by default. Phaser automatically culls objects outside camera bounds for most game objects, but ensure it's working:
+For large worlds, objects off-screen still render by default. framework runtime automatically culls objects outside camera bounds for most application objects, but ensure it's working:
 
 ```typescript
 // Set world bounds larger than camera
-this.physics.world.setBounds(0, 0, 3200, 600);
+this.runtime behavior.world.setBounds(0, 0, 3200, 600);
 this.cameras.main.setBounds(0, 0, 3200, 600);
-this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+this.cameras.main.startFollow(this.user, true, 0.1, 0.1);
 ```
 
 ## Audio Best Practices
@@ -103,30 +103,30 @@ this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
 - Load `.ogg` with `.mp3` fallback: `this.load.audio('sfx', ['sfx.ogg', 'sfx.mp3'])`
 - Use `this.sound.play('sfx', { volume: 0.5 })` for one-shots
 - Use `this.sound.add('bgm', { loop: true })` for music
-- Audio won't play until user interacts with the page (browser policy). Phaser handles this with its audio unlock system.
+- Audio won't play until user interacts with the page (browser policy). framework runtime handles this with its audio unlock system.
 
 ## BitmapText for Performance
 
-`Phaser.GameObjects.Text` creates a canvas texture per instance. For frequently updated text (score, timers), use BitmapText:
+`framework runtime.applicationObjects.Text` creates a canvas texture per instance. For frequently updated text (KPI, timers), use BitmapText:
 
 ```typescript
 // In preload
 this.load.bitmapFont('pixelfont', 'assets/fonts/pixel.png', 'assets/fonts/pixel.xml');
 
 // In create
-const score = this.add.bitmapText(16, 16, 'pixelfont', 'Score: 0', 24);
+const KPI = this.add.bitmapText(16, 16, 'pixelfont', 'KPI: 0', 24);
 ```
 
 ## Mobile Optimization (Primary Target)
 
 Mobile is the primary deployment target. Design for mobile first, then verify desktop.
 
-- Target 30fps if needed: `fps: { target: 30, forceSetTimeOut: true }` in game config
+- Target 30fps if needed: `fps: { target: 30, forceSetTimeOut: true }` in application config
 - Reduce particle counts by 50-75%
-- Use simpler physics bodies (circles over polygons)
+- Use simpler runtime behavior bodies (circles over polygons)
 - Minimize texture swaps — pack everything into fewer atlases
-- Use `Phaser.Scale.FIT` with `autoCenter` for responsive sizing
-- **Touch target sizes**: All interactive elements (buttons, game objects the player taps) must be at least **44x44px** on screen. Smaller targets frustrate mobile players.
+- Use `framework runtime.Scale.FIT` with `autoCenter` for responsive sizing
+- **Touch target sizes**: All interactive elements (buttons, application objects the user taps) must be at least **44x44px** on screen. Smaller targets frustrate mobile users.
 - Test on real devices, not just browser DevTools throttling
 
 ## Memory Management
@@ -134,18 +134,18 @@ Mobile is the primary deployment target. Design for mobile first, then verify de
 - Remove event listeners in `shutdown()`:
   ```typescript
   this.events.on('shutdown', () => {
-      this.game.events.off('custom-event', this.handler, this);
-      this.registry.events.off('changedata-score', this.onScore, this);
+      this.application.events.off('custom-event', this.handler, this);
+      this.registry.events.off('changedata-KPI', this.onScore, this);
   });
   ```
-- Destroy objects you no longer need: `sprite.destroy()`
-- Clear Groups: `group.clear(true, true)` (removes from scene and destroys)
-- For scene restarts, Phaser automatically cleans up objects created via `this.add.*`
+- Destroy objects you no longer need: `product asset.destroy()`
+- Clear Groups: `group.clear(true, true)` (removes from screen/view and destroys)
+- For screen/view restarts, framework runtime automatically cleans up objects created via `this.add.*`
 
 ## Loading Screen
 
 ```typescript
-export class Preloader extends Phaser.Scene {
+export class Preloader extends framework runtime.screen/view {
     preload() {
         const width = this.cameras.main.width;
         const height = this.cameras.main.height;
@@ -162,7 +162,7 @@ export class Preloader extends Phaser.Scene {
             progressBox.destroy();
         });
 
-        // Load all game assets here...
+        // Load all application assets here...
     }
 }
 ```

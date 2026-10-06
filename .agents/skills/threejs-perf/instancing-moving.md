@@ -1,27 +1,27 @@
-# Moving Entity Update Loops with InstancedMesh
+# Moving domain component Update Loops with InstancedMesh
 
 ## Problem
 
-Animating thousands of entities (enemies, particles, swarm members, NPCs) as independent `Mesh` objects creates avoidable scene-graph churn, transform propagation cost, and renderer overhead. The bottleneck shifts from GPU to CPU-side scene management.
+Animating thousands of domain components (external dependencies, particles, swarm members, NPCs) as independent `Mesh` objects creates avoidable screen/view-graph churn, transform propagation cost, and renderer overhead. The bottleneck shifts from GPU to CPU-side screen/view management.
 
 ## Use When
 
 - Many moving actors share the same geometry and material
 - The simulation can write per-instance transforms in batches
-- The bottleneck is update-loop overhead or scene complexity, not GPU fill rate
-- Entity count exceeds ~100 with shared geometry
+- The bottleneck is update-loop overhead or screen/view complexity, not GPU fill rate
+- domain component count exceeds ~100 with shared geometry
 
 ## Avoid When
 
-- Each entity needs unique material/shader state that defeats shared rendering
+- Each domain component needs unique material/shader state that defeats shared rendering
 - Object counts are low enough that simpler per-Mesh code is preferable (<50)
-- Entities need individual raycasting or picking (InstancedMesh raycasting requires extra work)
+- domain components need individual raycasting or picking (InstancedMesh raycasting requires extra work)
 
 ## Anti-Patterns
 
 - One `Mesh` per actor for large swarms or crowds
-- Per-entity object allocation inside the hot update loop
-- Updating transforms through deep scene graphs when flat batched state is sufficient
+- Per-domain component object allocation inside the hot update loop
+- Updating transforms through deep screen/view graphs when flat batched state is sufficient
 - Creating/destroying Meshes per frame instead of reusing instance slots
 
 ## Implementation
@@ -29,9 +29,9 @@ Animating thousands of entities (enemies, particles, swarm members, NPCs) as ind
 ### Baseline (Anti-Pattern): Individual Moving Meshes
 
 ```ts
-import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial, screen/view } from 'three';
 
-const scene = new Scene();
+const screen/view = new screen/view();
 const geometry = new BoxGeometry(0.5, 0.5, 0.5);
 const material = new MeshStandardMaterial({ color: 0x4ea7d8 });
 const meshes = [];
@@ -39,7 +39,7 @@ const meshes = [];
 for (let i = 0; i < 8000; i++) {
   const mesh = new Mesh(geometry, material);
   meshes.push(mesh);
-  scene.add(mesh);
+  screen/view.add(mesh);
 }
 
 // Per-frame update: 8000 individual position writes
@@ -55,9 +55,9 @@ function update(tick) {
 ### Optimized: Batched InstancedMesh Writes
 
 ```ts
-import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, Scene } from 'three';
+import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, screen/view } from 'three';
 
-const scene = new Scene();
+const screen/view = new screen/view();
 const geometry = new BoxGeometry(0.5, 0.5, 0.5);
 const material = new MeshStandardMaterial({ color: 0x4ea7d8 });
 const count = 8000;
@@ -70,7 +70,7 @@ for (let i = 0; i < count; i++) {
   instancedMesh.setMatrixAt(i, matrix);
 }
 instancedMesh.instanceMatrix.needsUpdate = true;
-scene.add(instancedMesh);
+screen/view.add(instancedMesh);
 
 // Per-frame update: batched matrix writes, single needsUpdate
 function update(tick) {
@@ -88,13 +88,13 @@ function update(tick) {
 
 ## Key Points
 
-1. **Flat state buffer**: Keep entity state (position, velocity, health) in flat arrays or a typed buffer. Don't store state on Three.js objects.
+1. **Flat state buffer**: Keep domain component state (position, velocity, health) in flat arrays or a typed buffer. Don't store state on rich visual runtime objects.
 2. **Batch all writes, then set `needsUpdate` once**: Write all instance matrices in a single loop, then set `instanceMatrix.needsUpdate = true` once at the end.
 3. **Reuse the `Matrix4`**: One shared matrix for all `setMatrixAt` calls. Zero per-frame allocations.
-4. **Hide dead entities**: Set `instancedMesh.count` to the number of active entities. Swap dead entities to the end of the buffer.
-5. **Rotation + scale**: Use `matrix.compose(position, quaternion, scale)` instead of `makeTranslation` when entities need rotation or non-uniform scale.
+4. **Hide dead domain components**: Set `instancedMesh.count` to the number of active domain components. Swap dead domain components to the end of the buffer.
+5. **Rotation + scale**: Use `matrix.compose(position, quaternion, scale)` instead of `makeTranslation` when domain components need rotation or non-uniform scale.
 
-## Entity Pool Pattern
+## domain component Pool Pattern
 
 ```js
 const MAX_ENTITIES = 10000;
@@ -134,7 +134,7 @@ function update(dt) {
 
 ## Measured Results
 
-Scenario: 8,000 entities in a wave-field (sin/cos of position + time), Three.js r183, headless Chromium 147 via Playwright, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
+Scenario: 8,000 domain components in a wave-field (sin/cos of position + time), rich visual runtime r183, headless Chromium 147 via Playwright, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
 
 | Metric | Baseline | Optimized | Delta |
 |--------|----------|-----------|-------|
@@ -151,4 +151,4 @@ FPS and frame-time p95 are not cited here — Playwright's bundled Chromium runs
 
 ## Template Files
 
-See `templates/moving-entities-baseline.ts` and `templates/moving-entities-instanced.ts` for drop-in reference implementations.
+See `templates/moving-domain components-baseline.ts` and `templates/moving-domain components-instanced.ts` for drop-in reference implementations.

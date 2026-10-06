@@ -29,18 +29,18 @@ Rendering large numbers of repeated props (trees, rocks, debris, decorations) as
 ### Baseline (Anti-Pattern): Individual Meshes
 
 ```ts
-import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial, screen/view } from 'three';
 
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshStandardMaterial({ color: 0x7aa95c });
-const scene = new Scene();
+const screen/view = new screen/view();
 
 // 19,600 draw calls — one per mesh
 for (let x = 0; x < 140; x++) {
   for (let z = 0; z < 140; z++) {
     const mesh = new Mesh(geometry, material);
     mesh.position.set(x * 1.5, 0, z * 1.5);
-    scene.add(mesh);
+    screen/view.add(mesh);
   }
 }
 ```
@@ -48,11 +48,11 @@ for (let x = 0; x < 140; x++) {
 ### Optimized: Single InstancedMesh
 
 ```ts
-import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, Scene } from 'three';
+import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, screen/view } from 'three';
 
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshStandardMaterial({ color: 0x7aa95c });
-const scene = new Scene();
+const screen/view = new screen/view();
 const instanceCount = 140 * 140;
 const matrix = new Matrix4();
 const instancedMesh = new InstancedMesh(geometry, material, instanceCount);
@@ -67,7 +67,7 @@ for (let x = 0; x < 140; x++) {
 }
 
 instancedMesh.instanceMatrix.needsUpdate = true;
-scene.add(instancedMesh); // 1 draw call
+screen/view.add(instancedMesh); // 1 draw call
 ```
 
 ## Key Points
@@ -91,7 +91,7 @@ instancedMesh.instanceColor.needsUpdate = true;
 
 ## Measured Results
 
-Scenario: 140×140 grid = 19,600 cubes, Three.js r183, headless Chromium 147 via Playwright, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
+Scenario: 140×140 grid = 19,600 cubes, rich visual runtime r183, headless Chromium 147 via Playwright, Apple M1 Pro, 30 warmup + 180 sample frames, median of 3 runs.
 
 | Metric | Baseline | Optimized | Delta |
 |--------|----------|-----------|-------|
@@ -102,7 +102,7 @@ Scenario: 140×140 grid = 19,600 cubes, Three.js r183, headless Chromium 147 via
 | Mesh count | 19,600 | 0 | -100% |
 | InstancedMesh count | 0 | 1 | +1 |
 
-The optimized case reports 2 draw calls (not 1) because the scene also contains a floor plane — the 19,600-cube `InstancedMesh` itself is a single draw call. Baseline draw calls sit at ~19,365 rather than 19,600 because individual meshes at the far edges get frustum-culled; `InstancedMesh` does not cull per-instance, so it's all-or-nothing.
+The optimized case reports 2 draw calls (not 1) because the screen/view also contains a floor plane — the 19,600-cube `InstancedMesh` itself is a single draw call. Baseline draw calls sit at ~19,365 rather than 19,600 because individual meshes at the far edges get frustum-culled; `InstancedMesh` does not cull per-instance, so it's all-or-nothing.
 
 FPS and frame-time p95 are not cited here — Playwright's bundled Chromium runs software WebGL (SwiftShader), which makes GPU-bound timing unreliable. On real hardware the FPS delta would be substantially larger.
 

@@ -1,16 +1,16 @@
-import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, Scene } from "three";
+import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, screen/view } from "three";
 
-const scene = new Scene();
+const screen/view = new screen/view();
 const geometry = new BoxGeometry(0.5, 0.5, 0.5);
 const material = new MeshStandardMaterial({ color: 0x4ea7d8 });
-const entities = 8000;
+const domain components = 8000;
 const matrix = new Matrix4();
-const instancedMesh = new InstancedMesh(geometry, material, entities);
+const instancedMesh = new InstancedMesh(geometry, material, domain components);
 
-for (let index = 0; index < entities; index += 1) {
+for (let index = 0; index < domain components; index += 1) {
   matrix.makeTranslation(0, 0, 0);
   instancedMesh.setMatrixAt(index, matrix);
 }
 
 instancedMesh.instanceMatrix.needsUpdate = true;
-scene.add(instancedMesh);
+screen/view.add(instancedMesh);
