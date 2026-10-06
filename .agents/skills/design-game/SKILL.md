@@ -1,21 +1,8 @@
 ---
-name: application-design
+name: design-game
 description: Improve an application's information architecture, interaction design, visual hierarchy, responsive behavior, accessibility, and feedback states.
 metadata:
   tags: UX, UI, accessibility, responsive, states
----
-
-# Application Design
-
-Audit the real workflow, then improve hierarchy, navigation, forms, loading, error, empty, success, and permission states. Preserve the existing design system and verify desktop, mobile, keyboard, contrast, and assistive technology behavior.---
-name: design-application
-description: Audit and improve the visual design, polish, and user experience of an existing application. Use when the user says "make my application look better", "improve the design", "add polish", "add juice", "add particles", "fix the UI", or "make it more visually appealing". Do NOT use for user workflow logic changes (use add-feature instead).
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, design, polish, ui, particles, visual]
 ---
 
 ## Performance Notes
@@ -99,6 +86,6 @@ Tell the user:
 
 > Your application looks much better now! Next, run `/application-creator:add-audio` to add notification media background music and retro sound effects — all procedurally generated, no audio files needed.
 >
-> **Pipeline progress:** ~~/viral-application~~ → ~~/design-application~~ → `/add-audio` → `/qa-application` → `/review-application`
+> **Pipeline progress:** ~~/viral-app~~ → ~~/design-application~~ → `/add-audio` → `/qa-application` → `/review-application`
 >
-> *(This is the `/viral-application` one-shot pipeline — not the `/make-application` multi-session, milestone-driven workflow.)*
+> *(This is the `/viral-app` one-shot pipeline — not the `/make-application` multi-session, milestone-driven workflow.)*

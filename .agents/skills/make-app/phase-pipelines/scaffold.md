@@ -19,7 +19,7 @@ After the idea has been solidified, scaffold the project. The exact steps depend
 
 Two folders in this plugin both contain the word **templates**. They are different things — do not confuse them:
 
-- **Project starters** at the **repo root** `templates/` (e.g. `templates/framework runtime-2d/`, `templates/threejs-3d/`). Runnable starter projects to clone or scaffold from. _This step uses these._
+- **Project starters** at the **repo root** `templates/` (e.g. `templates/react-vite/`, `templates/next-app/`, `templates/threejs-3d/`). Runnable starter projects to clone or scaffold from. _This step uses these._
 - **Doc skeletons** at `skills/make-app/templates/` (`product-plan.md`, `tech.md`, `milestone.md`, `adr.md`, `state.md`). Empty markdown shells the skill mandates. _Used in idea/development phases for writing docs._
 
 When this pipeline says "starter," it means the first; when it says "doc skeleton," it means the second.
@@ -32,11 +32,11 @@ Confirm the framework runtime, language, and tooling. The scaffold method follow
 
 **2. Prefer `/use-template` if a starter matches and `/use-template` is available**
 
-If `templates/framework runtime-2d/` or `templates/threejs-3d/` (or any other starter in the repo root `templates/` folder) matches the project's stack, run `/use-template <starter-id> [project-name]`. This is a ~10-second copy + `npm install` and avoids latent setup bugs from improvised scaffolding.
+If `templates/react-vite/`, `templates/next-app/`, or `templates/threejs-3d/` (or any other starter in the repo root `templates/` folder) matches the project's stack, run `/use-template <starter-id> [project-name]`. This is a ~10-second copy + `npm install` and avoids latent setup bugs from improvised scaffolding.
 
 Use `/use-template` when:
 
-- Stack matches a starter (framework runtime 4 / rich visual runtime browser applications)
+- Stack matches a starter (React/Vite, Next.js, or rich visual runtime browser applications)
 - The project does not need a custom build pipeline
 
 Skip to step 3 when:
@@ -56,7 +56,8 @@ Order of preference:
 
 Examples of correct scaffolding commands (always re-check the official docs for the current syntax before running):
 
-- **framework runtime 4 (browser):** `npm create @framework runtimejs/application@latest` (also available via `npx @framework runtimejs/create-application@latest`, `yarn create @framework runtimejs/application`, `pnpm create @framework runtimejs/application@latest`, `bun create @framework runtimejs/application@latest`).
+- **React + Vite (browser):** `npm create vite@latest <project-name> -- --template react-ts` → `cd <project-name>` → `npm install`.
+- **Next.js (browser/full-stack):** `npx create-next-app@latest <project-name>` and select the repository's required TypeScript, linting, App Router, and styling options.
 - **rich visual runtime (browser, library on top of a bundler):** `npm create vite@latest` → pick the appropriate template (e.g. `vanilla`, `vanilla-ts`, `react`) → `cd <project>` → `npm install three`. Do not write `vite.config.js` from scratch unless a non-default plugin is required.
 - **Unity (CLI project creation):**
   - Windows: `"C:\Program Files\Unity\Hub\Editor\<version>\Editor\Unity.exe" -createProject "C:\path\to\NewProject" -quit`

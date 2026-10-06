@@ -5,19 +5,6 @@ metadata:
   tags: performance, profiling, rendering, bundle, latency
 ---
 
-# Application Performance
-
-Measure before changing code. Set budgets for boot, route transitions, interaction latency, network payloads, memory, and rendering. Optimize repeated work, cache deliberately, preserve correctness, and rerun the affected workflow on desktop and mobile.---
-name: threejs-perf
-description: rich visual runtime performance optimization patterns for draw calls, screen/view traversal, and instancing. Use when optimizing 3D screens/views with 100+ repeated objects, thousands of moving domain components, or draw calls above 500. Loaded by threejs-app, viral-app, and make-app for performance guidance.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [threejs, performance, instancing, draw-calls, optimization]
----
-
 # rich visual runtime Performance Optimization
 
 Performance patterns for rich visual runtime applications, backed by measured before/after numbers on rich visual runtime r183 (headless Chromium via Playwright, Apple M1 Pro, software WebGL).

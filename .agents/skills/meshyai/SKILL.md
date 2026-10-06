@@ -5,20 +5,6 @@ metadata:
   tags: visual-assets, generation, provenance, accessibility, performance
 ---
 
-# Visual Asset Generation
-
-Define the visual purpose, dimensions, fallback, accessibility text, provenance, licensing, and delivery budget before generating an asset. Keep generated output replaceable and validate it in the target screen or workflow.---
-name: meshyai
-description: Generate custom 3D models from text or images using Meshy AI, then auto-rig and animate them for rich visual runtime applications. The preferred source for all 3D application assets. Use when the user says "generate a 3D model", "create a domain model model", "use Meshy", or needs a custom GLB model that doesn't exist in free libraries.
-argument-hint: "[text-prompt or image-path]"
-license: MIT
-compatibility: Requires MESHY_API_KEY environment variable and internet access for Meshy AI API calls.
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, 3d, meshy, ai, model-generation, rigging, animation]
----
-
 # Meshy AI — 3D Model Generation, Rigging & Animation
 
 You are an expert at generating custom 3D models with Meshy AI and integrating them into rich visual runtime browser applications. **Meshy is the preferred source for all 3D application assets** — it generates exactly what you need from a text description or reference image, with consistent art style and application-ready topology.

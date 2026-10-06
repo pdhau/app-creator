@@ -5,22 +5,6 @@ metadata:
   tags: demo, release, capture, workflow, documentation
 ---
 
-# Release Demo Capture
-
-Prepare stable demo data, capture boot through the primary workflow, show success and recovery states, and redact private information. Store the capture reference in the release handoff and validate it against the current build.---
-name: promo-video
-description: >
-  Record a high-FPS autonomous promo video of a framework runtime application using Playwright.
-  Triggers on: promo video, user workflow recording, marketing video, application capture.
-argument-hint: "[path-to-application]"
-license: MIT
-compatibility: Requires Playwright and FFmpeg installed locally for video capture and encoding.
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, promo, video, recording, playwright, ffmpeg]
----
-
 # Promo Video Recording
 
 Record smooth, autonomous promo footage of a framework runtime application for marketing / social media. The output is a 50 FPS MP4 in mobile portrait (9:16) — ready for TikTok, Reels, Moltbook, or X.

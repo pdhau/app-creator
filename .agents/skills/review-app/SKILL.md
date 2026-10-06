@@ -5,19 +5,6 @@ metadata:
   tags: review, architecture, security, accessibility, performance
 ---
 
-# Review Application
-
-Prioritize concrete defects and regressions with file references. Check domain boundaries, state transitions, boot behavior, critical user workflow, API/UI contracts, accessibility, performance, and test gaps. Report findings before summary.---
-name: review-app
-description: Review an existing application codebase for architecture, performance, and best practices. Use when the user says "review my application", "code review", "check my application architecture", "is my application well structured", or "audit my application code". Do NOT use for making changes — this is read-only analysis. Use improve-app to implement fixes.
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, review, architecture, best-practices, code-quality]
----
-
 ## Performance Notes
 
 - Take your time to do this thoroughly

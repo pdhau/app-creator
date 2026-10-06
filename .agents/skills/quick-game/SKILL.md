@@ -1,21 +1,8 @@
 ---
-name: quick-application
+name: quick-game
 description: Rapidly scaffold a small application prototype with one useful workflow, minimal dependencies, and a bootable verification path.
 metadata:
   tags: prototype, scaffold, workflow, validation
----
-
-# Quick Application
-
-Choose one user and one outcome, scaffold with the selected framework/runtime, implement one vertical slice, and verify boot plus the primary workflow. Keep a short product plan and record follow-up work in the backlog.---
-name: quick-application
-description: Rapidly scaffold and implement a playable application — no assets, design, audio, deploy, or monetize. Get something on screen fast. Use when the user says "quick application", "fast prototype", "just get something playable", or wants a application without the full pipeline. For the complete one-shot pipeline (deploy + monetize), use /viral-application instead. For a milestone-driven project, use /make-application. Do NOT use for production applications.
-argument-hint: "[2d|3d] [application-name] OR [tweet-url]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, prototype, scaffold, fast]
 ---
 
 ## Performance Notes
@@ -26,7 +13,7 @@ metadata:
 
 # Quick application (Fast Prototype)
 
-Build a playable application prototype as fast as possible. This is `/viral-application` without the polish — just scaffold + implement the core loop. Get something on screen, then incrementally add layers with `/add-assets`, `/design-application`, `/add-audio`, `/application-deploy`, and `/monetize-application`.
+Build a playable application prototype as fast as possible. This is `/viral-app` without the polish — just scaffold + implement the core loop. Get something on screen, then incrementally add layers with `/add-assets`, `/design-application`, `/add-audio`, `/application-deploy`, and `/monetize-application`.
 
 **What you'll get:**
 1. A scaffolded application project with clean architecture
@@ -152,4 +139,4 @@ Tell the user:
 > - `/application-deploy` — deploy to the web
 > - `/monetize-application` — add billing provider integration
 >
-> Or run `/viral-application` next time for the full one-shot pipeline (assets, polish, deploy, monetize all in one go).
+> Or run `/viral-app` next time for the full one-shot pipeline (assets, polish, deploy, monetize all in one go).

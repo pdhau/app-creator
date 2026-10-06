@@ -5,20 +5,6 @@ metadata:
   tags: realtime, collaboration, synchronization, authorization, testing
 ---
 
-# Realtime Collaboration
-
-Define the shared state contract, room or workspace identity, permissions, event ordering, conflict policy, offline behavior, reconnect path, presence, and observability. Test two or more clients against the same workflow and keep server authority separate from view state.---
-name: add-multiuser
-description: Add real-time or turn-based multiuser to an existing browser application using PartyKit (Cloudflare Durable Objects). Scaffolds a room-based server, a NetworkManager client, EventBus events, ApplicationState fields, Constants, and extends render_application_to_text(). Use when the user says "add multiuser", "make this multiuser", "add real-time co-op", "add online play", "scaffold multiuser", or "add netcode". Do NOT use for solo leaderboards (use monetize-app), single-user AI opponents (use add-feature), or peer-to-peer/WebRTC applications.
-argument-hint: "[application-path] [--mode=realtime|turn-based]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 0.1.0
-  tags: [application, multiuser, networking, partykit, websocket, realtime, turn-based]
-compatibility: Requires an existing framework runtime 3 or rich visual runtime application with application-creator architecture (EventBus, ApplicationState, Constants.js, render_application_to_text). Requires Node.js and a Cloudflare account for `npx partykit deploy` (free tier is sufficient).
----
-
 # Add Multiuser (PartyKit / Cloudflare Durable Objects)
 
 Add real-time or turn-based multiuser to an existing single-user browser application. This skill scaffolds:

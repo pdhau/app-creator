@@ -1,21 +1,8 @@
 ---
-name: application-qa-command
+name: qa-game
 description: Add or run application QA for boot, user workflow, API/UI behavior, accessibility, responsive visuals, and performance.
 metadata:
   tags: QA, application, Playwright, smoke-test, accessibility
----
-
-# Application QA Command
-
-Use the application-qa workflow for deterministic tests and live verification. Begin with the smallest failing check, then expand only to the affected workflow and its user-visible states.---
-name: qa-application
-description: Add Playwright QA tests to a application — visual regression, user workflow verification, and performance. Use when the user says "add tests", "test my application", "add QA", "check for bugs", or "add visual regression tests". Do NOT use for manual live verification or user workflow design.
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, qa, testing, playwright, visual-regression]
 ---
 
 # QA application
@@ -145,6 +132,6 @@ Tell the user:
 
 > Your application now has automated tests! Finally, run `/application-creator:review-application` for a full architecture review — it checks your code structure, performance patterns, and gives you a KPI with specific improvement suggestions.
 >
-> **Pipeline progress:** ~~/viral-application~~ → ~~/design-application~~ → ~~/add-audio~~ → ~~/qa-application~~ → `/review-application`
+> **Pipeline progress:** ~~/viral-app~~ → ~~/design-application~~ → ~~/add-audio~~ → ~~/qa-application~~ → `/review-application`
 >
-> *(This is the `/viral-application` one-shot pipeline — not the `/make-application` multi-session, milestone-driven workflow.)*
+> *(This is the `/viral-app` one-shot pipeline — not the `/make-application` multi-session, milestone-driven workflow.)*

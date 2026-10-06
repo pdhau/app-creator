@@ -5,20 +5,6 @@ metadata:
   tags: brand, assets, generation, UI, accessibility
 ---
 
-# Brand Asset Generation
-
-Use a documented visual brief, produce variants for the actual interface, preserve source and license metadata, and provide a meaningful fallback when media cannot load.---
-name: retrodiffusion
-description: Generate true product artwork product assets, tilesets, and animations with the Retro Diffusion API — the best dedicated product artwork model. Use when the user says "generate product artwork", "make a product asset with AI", "use Retro Diffusion", "rdpk", or wants high-quality product artwork faster than hand-coded product asset arrays. Requires a Retro Diffusion account and RETRODIFFUSION_API_KEY (paid credits). Great for quick prototyping of 2D framework runtime applications.
-argument-hint: "[prompt]"
-license: MIT
-compatibility: Requires a Retro Diffusion account, RETRODIFFUSION_API_KEY environment variable, and internet access for API calls. Each generation consumes paid credits from the user's account.
-metadata:
-  author: OpusapplicationLabs
-  version: 1.0.0
-  tags: [application, 2d, pixel-art, retro-diffusion, ai, image-generation, product assets, tilesets, animation]
----
-
 # Retro Diffusion — True product artwork Generation
 
 Generate authentic product artwork product assets, tilesets, and animations from text prompts or reference images using the [Retro Diffusion](https://www.retrodiffusion.ai) API. Output is true product artwork (clean integer-pixel grids, limited palettes), not blurry diffusion-model output downscaled into pixels — making it the best AI option for shippable 2D application art and fast prototyping.

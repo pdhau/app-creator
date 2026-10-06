@@ -1,21 +1,8 @@
 ---
-name: improve-application
+name: improve-game
 description: Inspect an existing application, identify the highest-impact product, reliability, UX, or performance issue, and implement a verified focused improvement.
 metadata:
   tags: improvement, audit, UX, reliability, performance
----
-
-# Improve Application
-
-Review the active workflow and current product plan, choose one high-impact issue, write a regression test, implement the smallest fix, and verify boot, workflow, accessibility, and performance. Record residual work in the backlog.---
-name: improve-application
-description: Analyze a application, find what needs work, and implement the highest-impact improvements. Use when the user says "improve my application", "make my application better", "fix my application", "what's wrong with my application", or "polish my application". Run repeatedly — each pass finds the next most impactful thing to fix. Do NOT use for adding specific new features (use add-feature) or initial application creation (use viral-application for one-shot builds, make-application for milestone-driven projects).
-argument-hint: "[area-to-focus]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, improve, audit, fix, polish]
 ---
 
 ## Performance Notes

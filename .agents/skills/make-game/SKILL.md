@@ -1,5 +1,5 @@
 ---
-name: application-development
+name: make-game
 description: Use this skill to design, scaffold, build, test, and iterate on a web, desktop, mobile, CLI, or service application. Start with a product plan, then follow the idea, scaffold, and development workflows.
 metadata:
   author: application-creator
@@ -35,7 +35,7 @@ Do not use this skill when:
 
 - The user's request is unrelated to application development (general web apps, CLI tools, libraries, infrastructure, data work, etc.)
 - The user explicitly asks for a non-application artifact (e.g. "build me a chat app")
-- The user wants a **one-shot viral application** from a tweet, news story, or short prompt — shipped end-to-end in a single session with no milestone planning. Use [`/viral-application`](../viral-application/SKILL.md) instead. That pipeline is opinionated (framework runtime/rich visual runtime, here.now, billing provider) and trades the planning rigor of this skill for ~10-minute time-to-deploy. If a `/viral-application` session outgrows itself (the user starts asking for milestones, ADRs, or long-term iteration), they should switch back to this skill.
+- The user wants a **one-shot viral application** from a tweet, news story, or short prompt — shipped end-to-end in a single session with no milestone planning. Use [`/viral-app`](../viral-app/SKILL.md) instead. That pipeline is opinionated (framework runtime/rich visual runtime, here.now, billing provider) and trades the planning rigor of this skill for ~10-minute time-to-deploy. If a `/viral-app` session outgrows itself (the user starts asking for milestones, ADRs, or long-term iteration), they should switch back to this skill.
 
 - `docs/product-plan.md` and `docs/tech.md` remain mandatory if they don't yet exist (otherwise the next session has no source of truth).
   author: application-creator

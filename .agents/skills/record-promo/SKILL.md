@@ -5,19 +5,6 @@ metadata:
   tags: recording, demo, onboarding, release
 ---
 
-# Record Release Demo
-
-Use a deterministic environment and a short script: boot, key workflow, measurable outcome, and recovery path. Confirm the recording contains no secrets or personal data and link it from the release handoff.---
-name: record-promo
-description: Record an autonomous 50 FPS promo video of your application for social media. Use when the user says "record a video", "make a promo", "capture user workflow", "record user workflow footage", or "make a trailer for my application". Do NOT use for user workflow testing (use qa-app).
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, video, promo, recording, playwright, ffmpeg]
----
-
 # Record Promo Video
 
 Autonomously capture smooth, high-FPS user workflow footage of your framework runtime application — ready for TikTok, Reels, Moltbook, or X. No human input needed during recording.

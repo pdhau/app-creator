@@ -1,21 +1,8 @@
 ---
-name: review-application
+name: review-game
 description: Review an application codebase for architecture, reliability, security, accessibility, performance, and workflow coverage without changing files.
 metadata:
   tags: review, architecture, security, accessibility, performance
----
-
-# Review Application
-
-Prioritize concrete defects and regressions with file references. Check domain boundaries, state transitions, boot behavior, critical user workflow, API/UI contracts, accessibility, performance, and test gaps. Report findings before summary.---
-name: review-application
-description: Review an existing application codebase for architecture, performance, and best practices. Use when the user says "review my application", "code review", "check my application architecture", "is my application well structured", or "audit my application code". Do NOT use for making changes â€” this is read-only analysis. Use improve-application to implement fixes.
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, review, architecture, best-practices, code-quality]
 ---
 
 ## Performance Notes
@@ -97,13 +84,13 @@ Result: Architecture 6/6, Performance 4/5, Code Quality 4/4, Monetization 2/4 â†
 Tell the user:
 
 > Your application has been through the full pipeline! Here's what you have:
-> - Scaffolded architecture (`/viral-application`)
+> - Scaffolded architecture (`/viral-app`)
 > - Visual polish (`/design-application`)
 > - Music and sound effects (`/add-audio`)
 > - Automated tests (`/qa-application`)
 > - Architecture review (`/review-application`)
 >
-> *(Reflects the `/viral-application` one-shot pipeline. If you're working through `/make-application`, the equivalent state is "post-scaffold-phase + first development milestone shipped".)*
+> *(Reflects the `/viral-app` one-shot pipeline. If you're working through `/make-application`, the equivalent state is "post-scaffold-phase + first development milestone shipped".)*
 >
 > **What's next?**
 > - Add new user workflow features with `/application-creator:add-feature [description]`

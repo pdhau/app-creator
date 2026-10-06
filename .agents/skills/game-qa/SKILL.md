@@ -1,5 +1,5 @@
 ---
-name: application-qa
+name: game-qa
 description: Test applications with Playwright and focused checks for boot, user workflows, API/UI contracts, accessibility, visual regressions, and performance.
 argument-hint: "[topic]"
 metadata:

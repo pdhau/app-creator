@@ -1,21 +1,8 @@
 ---
-name: application-notifications-media
+name: game-audio
 description: Design application notifications, transactional media, sound feedback, and user-controlled media preferences without coupling product behavior to one provider.
 metadata:
   tags: notifications, media, accessibility, preferences, integration
----
-
-# Notifications and Media
-
-Model notification intent separately from delivery providers. Cover success, warning, error, and empty states; respect mute, permission, reduced-motion, and retry preferences. Test delivery failure, duplicate prevention, accessibility announcements, and fallback UI.---
-name: application-audio
-description: application audio engineer using Web Audio API for procedural music and sound effects in browser applications. Zero dependencies. Use when adding music or SFX to a application.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, audio, music, sfx, web-audio-api, bgm]
 ---
 
 # application Audio Engineer (Web Audio API)

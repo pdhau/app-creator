@@ -5,19 +5,6 @@ metadata:
   tags: UX, UI, accessibility, responsive, states
 ---
 
-# Application Design
-
-Audit the real workflow, then improve hierarchy, navigation, forms, loading, error, empty, success, and permission states. Preserve the existing design system and verify desktop, mobile, keyboard, contrast, and assistive technology behavior.---
-name: design-app
-description: Audit and improve the visual design, polish, and user experience of an existing application. Use when the user says "make my application look better", "improve the design", "add polish", "add juice", "add particles", "fix the UI", or "make it more visually appealing". Do NOT use for user workflow logic changes (use add-feature instead).
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, design, polish, ui, particles, visual]
----
-
 ## Performance Notes
 
 - Take your time to do this thoroughly

@@ -1,21 +1,8 @@
 ---
-name: rapid-product-launch
+name: viral-game
 description: Turn a short product concept or timely reference into a small, usable application prototype with a clear workflow, release demo, and deployment checklist.
 metadata:
   tags: rapid, product, prototype, launch, demo
----
-
-# Rapid Product Launch
-
-Capture the problem, user, workflow, outcome, risk, and smallest shippable scope. Scaffold, build one vertical slice, run application QA, capture a demo, and document deployment and handoff. Keep future ideas in the backlog.---
-name: viral-application
-description: One-shot viral application pipeline — turn a tweet, news story, or short prompt into a scaffolded, designed, deployed, and monetized browser application in roughly 10 minutes. Use when the user says "make a viral application", "build a application from this tweet", "turn this story into a application", "/viral-application", or provides a tweet URL / short concept they want shipped end-to-end fast. Do NOT use when the user wants to design and build a real application project with milestones, ADRs, or multi-session iteration — use `/make-application` for that. Also do NOT use for modifying existing applications (use `/add-feature` or `/improve-application`).
-argument-hint: "[2d|3d] [application-name] OR [tweet-url]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: "2.0"
-  tags: [application, viral, tweet, scaffold, pipeline, framework runtime, threejs, deploy, monetize]
 ---
 
 # Viral application (One-Shot Pipeline)
@@ -28,12 +15,12 @@ This is the fast, end-to-end path. It is intentionally opinionated: framework ru
 
 | Want | Use |
 |---|---|
-| "Build me a viral application from this tweet/story/idea" — one session, ship it, share it | **`/viral-application`** (this skill) |
+| "Build me a viral application from this tweet/story/idea" — one session, ship it, share it | **`/viral-app`** (this skill) |
 | Design a real application with user workflow loop, milestones, ADRs, multi-session iteration, custom framework runtime choices | **`/make-application`** (the deeper pipeline at `skills/make-application/`) |
 | Add a feature to an existing application | `/add-feature` |
 | Audit + improve an existing application | `/improve-application` |
 
-If a user starts with `/viral-application` but the project clearly outgrows a one-shot build (they want milestones, a long-term tech stack discussion, or to keep iterating across many sessions), point them at `/make-application` and stop running this pipeline.
+If a user starts with `/viral-app` but the project clearly outgrows a one-shot build (they want milestones, a long-term tech stack discussion, or to keep iterating across many sessions), point them at `/make-application` and stop running this pipeline.
 
 **What you'll get:**
 1. A fully scaffolded application project with clean architecture (delta capping, object pooling, resource disposal)
@@ -601,13 +588,13 @@ Load the `review-application` skill and run the full analysis against the projec
 
 ### 2D application from prompt
 ```
-/viral-application 2d flappy-cat
+/viral-app 2d flappy-cat
 ```
 Result: Scaffold → product artwork cat + pipe product assets → sky gradient + particles → notification media BGM + meow SFX → promo video → deploy to here.now → register on billing provider. ~10 minutes, playable at `https://flappy-cat.here.now/`.
 
 ### 3D application from tweet
 ```
-/viral-application https://x.com/user/status/123456
+/viral-app https://x.com/user/status/123456
 ```
 Result: Fetches tweet → abstracts application concept → 3D rich visual runtime scaffold → Meshy AI domain model models → visual polish → audio → deploy + monetize.
 

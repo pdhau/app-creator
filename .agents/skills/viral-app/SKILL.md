@@ -5,19 +5,6 @@ metadata:
   tags: rapid, product, prototype, launch, demo
 ---
 
-# Rapid Product Launch
-
-Capture the problem, user, workflow, outcome, risk, and smallest shippable scope. Scaffold, build one vertical slice, run application QA, capture a demo, and document deployment and handoff. Keep future ideas in the backlog.---
-name: viral-app
-description: One-shot viral application pipeline — turn a tweet, news story, or short prompt into a scaffolded, designed, deployed, and monetized browser application in roughly 10 minutes. Use when the user says "make a viral application", "build a application from this tweet", "turn this story into a application", "/viral-app", or provides a tweet URL / short concept they want shipped end-to-end fast. Do NOT use when the user wants to design and build a real application project with milestones, ADRs, or multi-session iteration — use `/make-app` for that. Also do NOT use for modifying existing applications (use `/add-feature` or `/improve-app`).
-argument-hint: "[2d|3d] [application-name] OR [tweet-url]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: "2.0"
-  tags: [application, viral, tweet, scaffold, pipeline, framework runtime, threejs, deploy, monetize]
----
-
 # Viral application (One-Shot Pipeline)
 
 Turn a tweet, story, or short concept into a complete, deployed, monetized browser application in a single guided pipeline — from empty folder to public URL in roughly 10 minutes. Zero application-dev experience needed.

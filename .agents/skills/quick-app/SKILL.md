@@ -5,19 +5,6 @@ metadata:
   tags: prototype, scaffold, workflow, validation
 ---
 
-# Quick Application
-
-Choose one user and one outcome, scaffold with the selected framework/runtime, implement one vertical slice, and verify boot plus the primary workflow. Keep a short product plan and record follow-up work in the backlog.---
-name: quick-application
-description: Rapidly scaffold and implement a playable application — no assets, design, audio, deploy, or monetize. Get something on screen fast. Use when the user says "quick application", "fast prototype", "just get something playable", or wants a application without the full pipeline. For the complete one-shot pipeline (deploy + monetize), use /viral-app instead. For a milestone-driven project, use /make-app. Do NOT use for production applications.
-argument-hint: "[2d|3d] [application-name] OR [tweet-url]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, prototype, scaffold, fast]
----
-
 ## Performance Notes
 
 - Take your time to do this thoroughly

@@ -5,19 +5,6 @@ metadata:
   tags: notifications, media, accessibility, preferences, integration
 ---
 
-# Notifications and Media
-
-Model notification intent separately from delivery providers. Cover success, warning, error, and empty states; respect mute, permission, reduced-motion, and retry preferences. Test delivery failure, duplicate prevention, accessibility announcements, and fallback UI.---
-name: application-audio
-description: application audio engineer using Web Audio API for procedural music and sound effects in browser applications. Zero dependencies. Use when adding music or SFX to a application.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, audio, music, sfx, web-audio-api, bgm]
----
-
 # application Audio Engineer (Web Audio API)
 
 You are an expert application audio engineer. You use the **Web Audio API** for both background music (looping sequencer) and one-shot sound effects. Zero dependencies — everything is built into the browser.

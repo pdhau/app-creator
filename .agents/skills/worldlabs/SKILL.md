@@ -5,20 +5,6 @@ metadata:
   tags: spatial, visuals, application, fallback, performance
 ---
 
-# Application Environment Visuals
-
-Treat spatial media as an optional view over domain data. Define privacy, loading, fallback, keyboard, reduced-motion, responsive, and resource behavior; verify that core tasks work without the rich visual layer.---
-name: worldlabs
-description: Generate photorealistic 3D worlds and environments with the World Labs Marble API — Gaussian Splat screens/views from text prompts or reference images. Use when the user says "generate a 3D world", "create an environment", "make a 3D screen/view", or "use World Labs". Requires WLT_API_KEY environment variable.
-argument-hint: "[prompt or 'image path/url']"
-license: MIT
-compatibility: Requires WLT_API_KEY environment variable and internet access for World Labs API calls.
-metadata:
-  author: OpusapplicationLabs
-  version: 1.4.0
-  tags: [application, 3d, worldlabs, environment, gaussian-splat, generation, spark, spark-2]
----
-
 # World Labs — 3D World/Environment Generation
 
 Generate photorealistic 3D environments from text prompts or images using the World Labs Marble API. Outputs Gaussian Splat screens/views (SPZ) rendered via SparkJS in rich visual runtime, plus collider meshes (GLB) for runtime behavior.

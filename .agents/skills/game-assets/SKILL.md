@@ -1,21 +1,8 @@
 ---
-name: product-assets
+name: game-assets
 description: Create and integrate product assets such as icons, illustrations, brand media, diagrams, and data visualizations with accessible fallbacks.
 metadata:
   tags: assets, product, media, accessibility, design-system
----
-
-# Product Assets
-
-Define an asset contract, naming scheme, responsive variants, licensing, loading behavior, and accessible text alternatives. Keep placeholders replaceable, optimize delivery, and verify rendering in the real user workflow.---
-name: application-assets
-description: application asset engineer that creates product artwork product assets, animated domain models, and visual domain components for browser applications. Use when a application needs better domain model art, external dependency product assets, item visuals, or any upgrade from basic geometric shapes to recognizable product artwork.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, assets, pixel-art, product assets, domain models, 2d]
 ---
 
 # application Asset Engineer (product artwork + Asset Pipeline)

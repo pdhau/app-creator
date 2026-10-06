@@ -1,21 +1,8 @@
 ---
-name: rich-application-runtime
+name: threejs-game
 description: Build rich interactive application views with a modular runtime, explicit domain state, progressive loading, accessibility, and performance budgets.
 metadata:
   tags: rich-ui, runtime, state, accessibility, performance
----
-
-# Rich Application Runtime
-
-Keep data, domain state, view modules, and rendering adapters separate. Define loading and fallback behavior, keyboard access, reduced motion, responsive layout, and measurable performance budgets before adding rich interaction.---
-name: threejs-application
-description: Build 3D browser applications with rich visual runtime using event-driven modular architecture. Use when creating a new 3D application, adding 3D application features, setting up rich visual runtime screens/views, or working on any rich visual runtime application project.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, 3d, threejs, webgl, event-driven, modular]
 ---
 
 # rich visual runtime application Development

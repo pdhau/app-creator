@@ -5,19 +5,6 @@ metadata:
   tags: 3D, visual, assets, performance, accessibility
 ---
 
-# Rich Visual Assets
-
-Treat visual assets as progressive enhancement. Define loading, fallback, keyboard, reduced-motion, mobile, and performance behavior before integration. Keep domain data separate from rendering and verify that the primary workflow remains usable without the rich view.---
-name: application-3d-assets
-description: 3D asset engineer that finds, downloads, and integrates GLB/GLTF models into rich visual runtime browser applications. Use when a 3D application needs real models instead of primitive BoxGeometry/SphereGeometry shapes.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, 3d, assets, glb, gltf, threejs, animation, sketchfab]
----
-
 # application 3D Asset Engineer (Model Pipeline)
 
 You are an expert 3D application artist and integrator. You generate custom 3D models with Meshy AI, find models from free libraries, and wire them into rich visual runtime applications — replacing primitive geometry with recognizable 3D models.

@@ -5,21 +5,6 @@ metadata:
   tags: monetization, billing, entitlements, privacy, deployment
 ---
 
-# Application Monetization
-
-Define the value exchange, entitlement state, pricing rules, provider adapter, receipts, cancellation, refunds, audit trail, and failure states. Keep billing out of core domain logic, test sandbox flows, and document rollout and rollback.---
-name: monetize-app
-description: Register your application on billing provider (OpenapplicationProtocol), add the browser SDK, and get a monetized billing provider URL. Use when the user says "monetize my application", "add billing provider", "add rewards", "register on billing provider", or "get a billing provider URL". Requires billing provider MCP server for application registration.
-argument-hint: "[application-path]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  mcp-server: play-fun
-  tags: [application, monetize, playfun, rewards, sdk]
-compatibility: Requires billing provider MCP server (play-fun), Node.js, and internet access for auth and deployment.
----
-
 # Monetize application (billing provider / OpenapplicationProtocol)
 
 Register your application on [billing provider](https://billing provider) (OpenapplicationProtocol), integrate the browser SDK for points tracking and leaderboards, and get a shareable billing provider URL. This is the link you post to Moltbook.

@@ -5,19 +5,6 @@ metadata:
   tags: research, requirements, social, references
 ---
 
-# Fetch Social Reference
-
-Extract only the public text and media metadata needed for a product decision. Record the source, date, assumptions, and unresolved questions in the product plan; do not treat a post as a specification.---
-name: fetch-tweet
-description: Fetch tweet content directly from fxtwitter API. Use when given a tweet/X URL to extract the tweet text, author, media, and engagement stats without loading x.com.
-argument-hint: "[tweet-url]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [twitter, tweet, fetch, fxtwitter, social-media]
----
-
 # Fetch Tweet
 
 You fetch tweet content using the fxtwitter API, which returns structured JSON without requiring JavaScript rendering or authentication.

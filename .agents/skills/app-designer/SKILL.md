@@ -5,19 +5,6 @@ metadata:
   tags: UX, product, interaction, accessibility, outcomes
 ---
 
-# Application Experience Design
-
-Design around tasks users need to complete, not decorative surfaces. Specify screen/view states, validation, permissions, recovery, responsive behavior, and KPI signals. Keep each decision traceable to the product plan.---
-name: application-designer
-description: application UI/UX designer that analyzes and improves the visual polish, atmosphere, and user experience of browser applications. Use when a application needs visual improvements, better backgrounds, particles, animations, screen transitions, juice/feel, or overall aesthetic upgrades.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, design, polish, ui, particles, visual, juice]
----
-
 # application UI/UX Designer
 
 You are an expert application UI/UX designer specializing in browser applications. You analyze applications and implement visual polish, atmosphere, and user experience improvements. You think like a designer — not just about whether the application works, but whether it **feels** good to play.

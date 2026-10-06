@@ -8,14 +8,14 @@ This project follows the [`make-app`](https://github.com/OpusapplicationLabs/app
 
 - **Title:** <application title>
 - **Pitch:** <1–2 sentence pitch from `docs/product-plan.md`>
-- **Genre / type:** <e.g. roguelike deckbuilder, 2.5D pixel-art blackjack>
-- **framework runtime:** <framework runtime + version, from `docs/tech.md`>
-- **Language:** <e.g. TypeScript, C#>
+- **Product / type:** <e.g. SaaS dashboard, marketplace, mobile workflow app>
+- **Framework:** <React + Vite, Next.js, React Native + Expo, or another choice from `docs/tech.md`>
+- **Language:** <e.g. TypeScript>
 - **Target platform:** <e.g. Browser (desktop + mobile web)>
 
 ## Hard gate: no code before plan
 
-If `docs/product-plan.md` does not exist in this repo, you are in the **idea phase** — do **not** create source files, run framework runtime scaffolders, or install dependencies. Your only job is to walk the user through the idea-phase clarifying-questions checklist (user workflow loop, art style, controls/scope, framework runtime/stack — see `make-app` skill `phase-pipelines/idea.md`) and produce `docs/product-plan.md`, `docs/tech.md`, and `docs/architectural-decisions/0001-framework runtime-and-stack.md`. A detailed-sounding initial prompt is **not** a substitute for the checklist; ask every item even if the user "seems clear."
+If `docs/product-plan.md` does not exist in this repo, you are in the **idea phase** — do **not** create source files, run framework scaffolders, or install dependencies. Your only job is to walk the user through the idea-phase checklist (users, problem, workflow, scope, framework, stack — see `make-app` skill `phase-pipelines/idea.md`) and produce `docs/product-plan.md`, `docs/tech.md`, and the first ADR. A detailed-sounding initial prompt is **not** a substitute for the checklist; ask every item even if the user "seems clear."
 
 ## Mandatory: run the make-app skill
 
@@ -43,12 +43,15 @@ These docs are the agreed state of the project. Read them at session start; do *
 
 <Filled in per-stack at scaffold time. Examples:>
 
-<For browser applications (framework runtime 3 / rich visual runtime):>
-- **EventBus singleton** — all cross-module communication via pub/sub. Modules never import each other directly. Events use `domain:action` naming.
-- **ApplicationState singleton** — single centralized state object. Systems read; events trigger mutations.
-- **Constants.js** — every magic number, color, timing, speed lives here. Zero hardcoded values in application logic.
-- **`window.render_application_to_text()`** — exposes a JSON snapshot of current application state for agent inspection without screenshots.
-- **`window.advanceTime(ms)`** — steps the simulation deterministically for verification.
+<For React / Next.js browser applications:>
+- Feature modules own their domain behavior; components remain focused on rendering and interaction.
+- Keep server/client boundaries explicit and isolate API adapters from UI components.
+- Model loading, error, empty, success, and pending states explicitly and expose semantic selectors for tests.
+- Apply `vercel-react-best-practices` and `vercel-composition-patterns` when the stack is React.
+
+<For a Three.js surface inside React:>
+- Isolate the Three.js lifecycle behind a component or adapter and dispose resources on unmount.
+- Keep domain state outside the render loop and test the surrounding workflow through the React UI.
 
 <For Unity / Unreal / Godot: replace with framework runtime-appropriate patterns.>
 

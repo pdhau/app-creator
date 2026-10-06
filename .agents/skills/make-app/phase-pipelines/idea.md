@@ -50,11 +50,11 @@ Often skipped, often the source of mid-development pivots. You MUST get an expli
 - [ ] **Scope ceiling** — how many workspace states / tracks / domain models / external dependencies for v1? "Ship a vertical slice with one X" is usually right; "ten of everything" is usually wrong.
 - [ ] **Multiuser?** — single-user only? local co-op? online? (Affects framework runtime and architecture from day one.)
 
-**4. Discuss the framework runtime and stack**
+**4. Discuss the application framework and stack**
 
-Use answers from steps 1–3 to narrow framework runtime candidates. Also factor in the user's existing experience — a JS/TS dev with no application-framework runtime background is usually better off with framework runtime or rich visual runtime than starting fresh in Unity. Present 2–3 options with pros/cons (language, GUI editor, ecosystem, asset pipeline) and let the user choose. Confirm:
+Use answers from steps 1–3 to narrow framework candidates. For browser applications, present React + Vite, Next.js, and React Native + Expo when mobile is required. Mention `threejs-app` only for an explicitly 3D or spatial surface. Present 2–3 options with pros/cons (language, routing, rendering, ecosystem, deployment) and let the user choose. Confirm:
 
-- [ ] **framework runtime + language** chosen with the user (not assumed).
+- [ ] **Framework + language** chosen with the user (not assumed).
 - [ ] **Test framework** (Playwright for browser applications is the default in this skill).
 - [ ] **Deployment target** — browser, Steam, mobile store, itch.io? Affects framework runtime choice.
 
@@ -66,7 +66,7 @@ Resolve any open questions, then write the plan. The plan must include:
 - **Core user workflow loop** — start to finish, named verbs
 - **application rules** — only those a user or developer must know
 - **Art style** — perspective, palette, mood, references
-- **Tech stack** — framework runtime, language, libraries, test framework
+- **Tech stack** — framework, language, libraries, test framework
 - **Open questions** — anything still unresolved
 
 Write this to `docs/product-plan.md` using the [doc skeleton](../templates/product-plan.md). Write the stack to `docs/tech.md` using [its skeleton](../templates/tech.md). Create `docs/architectural-decisions/` and write `0001-framework runtime-and-stack.md` using the [ADR skeleton](../templates/adr.md) — locking framework runtime/language/art-style here is the highest-leverage anti-drift act in the whole project.

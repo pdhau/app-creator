@@ -5,19 +5,6 @@ metadata:
   tags: template, scaffold, application, conventions
 ---
 
-# Use Application Template
-
-Select a template that matches the product and runtime, inspect its scripts and conventions, then adapt it through the idea, scaffold, and development workflow. Verify the boot path before adding features.---
-name: use-template
-description: Clone a application template from the gallery as a starting point. Use when the user says "use a template", "start from a template", "clone flappy-bird", "use the platformer template", or wants to quickly bootstrap a application from an existing example. Do NOT use for creating a application from scratch (use viral-app for one-shot builds or make-app for milestone-driven projects).
-argument-hint: "[template-id] [project-name]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, template, scaffold, clone, gallery]
----
-
 # Use Template
 
 Clone a application template from the gallery into a new project. This is a fast copy — working code in seconds, not an AI pipeline.

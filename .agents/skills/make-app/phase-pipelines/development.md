@@ -57,10 +57,10 @@ Before changing implementation code, **write the tests that will prove the miles
 
 What to write where:
 
-- **user workflow logic, state transitions, scoring, collision rules, win/lose conditions** → Playwright tests using the patterns in `/qa-app` (the `application-test` fixture, `render_application_to_text()` for state assertions, `advanceTime()` / `page.clock` for deterministic timing). These are the default and cover almost everything.
+- **user workflow logic, state transitions, validation, success/error/empty states** → Playwright tests using `/qa-app`, with DOM roles, API contracts, deterministic mocks, and focused state assertions. These are the default for React applications.
 - **Pure functions that don't depend on the application runtime** (math helpers, formatters, RNG wrappers) → unit tests next to the source if the project already has a unit test runner. Don't introduce a new test framework just for one helper.
 - **Visual-only changes** (palette tweaks, particle counts, juice, transitions) → a Playwright screenshot test that captures the *current* baseline before the change, then a second assertion that the post-change screenshot differs (or matches a reviewed new baseline). For polish where "differs" isn't a meaningful assertion, fall back to live-iterate (step 5) and **explicitly note in the milestone that the AC is verified by user live verification, not automated test** — do not silently skip the test step.
-- **Multiuser behavior** → tests that boot two clients via Playwright and assert state convergence. The `add-multiuser` skill has scaffolding patterns.
+- **Multiuser behavior** → tests that boot two clients via Playwright and assert state convergence. The `add-multiplayer` skill has scaffolding patterns.
 
 If the milestone AC is too vague to write a test against ("combat should feel snappy", "menus should be polished"), stop and run [live verification / repro](../sub-pipelines/playtest-repro.md) to convert the AC into something checkable before continuing.
 
@@ -84,14 +84,14 @@ If the project has no test harness yet, run `/qa-app` to set one up before writi
 | Replace primitives with GLB models | `/add-3d-assets` |
 | Generate custom 3D models | `/meshyai` |
 | Add procedural BGM/SFX | `/add-audio` |
-| Visual polish, juice, transitions | `/design-app` |
+| Visual polish, responsive UI, transitions | `/design-app` + `web-design-guidelines` or `vercel-react-view-transitions` |
 | Add/extend Playwright tests | `/qa-app` |
-| Real-time or turn-based multiuser | `/add-multiuser` |
+| Real-time or turn-based collaboration | `/add-multiplayer` |
 | Holistic audit + improvements | `/improve-app` |
 | Read-only architecture review | `/review-app` |
 | Add gateable features (skins, continue, etc.) | `/scaffold-gateables` |
 | Wire monetization (billing provider) | `/monetize-app` |
-| Deploy a build | `/app-deploy` |
+| Deploy a build | `/app-deploy` + `deploy-to-vercel` when deploying to Vercel |
 | Record a promo video | `/record-promo` |
 | Fix a clear, scoped bug | [`bug-fix.md`](../sub-pipelines/bug-fix.md) |
 | Convert vague feedback into AC | [`playtest-repro.md`](../sub-pipelines/playtest-repro.md) |

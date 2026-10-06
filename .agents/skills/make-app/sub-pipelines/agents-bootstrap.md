@@ -28,7 +28,9 @@ Generate the project-root `AGENTS.md` (and `CLAUDE.md` pointer) that enforces th
    - Title, pitch, genre, framework runtime + version, language, target platform.
 
 4. **Fill the architecture rules** based on the framework runtime. Defaults:
-   - **framework runtime 3 / rich visual runtime (browser):** EventBus singleton, ApplicationState singleton, `Constants.js`, `window.render_application_to_text()`, `window.advanceTime(ms)`. These are mandatory for the live-iterate loop and must be called out.
+   - **React / Next.js (browser):** feature-oriented components, explicit client/server boundaries, typed domain modules, accessible loading/error/empty/success states, stable `data-testid` hooks only where semantic selectors are insufficient, and a deterministic test seam for network/time. Apply `vercel-react-best-practices` and `vercel-composition-patterns` when relevant.
+   - **React Native / Expo:** platform-specific modules, accessible native controls, stable testIDs only where semantic queries are insufficient, and the patterns from `vercel-react-native-skills`.
+   - **Three.js surface inside React:** keep Three.js lifecycle isolated behind a component or adapter; dispose resources on unmount and keep domain state outside the render loop. Apply `threejs-app` only for the 3D surface.
    - **Unity:** ScriptableObject for shared state; UnityEvent or signal-bus for cross-component messaging; Constants/Settings as ScriptableObjects; expose a debug state-dump method on a singleton MonoBehaviour for agent inspection.
    - **Godot:** Autoload singletons for state and event bus; `Globals` script for constants; `_unhandled_input` discipline; expose a debug `state_to_text()` on a global node.
    - **Other / custom:** ask the user what patterns the project will use, write them down, and add an ADR if no architecture-pattern ADR exists yet.

@@ -5,19 +5,6 @@ metadata:
   tags: architecture, domain, state, modules, ADR
 ---
 
-# Application Architecture
-
-Prefer explicit domain state, feature modules, adapters at external boundaries, and event-driven updates where they clarify ownership. Map screens/views to application modules, domain components to domain components, and runtime services to framework boundaries. Record important decisions in ADRs and test state transitions independently.---
-name: app-architecture
-description: application architecture patterns and best practices for browser applications. Use when designing application systems, planning architecture, structuring a application project, or making architectural decisions about application code.
-argument-hint: "[topic]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, architecture, patterns, eventbus, applicationstate, best-practices]
----
-
 # application Architecture Patterns
 
 Reference knowledge for building well-structured browser applications. These patterns apply to both rich visual runtime (3D) and framework runtime (2D) applications.

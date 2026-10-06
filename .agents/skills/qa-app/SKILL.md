@@ -5,19 +5,6 @@ metadata:
   tags: QA, application, Playwright, smoke-test, accessibility
 ---
 
-# Application QA Command
-
-Use the app-qa workflow for deterministic tests and live verification. Begin with the smallest failing check, then expand only to the affected workflow and its user-visible states.---
-name: qa-app
-description: Add Playwright QA tests to a application — visual regression, user workflow verification, and performance. Use when the user says "add tests", "test my application", "add QA", "check for bugs", or "add visual regression tests". Do NOT use for manual live verification or user workflow design.
-argument-hint: "[path-to-application]"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, qa, testing, playwright, visual-regression]
----
-
 # QA application
 
 Add automated QA testing with Playwright to an existing application project. Tests verify your application boots, screens/views work, scoring functions, and visuals haven't broken — like a safety net for your application.

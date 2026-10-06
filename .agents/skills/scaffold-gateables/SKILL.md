@@ -5,20 +5,6 @@ metadata:
   tags: entitlements, access, plans, feature-flags, monetization
 ---
 
-# Scaffold Entitlements
-
-Model entitlement checks as domain policy, provide a default path for every user, expose provider-neutral hooks, and test denied, trial, active, expired, and recovery states.---
-name: scaffold-gateables
-description: Add gateable features to an existing browser application — skin picker, continue-after-death, bonus mode, save slots, daily challenge. Monetization-agnostic scaffolding that leaves clean hooks for any paywall, subscription, or entitlement layer. Features are scaffolded at silver and gold tiers only (bronze is the default everyone gets). Use when the user says "add gateables", "scaffold monetizable features", "add skin picker", "add continue-after-death", "make my application monetizable", or "add premium hooks". Do NOT use for billing provider SDK integration (use monetize-app) or generic user workflow features (use add-feature).
-argument-hint: "[path-to-application] [optional feature hints e.g. 'skins continue']"
-license: MIT
-metadata:
-  author: OpusapplicationLabs
-  version: 1.0.0
-  tags: [application, gateables, monetization, skins, continue, save-slots, qol]
-compatibility: Requires an existing framework runtime 3 or rich visual runtime application with application-creator architecture (EventBus, ApplicationState, Constants.js, render_application_to_text).
----
-
 ## Performance Notes
 
 - Take your time to understand the application before proposing features

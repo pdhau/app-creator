@@ -5,20 +5,6 @@ metadata:
   tags: release, deployment, operations, observability, rollback
 ---
 
-# Application Release
-
-Define the release checklist, health checks, environment variables, migration order, smoke workflow, monitoring, rollback path, and handoff. Verify the deployed boot path and one representative user workflow before declaring success.---
-name: app-deploy
-description: Deploy browser applications to here.now (default), GitHub Pages, or other hosting. Use when deploying a application, setting up hosting, or publishing a application build. Do NOT use for local development servers (use npm run dev).
-argument-hint: "[platform]"
-license: MIT
-compatibility: Requires internet access. Uses npx (here.now) or gh CLI (GitHub Pages) for deployment.
-metadata:
-  author: OpusapplicationLabs
-  version: 1.3.0
-  tags: [application, deploy, hosting, here-now, github-pages]
----
-
 # application Deployment
 
 Deploy your browser application for public access. **here.now is the default** — instant static hosting with zero configuration. GitHub Pages is available as an alternative when you need git-based deploys.
